@@ -97,6 +97,8 @@
                 return;
             }
             joueurs = data.map(j => j.nom);
+            console.log("Joueurs récupérés :", joueurs);
+
 
             document.getElementById('nbButeurs').addEventListener('change', () => genererChamps('buteurs-container', 'buteur'));
             document.getElementById('nbPasseurs').addEventListener('change', () => genererChamps('passeurs-container', 'passeur'));
