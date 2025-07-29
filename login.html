@@ -35,11 +35,13 @@
     <p id="error"></p>
 
     <script>
+        // 1. Déclaration Supabase
         const SUPABASE_URL = 'https://lgnwgbctaqaeawzjnuqh.supabase.co';  // remplace par le tien
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnbndnYmN0YXFhZWF3empudXFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MjYzNjUsImV4cCI6MjA2OTQwMjM2NX0.E0ug5jpRQVh55aq1ewToqol7h7aRPkg7YvwbKpQtVHo';             // remplace par ta clé
 
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        // 2. Déclaration de la fonction login
         async function login() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -51,7 +53,6 @@
             if (error) {
                 document.getElementById('error').innerText = "Identifiants incorrects.";
             } else {
-                // Connexion OK → redirection vers page admin
                 window.location.href = "admin.html";
             }
         }
