@@ -117,8 +117,6 @@
                 return;
             }
             joueurs = data.map(j => j.nom);
-            console.log("Joueurs récupérés :", joueurs);
-
 
             document.getElementById('nbButeurs').addEventListener('change', () => genererChamps('buteurs-container', 'buteur'));
             document.getElementById('nbPasseurs').addEventListener('change', () => genererChamps('passeurs-container', 'passeur'));
@@ -203,6 +201,8 @@
 
         async function chargerMatchs() {
     const { data, error } = await supabase.from("matchs").select("*").order("date", { ascending: false });
+
+    console.log("MATCHS :", data, error);
 
     if (error) {
         console.error("Erreur chargement matchs :", error.message);
