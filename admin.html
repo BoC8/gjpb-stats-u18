@@ -122,10 +122,64 @@
             }
         }
 
+
         async function soumettreMatch() {
-            alert("Fonction soumettreMatch à compléter");
+            const date = document.getElementById('date').value;
+            const equipe = document.getElementById('equipe').value;
+            const adversaire = document.getElementById('adversaire').value;
+            const lieu = document.getElementById('lieu').value;
+            const competition = document.getElementById('competition').value;
+            const buts_gjpb = parseInt(document.getElementById('buts_gjpb').value);
+            const buts_adv = parseInt(document.getElementById('buts_adv').value);
+            const resultat = document.getElementById('resultat').value;
+
+            // 1. Insérer le match
+            const { data: matchData, error: matchError } = await supabase.from('matchs').insert({
+                date, equipe, adversaire, lieu, competition, buts_gjpb, buts_adv, resultat
+            }).select().single();
+
+            if (matchError) {
+                document.getElementById("resultatMessage").innerText = "❌ Erreur ajout match.";
+                console.error(matchError);
+                return;
+            }
+
+            const match_id = matchData.id;
+
+            // 2. Récupérer les buteurs
+            const nbButeurs = parseInt(document.getElementById('nbButeurs').value) || 0;
+            const buteursContainer = document.getElementById('buteurs-container');
+            const actions = [];
+
+            for (let i = 0; i < nbButeurs; i++) {
+                const nom = buteursContainer.querySelectorAll('select')[i].value;
+                actions.push({ match_id, joueur: nom, type: 'Goal' });
+            }
+
+            // 3. Récupérer les passeurs
+            const nbPasseurs = parseInt(document.getElementById('nbPasseurs').value) || 0;
+            const passeursContainer = document.getElementById('passeurs-container');
+
+            for (let i = 0; i < nbPasseurs; i++) {
+                const nom = passeursContainer.querySelectorAll('select')[i].value;
+                actions.push({ match_id, joueur: nom, type: 'Assist' });
+            }
+
+            // 4. Enregistrer les actions
+            const { error: actionsError } = await supabase.from('actions').insert(actions);
+
+            if (actionsError) {
+                document.getElementById("resultatMessage").innerText = "❌ Match OK mais erreur sur actions.";
+                console.error(actionsError);
+                return;
+            }
+
+            // 5. Succès
+            document.getElementById("resultatMessage").innerText = "✅ Match et actions enregistrés avec succès !";
+            document.getElementById("resultatMessage").style.color = "green";
         }
     </script>
+
 
 </body>
 
