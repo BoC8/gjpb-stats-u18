@@ -189,8 +189,7 @@
 
             // Reset formulaire
             document.querySelector("button[onclick='soumettreMatch()']").innerText = "Enregistrer le match";
-            document.querySelector("form")?.reset(); // ou vider les champs un à un
-            matchEnCours = null;
+            document.getElementById("resultatMessage").innerText = "Match enregistré/modifié avec succès !"; matchEnCours = null;
 
             // Recharge la liste
             chargerMatchs();
