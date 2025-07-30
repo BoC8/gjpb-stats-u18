@@ -161,31 +161,75 @@
             let error;
 
             if (matchEnCours) {
-                // MODIFICATION
+                // MODIFICATION DU MATCH (sans les actions pour l’instant)
                 ({ error } = await supabase
                     .from("matchs")
                     .update(match)
                     .eq("id", matchEnCours));
+
+                if (error) {
+                    alert("Erreur lors de la modification");
+                    console.error(error);
+                    return;
+                }
+
+                document.getElementById("resultatMessage").innerText = "Match modifié avec succès !";
             } else {
-                // AJOUT
-                ({ error } = await supabase
+                // AJOUT DU MATCH
+                const { data: insertedMatch, error: insertError } = await supabase
                     .from("matchs")
-                    .insert(match));
+                    .insert(match)
+                    .select()
+                    .single();
+
+                if (insertError) {
+                    alert("Erreur lors de l'ajout du match");
+                    console.error(insertError);
+                    return;
+                }
+
+                // AJOUT DES ACTIONS (buteurs & passeurs)
+                const actions = [];
+
+                const nbButeurs = parseInt(document.getElementById("nbButeurs").value);
+                for (let i = 0; i < nbButeurs; i++) {
+                    const joueur = document.querySelector(`select[name="buteur_${i}"]`).value;
+                    actions.push({
+                        match_id: insertedMatch.id,
+                        joueur: joueur,
+                        type: 'Goal'
+                    });
+                }
+
+                const nbPasseurs = parseInt(document.getElementById("nbPasseurs").value);
+                for (let i = 0; i < nbPasseurs; i++) {
+                    const joueur = document.querySelector(`select[name="passeur_${i}"]`).value;
+                    actions.push({
+                        match_id: insertedMatch.id,
+                        joueur: joueur,
+                        type: 'Assist'
+                    });
+                }
+
+                const { error: actionsError } = await supabase
+                    .from("actions")
+                    .insert(actions);
+
+                if (actionsError) {
+                    alert("Erreur lors de l'ajout des buteurs/passeurs");
+                    console.error(actionsError);
+                    return;
+                }
+
+                document.getElementById("resultatMessage").innerText = "Match et actions enregistrés avec succès !";
             }
 
-            if (error) {
-                alert("Erreur lors de l'enregistrement");
-                console.error(error);
-                return;
-            }
-
-            // Reset formulaire
+            // Réinitialisation
             document.querySelector("button[onclick='soumettreMatch()']").innerText = "Enregistrer le match";
-            document.getElementById("resultatMessage").innerText = "Match enregistré/modifié avec succès !"; matchEnCours = null;
-
-            // Recharge la liste
-            chargerMatchs();
+            matchEnCours = null;
+            chargerMatchs(); // recharge le tableau
         }
+
 
 
 
