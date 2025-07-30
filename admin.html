@@ -160,17 +160,25 @@
 
             let error;
 
+            // if (matchEnCours) {
+            //     // MODIFICATION
+            //     ({ error } = await supabase
+            //         .from("matchs")
+            //         .update(match)
+            //         .eq("id", matchEnCours));
+            // } else {
+            //     // AJOUT
+            //     ({ error } = await supabase
+            //         .from("matchs")
+            //         .insert(match));
+            // }
+
             if (matchEnCours) {
-                // MODIFICATION
+                console.log("🛠️ Modification de l'id :", matchEnCours, match);
                 ({ error } = await supabase
                     .from("matchs")
                     .update(match)
                     .eq("id", matchEnCours));
-            } else {
-                // AJOUT
-                ({ error } = await supabase
-                    .from("matchs")
-                    .insert(match));
             }
 
             if (error) {
