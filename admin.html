@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin - Ajouter un match</title>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
@@ -97,6 +97,8 @@
                 <th>Buts GJPB</th>
                 <th>Buts Adv.</th>
                 <th>Résultat</th>
+                <th>✏️</th>
+                <th>🗑️</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -200,33 +202,54 @@
         }
 
         async function chargerMatchs() {
-    const { data, error } = await supabase.from("matchs").select("*").order("date", { ascending: false });
+            const { data, error } = await supabase.from("matchs").select("*").order("date", { ascending: false });
 
-    console.log("MATCHS :", data, error);
+            console.log("MATCHS :", data, error);
 
-    if (error) {
-        console.error("Erreur chargement matchs :", error.message);
-        return;
-    }
+            if (error) {
+                console.error("Erreur chargement matchs :", error.message);
+                return;
+            }
 
-    const tbody = document.querySelector("#tableMatchs tbody");
-    tbody.innerHTML = ""; // reset
+            const tbody = document.querySelector("#tableMatchs tbody");
+            tbody.innerHTML = ""; // reset
 
-    data.forEach(match => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${match.date}</td>
-            <td>${match.equipe}</td>
-            <td>${match.adversaire}</td>
-            <td>${match.lieu}</td>
-            <td>${match.competition}</td>
-            <td>${match.buts_gjpb}</td>
-            <td>${match.buts_adv}</td>
-            <td>${match.resultat}</td>
-        `;
-        tbody.appendChild(row);
-    });
-}
+            data.forEach(match => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                <td>${match.date}</td>
+                <td>${match.equipe}</td>
+                <td>${match.adversaire}</td>
+                <td>${match.lieu}</td>
+                <td>${match.competition}</td>
+                <td>${match.buts_gjpb}</td>
+                <td>${match.buts_adv}</td>
+                <td>${match.resultat}</td>
+                <td><button onclick="modifierMatch(${match.id})">✏️</button></td>
+                <td><button onclick="supprimerMatch(${match.id})">🗑️</button></td>
+                `;
+
+                tbody.appendChild(row);
+            });
+        }
+
+        async function supprimerMatch(id) {
+            const confirmation = confirm("Supprimer ce match ?");
+            if (!confirmation) return;
+
+            const { error } = await supabase
+                .from("matchs")
+                .delete()
+                .eq("id", id);
+
+            if (error) {
+                alert("Erreur lors de la suppression");
+                console.error(error);
+            } else {
+                chargerMatchs(); // Recharge la liste
+            }
+        }
+
 
     </script>
 
