@@ -97,8 +97,8 @@
                 <th>Buts GJPB</th>
                 <th>Buts Adv.</th>
                 <th>Résultat</th>
-                <th>✏️</th>
-                <th>🗑️</th>
+                <th>Modifier</th>
+                <th>Supprimer</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -225,8 +225,8 @@
                 <td>${match.buts_gjpb}</td>
                 <td>${match.buts_adv}</td>
                 <td>${match.resultat}</td>
-                <td><button onclick="modifierMatch(${match.id})">✏️</button></td>
-                <td><button onclick="supprimerMatch(${match.id})">🗑️</button></td>
+                <td><button onclick="modifierMatch('${match.id}')">✏️</button></td>
+                <td><button onclick="supprimerMatch('${match.id}')">🗑️</button></td>
                 `;
 
                 tbody.appendChild(row);
