@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin - Ajouter un match</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
@@ -82,6 +83,25 @@
     <button onclick="soumettreMatch()">Enregistrer le match</button>
     <p id="resultatMessage"></p>
 
+    <br><br>
+    <hr>
+    <h2>Matchs enregistrés</h2>
+    <table id="tableMatchs" border="1" cellpadding="5" style="width: 100%; margin-top: 20px;">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Équipe</th>
+                <th>Adversaire</th>
+                <th>Lieu</th>
+                <th>Compétition</th>
+                <th>Buts GJPB</th>
+                <th>Buts Adv.</th>
+                <th>Résultat</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
     <script>
         const SUPABASE_URL = 'https://lgnwgbctaqaeawzjnuqh.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnbndnYmN0YXFhZWF3empudXFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MjYzNjUsImV4cCI6MjA2OTQwMjM2NX0.E0ug5jpRQVh55aq1ewToqol7h7aRPkg7YvwbKpQtVHo';
@@ -102,6 +122,8 @@
 
             document.getElementById('nbButeurs').addEventListener('change', () => genererChamps('buteurs-container', 'buteur'));
             document.getElementById('nbPasseurs').addEventListener('change', () => genererChamps('passeurs-container', 'passeur'));
+
+            chargerMatchs();
         });
 
         function genererChamps(containerId, prefix) {
@@ -178,6 +200,34 @@
             document.getElementById("resultatMessage").innerText = "✅ Match et actions enregistrés avec succès !";
             document.getElementById("resultatMessage").style.color = "green";
         }
+
+        async function chargerMatchs() {
+    const { data, error } = await supabase.from("matchs").select("*").order("date", { ascending: false });
+
+    if (error) {
+        console.error("Erreur chargement matchs :", error.message);
+        return;
+    }
+
+    const tbody = document.querySelector("#tableMatchs tbody");
+    tbody.innerHTML = ""; // reset
+
+    data.forEach(match => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${match.date}</td>
+            <td>${match.equipe}</td>
+            <td>${match.adversaire}</td>
+            <td>${match.lieu}</td>
+            <td>${match.competition}</td>
+            <td>${match.buts_gjpb}</td>
+            <td>${match.buts_adv}</td>
+            <td>${match.resultat}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
     </script>
 
 
