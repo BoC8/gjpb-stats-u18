@@ -298,9 +298,22 @@
 
 
 
-        async function modifierMatch(match) {
-            console.log("MATCH CLIQUÉ :", match);
+        async function modifierMatch(id) {
+            // 🔁 Récupérer le match à modifier
+            const { data: matchs, error: matchError } = await supabase
+                .from("matchs")
+                .select("*")
+                .eq("id", id)
+                .single();
 
+            if (matchError) {
+                console.error("Erreur récupération match :", matchError);
+                return;
+            }
+
+            const match = matchs;
+
+            // 🧩 Remplir les champs du formulaire
             document.getElementById("date").value = match.date;
             document.getElementById("equipe").value = match.equipe;
             document.getElementById("adversaire").value = match.adversaire;
@@ -310,32 +323,31 @@
             document.getElementById("buts_adv").value = match.buts_adv;
             document.getElementById("resultat").value = match.resultat;
 
-            // ⚠️ Indique qu'on modifie
             matchEnCours = match.id;
             document.querySelector("button[onclick='soumettreMatch()']").innerText = "Modifier le match";
 
-            // 🧠 Charger les actions liées à ce match
-            const { data: actions, error } = await supabase
+            // 🧠 Charger les actions liées
+            const { data: actions, error: actionsError } = await supabase
                 .from("actions")
                 .select("joueur, type")
                 .eq("match_id", match.id);
 
-            if (error) {
-                console.error("Erreur chargement actions :", error);
+            if (actionsError) {
+                console.error("Erreur chargement actions :", actionsError);
                 return;
             }
 
-            // 🎯 Filtrer les buteurs / passeurs
+            // 🎯 Remplir les champs dynamiques
             const buteurs = actions.filter(a => a.type === "Goal").map(a => a.joueur);
             const passeurs = actions.filter(a => a.type === "Assist").map(a => a.joueur);
 
-            // 📌 Afficher les bons champs dynamiques
             document.getElementById("nbButeurs").value = buteurs.length;
             genererChamps("buteurs-container", "buteur", buteurs);
 
             document.getElementById("nbPasseurs").value = passeurs.length;
             genererChamps("passeurs-container", "passeur", passeurs);
         }
+
 
 
 
