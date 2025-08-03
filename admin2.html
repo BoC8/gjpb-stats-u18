@@ -64,7 +64,7 @@
         <option>Amical</option>
     </select>
     <input type="number" id="buts_gjpb" placeholder="Buts GJPB">
-    <input type="number" id="buts_adv" placeholder="Buts adverses">
+    <input type="number" id="buts_adv" placeholder="Buts Adverses">
     <select id="resultat">
         <option value="V">Victoire</option>
         <option value="N">Nul</option>
@@ -109,7 +109,6 @@
     </table>
 
     <script>
-        // Config Supabase
         const SUPABASE_URL = 'https://lgnwgbctaqaeawzjnuqh.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6...';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -118,18 +117,14 @@
         let matchEnCours = null;
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // Charger liste des joueurs
-            const { data, error } = await supabase.from('joueurs').select('nom');
-            if (!error) joueurs = data.map(j => j.nom);
+            // Charger joueurs
+            const { data: jdata, error: jerror } = await supabase.from('joueurs').select('nom');
+            if (!jerror) joueurs = jdata.map(j => j.nom);
 
-            // Écouteurs dynamiques
             document.getElementById('nbButeurs').addEventListener('input', () => genererChamps('buteurs-container', 'buteur'));
             document.getElementById('nbPasseurs').addEventListener('input', () => genererChamps('passeurs-container', 'passeur'));
-
-            // Clic bouton
             document.getElementById('submitBtn').addEventListener('click', soumettreMatch);
 
-            // Charger matchs
             chargerMatchs();
         });
 
@@ -139,13 +134,10 @@
             const nbField = document.getElementById(`nb${prefix.charAt(0).toUpperCase() + prefix.slice(1)}s`);
             const nb = valeurs.length || parseInt(nbField.value) || 0;
             for (let i = 0; i < nb; i++) {
-                const select = document.createElement('select');
-                select.name = `${prefix}_${i}`;
-                joueurs.forEach(nom => {
-                    const opt = document.createElement('option');
-                    opt.value = nom;
-                    opt.textContent = nom;
-                    if (valeurs[i] === nom) opt.selected = true;
+                const select = document.createElement('select'); select.name = `${prefix}_${i}`;
+                joueurs.forEach(n => {
+                    const opt = document.createElement('option'); opt.value = n; opt.textContent = n;
+                    if (valeurs[i] === n) opt.selected = true;
                     select.appendChild(opt);
                 });
                 container.appendChild(select);
@@ -163,74 +155,51 @@
                 buts_adv: parseInt(document.getElementById('buts_adv').value) || 0,
                 resultat: document.getElementById('resultat').value
             };
-
             let matchId;
             if (matchEnCours) {
-                // Mise à jour du match
-                const { error: updateErr } = await supabase.from('matchs').update(matchData).eq('id', matchEnCours);
-                if (updateErr) { alert('Erreur modification match'); console.error(updateErr); return; }
-                // Suppression anciennes actions
-                const { error: deleteErr } = await supabase.from('actions').delete().eq('match_id', matchEnCours);
-                if (deleteErr) { alert('Erreur suppression anciennes actions'); console.error(deleteErr); return; }
+                // update match
+                const { error: upErr } = await supabase.from('matchs').update(matchData).eq('id', matchEnCours);
+                if (upErr) { alert('Erreur modification match'); console.error(upErr); return; }
+                // delete old actions
+                const { error: delErr } = await supabase.from('actions').delete().eq('match_id', matchEnCours);
+                if (delErr) { alert('Erreur suppression anciennes actions'); console.error(delErr); return; }
                 matchId = matchEnCours;
             } else {
-                // Création de nouveau match
-                const { data, error: insertErr } = await supabase.from('matchs').insert(matchData).select().single();
-                if (insertErr) { alert('Erreur ajout match'); console.error(insertErr); return; }
-                matchId = data.id;
+                const { data: mdata, error: insErr } = await supabase.from('matchs').insert(matchData).select().single();
+                if (insErr) { alert('Erreur ajout match'); console.error(insErr); return; } matchId = mdata.id;
             }
-
-            // Insert nouvelles actions
+            // insert actions
             const actions = [];
             document.querySelectorAll('[name^="buteur_"]').forEach(el => actions.push({ match_id: matchId, joueur: el.value, type: 'Goal' }));
             document.querySelectorAll('[name^="passeur_"]').forEach(el => actions.push({ match_id: matchId, joueur: el.value, type: 'Assist' }));
-            if (actions.length) {
-                const { error: actErr } = await supabase.from('actions').insert(actions);
-                if (actErr) { alert('Erreur ajout actions'); console.error(actErr); return; }
-            }
-
+            if (actions.length) { const { error: actErr } = await supabase.from('actions').insert(actions); if (actErr) { alert('Erreur ajout actions'); console.error(actErr); return; } }
             document.getElementById('resultatMessage').innerText = 'Match et actions enregistrés !';
-            matchEnCours = null;
-            document.getElementById('submitBtn').textContent = 'Enregistrer le match';
+            matchEnCours = null; document.getElementById('submitBtn').textContent = 'Enregistrer le match';
             chargerMatchs();
         }
 
         async function chargerMatchs() {
             const { data, error } = await supabase.from('matchs').select('*').order('date', { ascending: false });
-            if (error) { console.error(error); return; }
-            const tbody = document.querySelector('#tableMatchs tbody');
-            tbody.innerHTML = '';
-            data.forEach(match => {
+            if (error) { console.error(error); return; } const tbody = document.querySelector('#tableMatchs tbody'); tbody.innerHTML = '';
+            data.forEach(m => {
                 const tr = document.createElement('tr');
-                ['date', 'equipe', 'adversaire', 'lieu', 'competition', 'buts_gjpb', 'buts_adv', 'resultat']
-                    .forEach(key => {
-                        const td = document.createElement('td');
-                        td.textContent = key === 'date' ? match.date.slice(0, 10) : match[key];
-                        tr.appendChild(td);
-                    });
-                // Edit button
-                const btnE = document.createElement('button'); btnE.textContent = '✏️'; btnE.addEventListener('click', () => modifierMatch(match.id));
-                const tdE = document.createElement('td'); tdE.appendChild(btnE); tr.appendChild(tdE);
-                // Delete button
-                const btnD = document.createElement('button'); btnD.textContent = '🗑️'; btnD.addEventListener('click', () => supprimerMatch(match.id));
-                const tdD = document.createElement('td'); tdD.appendChild(btnD); tr.appendChild(tdD);
+                ['date', 'equipe', 'adversaire', 'lieu', 'competition', 'buts_gjpb', 'buts_adv', 'resultat'].forEach(key => {
+                    const td = document.createElement('td'); td.textContent = key === 'date' ? m.date.slice(0, 10) : m[key]; tr.appendChild(td);
+                });
+                const eBtn = document.createElement('button'); eBtn.textContent = '✏️'; eBtn.addEventListener('click', () => modifierMatch(m.id));
+                const tdE = document.createElement('td'); tdE.appendChild(eBtn); tr.appendChild(tdE);
+                const dBtn = document.createElement('button'); dBtn.textContent = '🗑️'; dBtn.addEventListener('click', () => supprimerMatch(m.id));
+                const tdD = document.createElement('td'); tdD.appendChild(dBtn); tr.appendChild(tdD);
                 tbody.appendChild(tr);
             });
         }
 
-        async function supprimerMatch(id) {
-            if (!confirm('Supprimer ce match ?')) return;
-            const { error } = await supabase.from('matchs').delete().eq('id', id);
-            if (error) { alert('Erreur suppression'); console.error(error); }
-            chargerMatchs();
-        }
+        async function supprimerMatch(id) { if (!confirm('Supprimer ce match ?')) return; const { error } = await supabase.from('matchs').delete().eq('id', id); if (error) { alert('Erreur suppression'); console.error(error); } chargerMatchs(); }
 
         async function modifierMatch(id) {
             console.log('modifierMatch id=', id);
-            // Récupérer match
-            const { data: match, error: matchErr } = await supabase.from('matchs').select('*').eq('id', id).single();
-            if (matchErr) { console.error(matchErr); return; }
-            // Préremplir formulaire
+            const { data: match, error: me } = await supabase.from('matchs').select('*').eq('id', id).single();
+            if (me) { console.error(me); return; }
             document.getElementById('date').value = match.date.slice(0, 10);
             document.getElementById('equipe').value = match.equipe;
             document.getElementById('adversaire').value = match.adversaire;
@@ -239,14 +208,12 @@
             document.getElementById('buts_gjpb').value = match.buts_gjpb;
             document.getElementById('buts_adv').value = match.buts_adv;
             document.getElementById('resultat').value = match.resultat;
-            // Récup actions
-            const { data: actions, error: actErr } = await supabase.from('actions').select('joueur, type').eq('match_id', id);
-            if (actErr) { console.error(actErr); return; }
-            const buteurs = actions.filter(a => a.type === 'Goal').map(a => a.joueur);
-            const passeurs = actions.filter(a => a.type === 'Assist').map(a => a.joueur);
-            // Préremplir champs dynamiques
-            document.getElementById('nbButeurs').value = buteurs.length; genererChamps('buteurs-container', 'buteur', buteurs);
-            document.getElementById('nbPasseurs').value = passeurs.length; genererChamps('passeurs-container', 'passeur', passeurs);
+            const { data: acts, error: ae } = await supabase.from('actions').select('joueur,type').eq('match_id', id);
+            if (ae) { console.error(ae); return; }
+            const bu = acts.filter(a => a.type === 'Goal').map(a => a.joueur);
+            const pa = acts.filter(a => a.type === 'Assist').map(a => a.joueur);
+            document.getElementById('nbButeurs').value = bu.length; genererChamps('buteurs-container', 'buteur', bu);
+            document.getElementById('nbPasseurs').value = pa.length; genererChamps('passeurs-container', 'passeur', pa);
             matchEnCours = id; document.getElementById('submitBtn').textContent = 'Modifier le match';
         }
     </script>
