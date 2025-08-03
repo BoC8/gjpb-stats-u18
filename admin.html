@@ -277,6 +277,8 @@
             });
         }
 
+
+
         async function supprimerMatch(id) {
             const confirmation = confirm("Supprimer ce match ?");
             if (!confirmation) return;
@@ -294,7 +296,11 @@
             }
         }
 
+
+
         async function modifierMatch(match) {
+            console.log("MATCH CLIQUÉ :", match);
+
             document.getElementById("date").value = match.date;
             document.getElementById("equipe").value = match.equipe;
             document.getElementById("adversaire").value = match.adversaire;
