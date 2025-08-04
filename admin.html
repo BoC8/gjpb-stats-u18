@@ -232,6 +232,33 @@
             }
         }
 
+
+
+        async function supprimerMatch(id) {
+            const confirmation = confirm("Supprimer ce match ? Cette action est définitive.");
+            if (!confirmation) return;
+
+            // Supprimer d'abord les actions liées
+            const { error: errorActions } = await supabase.from("actions").delete().eq("match_id", id);
+            if (errorActions) {
+                alert("Erreur suppression des buteurs/passeurs");
+                console.error(errorActions);
+                return;
+            }
+
+            // Supprimer le match
+            const { error } = await supabase.from("matchs").delete().eq("id", id);
+            if (error) {
+                alert("Erreur suppression du match");
+                console.error(error);
+                return;
+            }
+
+            alert("Match supprimé !");
+            await chargerMatchs(); // Recharger le tableau
+        }
+
+
     </script>
 
 </body>
