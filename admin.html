@@ -75,6 +75,29 @@
     <button onclick="soumettreMatch()">Enregistrer</button>
     <p id="resultatMessage"></p>
 
+
+
+
+    <h2>Matchs enregistrés</h2>
+    <table border="1" style="width: 100%; border-collapse: collapse;" id="tableauMatchs">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Équipe</th>
+                <th>Adversaire</th>
+                <th>Lieu</th>
+                <th>Compétition</th>
+                <th>Score</th>
+                <th>Résultat</th>
+                <th>Buteurs</th>
+                <th>Passeurs</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+
     <script>
         const supabase = window.supabase.createClient(
             'https://lgnwgbctaqaeawzjnuqh.supabase.co',
@@ -92,7 +115,10 @@
             joueurs = data.map(j => j.nom);
             document.getElementById("nbButeurs").addEventListener("change", () => genererChamps("buteurs-container", "buteur"));
             document.getElementById("nbPasseurs").addEventListener("change", () => genererChamps("passeurs-container", "passeur"));
+            await chargerMatchs();
         });
+
+
 
         function genererChamps(containerId, prefix) {
             const container = document.getElementById(containerId);
@@ -110,6 +136,8 @@
                 container.appendChild(select);
             }
         }
+
+
 
         async function soumettreMatch() {
             const date = document.getElementById("date").value;
@@ -159,6 +187,51 @@
 
             document.getElementById("resultatMessage").innerText = "Match et actions enregistrés avec succès ! ✅";
         }
+
+
+
+        async function chargerMatchs() {
+            const table = document.querySelector("#tableauMatchs tbody");
+            table.innerHTML = ""; // Reset
+
+            const { data: matchs, error: errMatchs } = await supabase.from("matchs").select("*");
+            if (errMatchs) {
+                console.error("Erreur chargement matchs :", errMatchs);
+                return;
+            }
+
+            for (const match of matchs) {
+                // Récupérer les actions liées
+                const { data: actions, error: errActions } = await supabase
+                    .from("actions")
+                    .select("joueur, type")
+                    .eq("match_id", match.id);
+
+                const buteurs = actions?.filter(a => a.type === "Goal").map(a => a.joueur).join(", ");
+                const passeurs = actions?.filter(a => a.type === "Assist").map(a => a.joueur).join(", ");
+
+                const tr = document.createElement("tr");
+
+                tr.innerHTML = `
+                    <td>${match.date}</td>
+                    <td>${match.equipe}</td>
+                    <td>${match.adversaire}</td>
+                    <td>${match.lieu}</td>
+                    <td>${match.competition}</td>
+                    <td>${match.buts_gjpb} - ${match.buts_adv}</td>
+                    <td>${match.resultat}</td>
+                    <td>${buteurs}</td>
+                    <td>${passeurs}</td>
+                    <td>
+                        <button onclick="modifierMatch(${match.id})">✏️</button>
+                        <button onclick="supprimerMatch(${match.id})">🗑️</button>
+                    </td>
+                    `;
+
+                table.appendChild(tr);
+            }
+        }
+
     </script>
 
 </body>
