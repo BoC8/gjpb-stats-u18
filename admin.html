@@ -32,7 +32,7 @@
 
 <body>
 
-    <h1>Ajouter un match !</h1>
+    <h1>Ajouter un match !!</h1>
 
     <input type="date" id="date">
     <select id="equipe">
@@ -111,8 +111,53 @@
             }
         }
 
-        function soumettreMatch() {
-            alert("À compléter à l'étape suivante !");
+        async function soumettreMatch() {
+            const date = document.getElementById("date").value;
+            const equipe = document.getElementById("equipe").value;
+            const adversaire = document.getElementById("adversaire").value;
+            const lieu = document.getElementById("lieu").value;
+            const competition = document.getElementById("competition").value;
+            const buts_gjpb = parseInt(document.getElementById("buts_gjpb").value);
+            const buts_adv = parseInt(document.getElementById("buts_adv").value);
+            const resultat = document.getElementById("resultat").value;
+
+            // 1. Insertion du match
+            const { data: match, error: errMatch } = await supabase
+                .from("matchs")
+                .insert({
+                    date, equipe, adversaire, lieu, competition,
+                    buts_gjpb, buts_adv, resultat
+                })
+                .select()
+                .single();
+
+            if (errMatch) {
+                console.error("Erreur ajout match :", errMatch);
+                document.getElementById("resultatMessage").innerText = "Erreur ajout match.";
+                return;
+            }
+
+            const match_id = match.id;
+
+            // 2. Récupération des buteurs et passeurs
+            const buteurs = Array.from(document.querySelectorAll('#buteurs-container select')).map(s => s.value);
+            const passeurs = Array.from(document.querySelectorAll('#passeurs-container select')).map(s => s.value);
+
+            const actions = [
+                ...buteurs.map(joueur => ({ match_id, joueur, type: 'Goal' })),
+                ...passeurs.map(joueur => ({ match_id, joueur, type: 'Assist' }))
+            ];
+
+            if (actions.length > 0) {
+                const { error: errActions } = await supabase.from("actions").insert(actions);
+                if (errActions) {
+                    console.error("Erreur ajout actions :", errActions);
+                    document.getElementById("resultatMessage").innerText = "Match OK mais erreur actions.";
+                    return;
+                }
+            }
+
+            document.getElementById("resultatMessage").innerText = "Match et actions enregistrés avec succès ! ✅";
         }
     </script>
 
