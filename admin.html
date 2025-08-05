@@ -123,15 +123,16 @@
 
 
 
-        function genererChamps(containerId, prefix) {
+        function genererChamps(containerId, prefix, count = null) {
             const container = document.getElementById(containerId);
             container.innerHTML = ''; // reset
-            const nb = parseInt(document.getElementById(`nb${prefix[0].toUpperCase() + prefix.slice(1)}s`).value);
+
+            const nb = count !== null ? count : document.getElementById(`nb${prefix[0].toUpperCase() + prefix.slice(1)}s`).value;
 
             for (let i = 0; i < nb; i++) {
                 const select = document.createElement('select');
                 select.name = `${prefix}_${i}`;
-                select.id = `${prefix}_${i}`; // ✅ CRUCIAL : l’id permet de retrouver le champ plus tard
+                select.id = `${prefix}_${i}`;  // ⚠️ important
                 joueurs.forEach(nom => {
                     const option = document.createElement('option');
                     option.value = nom;
@@ -141,6 +142,7 @@
                 container.appendChild(select);
             }
         }
+
 
 
 
@@ -420,7 +422,7 @@
             // Étape 6 : Remplir les selects après un court délai (DOM update)
             setTimeout(() => {
                 remplirChampsActions(match.actions);
-            }, 50);
+            }, 0);
         }
 
 
@@ -428,32 +430,26 @@
 
 
         function remplirChampsActions(actions) {
-            const buteurs = actions.filter(a => a.type === "Goal");
-            const passeurs = actions.filter(a => a.type === "Assist");
+            console.log("🔁 remplissage des selects...");
 
-            console.log("➡️ Remplissage buteurs :", buteurs);
-            console.log("➡️ Remplissage passeurs :", passeurs);
+            const buts = actions.filter(a => a.type === "Goal");
+            const passes = actions.filter(a => a.type === "Assist");
 
-            buteurs.forEach((action, i) => {
+            buts.forEach((a, i) => {
                 const select = document.getElementById(`buteur_${i}`);
-                if (select) {
-                    select.value = action.joueur;
-                    console.log(`✅ Buteur ${i} = ${action.joueur}`);
-                } else {
-                    console.warn(`❌ Champ select introuvable pour buteur ${i}`);
-                }
+                console.log(`Remplissage buteur ${i} -> ${a.joueur} -> select=`, select);
+                if (select) select.value = a.joueur;
+                else console.warn(`❌ Champ select introuvable pour buteur ${i}`);
             });
 
-            passeurs.forEach((action, i) => {
+            passes.forEach((a, i) => {
                 const select = document.getElementById(`passeur_${i}`);
-                if (select) {
-                    select.value = action.joueur;
-                    console.log(`✅ Passeur ${i} = ${action.joueur}`);
-                } else {
-                    console.warn(`❌ Champ select introuvable pour passeur ${i}`);
-                }
+                console.log(`Remplissage passeur ${i} -> ${a.joueur} -> select=`, select);
+                if (select) select.value = a.joueur;
+                else console.warn(`❌ Champ select introuvable pour passeur ${i}`);
             });
         }
+
 
 
 
