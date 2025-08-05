@@ -33,7 +33,7 @@
 <body>
     <div id="formulaire">
 
-        <h1>Ajouter un match !! </h1>
+        <h1>Ajouter un match ! </h1>
 
         <input type="date" id="date">
         <select id="equipe">
@@ -390,53 +390,57 @@
         function modifierMatch(match) {
             console.log("Modification demandée pour :", match);
 
-            // 1. Remplir les champs principaux du match
-            document.getElementById('date').value = match.date;
-            document.getElementById('equipe').value = match.equipe;
-            document.getElementById('adversaire').value = match.adversaire;
-            document.getElementById('lieu').value = match.lieu;
-            document.getElementById('competition').value = match.competition;
-            document.getElementById('buts_gjpb').value = match.buts_gjpb;
-            document.getElementById('buts_adv').value = match.buts_adv;
-            document.getElementById('resultat').value = match.resultat;
+            // Étape 1 : Remplir les champs du match
+            document.getElementById("date").value = match.date;
+            document.getElementById("equipe").value = match.equipe;
+            document.getElementById("adversaire").value = match.adversaire;
+            document.getElementById("lieu").value = match.lieu;
+            document.getElementById("competition").value = match.competition;
+            document.getElementById("buts_gjpb").value = match.buts_gjpb;
+            document.getElementById("buts_adv").value = match.buts_adv;
+            document.getElementById("resultat").value = match.resultat;
 
-            // 2. Stocker l'id du match dans le formulaire
-            document.getElementById('formulaire').dataset.matchId = match.id;
-
-            // 3. Appeler la fonction pour générer les champs d’actions et les remplir
-            if (match.actions && Array.isArray(match.actions)) {
-                remplirChampsActions(match.actions);
-            } else {
-                console.warn("⚠️ Aucune action à remplir (match.actions vide ou non défini)");
-            }
+            // Étape 2 : Ajouter l'attribut data-match-id sur le formulaire
+            document.getElementById("formulaire").dataset.matchId = match.id;
 
             console.log("✅ Champs remplis pour modification !");
+
+            // Étape 3 : Calculer le nombre de buteurs et passeurs
+            const buteurs = match.actions.filter(a => a.type === "Goal");
+            const passeurs = match.actions.filter(a => a.type === "Assist");
+
+            // Étape 4 : Définir le nombre dans les inputs
+            document.getElementById("nbButeurs").value = buteurs.length;
+            document.getElementById("nbPasseurs").value = passeurs.length;
+
+            // Étape 5 : Générer les selects
+            genererChamps("buteurs-container", "buteur", buteurs.length);
+            genererChamps("passeurs-container", "passeur", passeurs.length);
+
+            // Étape 6 : Remplir les selects après un court délai (DOM update)
+            setTimeout(() => {
+                remplirChampsActions(match.actions);
+            }, 50);
         }
 
 
 
 
+
         function remplirChampsActions(actions) {
-            // Grouper les actions par type
             const buteurs = actions.filter(a => a.type === "Goal");
             const passeurs = actions.filter(a => a.type === "Assist");
 
-            // Met à jour le nombre de champs
-            document.getElementById('nbButeurs').value = buteurs.length;
-            document.getElementById('nbPasseurs').value = passeurs.length;
+            console.log("➡️ Remplissage buteurs :", buteurs);
+            console.log("➡️ Remplissage passeurs :", passeurs);
 
-            // Générer les listes déroulantes
-            genererChamps('buteurs-container', 'buteur');
-            genererChamps('passeurs-container', 'passeur');
-
-            // Remplir les valeurs dans les champs déjà créés
             buteurs.forEach((action, i) => {
                 const select = document.getElementById(`buteur_${i}`);
                 if (select) {
                     select.value = action.joueur;
                     console.log(`✅ Buteur ${i} = ${action.joueur}`);
                 } else {
-                    console.warn(`❌ Champ buteur_${i} introuvable`);
+                    console.warn(`❌ Champ select introuvable pour buteur ${i}`);
                 }
             });
 
@@ -446,10 +450,11 @@
                     select.value = action.joueur;
                     console.log(`✅ Passeur ${i} = ${action.joueur}`);
                 } else {
-                    console.warn(`❌ Champ passeur_${i} introuvable`);
+                    console.warn(`❌ Champ select introuvable pour passeur ${i}`);
                 }
             });
         }
+
 
 
 
