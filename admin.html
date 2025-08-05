@@ -126,20 +126,6 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnbndnYmN0YXFhZWF3empudXFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MjYzNjUsImV4cCI6MjA2OTQwMjM2NX0.E0ug5jpRQVh55aq1ewToqol7h7aRPkg7YvwbKpQtVHo';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        window.onload = () => {
-            const debugDiv = document.getElementById("debug");
-            if (debugDiv) {
-                const p = document.createElement("p");
-                p.textContent = "✅ Le bloc de debug est visible dans la page !";
-                debugDiv.appendChild(p);
-            } else {
-                alert("❌ Le bloc debug n’a pas été trouvé !");
-            }
-        };
-
-
-
-
         // console.log("Ceci est un test");
 
         let joueurs = [];
@@ -235,6 +221,7 @@
             document.getElementById('buts_adv').value = match.buts_adv;
             document.getElementById('resultat').value = match.resultat;
             document.getElementById('formulaire').dataset.matchId = match.id;
+
             console.log('✅ Champs remplis pour modification !');
             const buts = match.actions.filter(a => a.type === 'Goal');
             const pas = match.actions.filter(a => a.type === 'Assist');
@@ -282,10 +269,6 @@
             chargerMatchs();
         }
     </script>
-
-
-    <div id="debug"
-        style="background:#000;color:#0f0;padding:10px;font-family:monospace;max-height:200px;overflow:auto;"></div>
 
 
 </body>
