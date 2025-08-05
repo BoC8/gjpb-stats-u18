@@ -184,7 +184,7 @@
                 .from('matchs')
                 .select('*, actions(*)')
                 .order('date', { ascending: false });
-                
+
             console.log("📦 Matchs récupérés :", matchs);
 
             if (error) {
@@ -194,6 +194,11 @@
 
             const tbody = document.querySelector('#tableauMatchs tbody');
             tbody.innerHTML = '';
+
+            if (!matchs || matchs.length === 0) {
+                console.warn("Aucun match trouvé, tableau non rempli.");
+                return;
+            }
 
             matchs.forEach(match => {
                 const tr = document.createElement('tr');
