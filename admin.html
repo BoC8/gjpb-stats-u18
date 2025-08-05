@@ -56,7 +56,7 @@
 </head>
 
 <body>
-    <h1>Admin - Ajouter / Modifier un match</h1>
+    <h1>Admin - Ajouter / Modifier un match !!</h1>
 
     <div id="formulaire">
         <input type="date" id="date">
@@ -180,30 +180,42 @@
 
         // Charger et afficher tous les matchs
         async function chargerMatchs() {
-            const { data: matchs, error } = await supabase.from('matchs').select('*, actions(*)').order('date', { ascending: false });
-            if (error) { console.error('Erreur charg match:', error); return; }
+            const { data: matchs, error } = await supabase
+                .from('matchs')
+                .select('*, actions(*)')
+                .order('date', { ascending: false });
 
-            const tbody = document.querySelector('#tableauMatchs tbody'); tbody.innerHTML = '';
+            if (error) {
+                console.error('Erreur charg match:', error);
+                return;
+            }
+
+            console.log("📦 Matchs récupérés :", matchs);
+
+            const tbody = document.querySelector('#tableauMatchs tbody');
+            tbody.innerHTML = '';
+
             matchs.forEach(match => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${match.date}</td>
-                    <td>${match.equipe}</td>
-                    <td>${match.adversaire}</td>
-                    <td>${match.lieu}</td>
-                    <td>${match.competition}</td>
-                    <td>${match.buts_gjpb} - ${match.buts_adv}</td>
-                    <td>${match.resultat}</td>
-                    <td>${match.actions.filter(a => a.type === 'Goal').map(a => a.joueur).join(', ')}</td>
-                    <td>${match.actions.filter(a => a.type === 'Assist').map(a => a.joueur).join(', ')}</td>
-                    <td>
-                        <button onclick='modifierMatch(${JSON.stringify(match)})'>✏️</button>
-                        <button onclick='supprimerMatch("${match.id}")'>🗑️</button>
-                    </td>
-                `;
+            <td>${match.date}</td>
+            <td>${match.equipe}</td>
+            <td>${match.adversaire}</td>
+            <td>${match.lieu}</td>
+            <td>${match.competition}</td>
+            <td>${match.buts_gjpb} - ${match.buts_adv}</td>
+            <td>${match.resultat}</td>
+            <td>${match.actions.filter(a => a.type === 'Goal').map(a => a.joueur).join(', ')}</td>
+            <td>${match.actions.filter(a => a.type === 'Assist').map(a => a.joueur).join(', ')}</td>
+            <td>
+                <button onclick='modifierMatch(${JSON.stringify(match)})'>✏️</button>
+                <button onclick='supprimerMatch("${match.id}")'>🗑️</button>
+            </td>
+        `;
                 tbody.appendChild(tr);
             });
         }
+
 
         // Modifier un match
         function modifierMatch(match) {
