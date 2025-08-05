@@ -32,7 +32,7 @@
 
 <body>
 
-    <h1>Ajouter un match !</h1>
+    <h1>Ajouter un match !!</h1>
 
     <input type="date" id="date">
     <select id="equipe">
@@ -306,6 +306,10 @@
             // Recrée les champs <select>
             genererChamps("buteurs-container", "buteur");
             genererChamps("passeurs-container", "passeur");
+
+            console.log("Contenu du DOM après génération des selects :");
+            console.log(document.getElementById("buteurs-container").innerHTML);
+
 
             // ⏳ Attendre que les selects soient bien injectés dans le DOM
             setTimeout(() => {
