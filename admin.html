@@ -310,13 +310,20 @@
             // Insère les valeurs dans les <select>
             buteurs.forEach((nom, i) => {
                 const select = document.querySelector(`[name="buteur_${i}"]`);
+                console.log("Remplissage buteur", i, "->", nom, "-> select=", select);
                 if (select) {
                     const option = Array.from(select.options).find(opt => opt.value === nom);
                     if (option) {
                         select.value = nom;
+                        console.log("✅ Buteur trouvé et sélectionné :", nom);
+                    } else {
+                        console.warn("❌ Buteur non trouvé dans les options :", nom);
                     }
+                } else {
+                    console.error("❌ Champ select introuvable pour buteur", i);
                 }
             });
+
 
             passeurs.forEach((nom, i) => {
                 const select = document.querySelector(`[name="passeur_${i}"]`);
