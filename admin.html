@@ -33,7 +33,7 @@
 <body>
     <div id="formulaire">
 
-        <h1>Ajouter un match ! </h1>
+        <h1>Ajouter un match !! </h1>
 
         <input type="date" id="date">
         <select id="equipe">
@@ -415,14 +415,15 @@
             document.getElementById("nbButeurs").value = buteurs.length;
             document.getElementById("nbPasseurs").value = passeurs.length;
 
-            // Étape 5 : Générer les selects
-            genererChamps("buteurs-container", "buteur", buteurs.length);
-            genererChamps("passeurs-container", "passeur", passeurs.length);
+            console.log("🛠️ Génération des champs...");
+            genererChamps("buteurs-container", "buteur", match.actions.filter(a => a.type === "Goal").length);
+            genererChamps("passeurs-container", "passeur", match.actions.filter(a => a.type === "Assist").length);
 
-            // Étape 6 : Remplir les selects après un court délai (DOM update)
             setTimeout(() => {
+                console.log("⏳ Appel de remplirChampsActions...");
                 remplirChampsActions(match.actions);
             }, 0);
+
         }
 
 
