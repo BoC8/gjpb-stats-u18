@@ -31,49 +31,52 @@
 </head>
 
 <body>
+    <div id="formulaire">
 
-    <h1>Ajouter un match ! </h1>
+        <h1>Ajouter un match !!! </h1>
 
-    <input type="date" id="date">
-    <select id="equipe">
-        <option>18A</option>
-        <option>17</option>
-        <option>18B</option>
-    </select>
-    <input type="text" id="adversaire" placeholder="Adversaire">
-    <select id="lieu">
-        <option>Domicile</option>
-        <option>Extérieur</option>
-    </select>
-    <select id="competition">
-        <option>Phase</option>
-        <option>Coupe</option>
-        <option>Amical</option>
-    </select>
-    <input type="number" id="buts_gjpb" placeholder="Buts GJPB">
-    <input type="number" id="buts_adv" placeholder="Buts adverses">
-    <select id="resultat">
-        <option value="V">Victoire</option>
-        <option value="N">Nul</option>
-        <option value="D">Défaite</option>
-    </select>
+        <input type="date" id="date">
+        <select id="equipe">
+            <option>18A</option>
+            <option>17</option>
+            <option>18B</option>
+        </select>
+        <input type="text" id="adversaire" placeholder="Adversaire">
+        <select id="lieu">
+            <option>Domicile</option>
+            <option>Extérieur</option>
+        </select>
+        <select id="competition">
+            <option>Phase</option>
+            <option>Coupe</option>
+            <option>Amical</option>
+        </select>
+        <input type="number" id="buts_gjpb" placeholder="Buts GJPB">
+        <input type="number" id="buts_adv" placeholder="Buts adverses">
+        <select id="resultat">
+            <option value="V">Victoire</option>
+            <option value="N">Nul</option>
+            <option value="D">Défaite</option>
+        </select>
 
-    <!-- Section buteurs -->
-    <div class="actions-group">
-        <label for="nbButeurs">Nombre de buteurs :</label>
-        <input type="number" id="nbButeurs" min="0" max="14">
-        <div id="buteurs-container"></div>
+        <!-- Section buteurs -->
+        <div class="actions-group">
+            <label for="nbButeurs">Nombre de buteurs :</label>
+            <input type="number" id="nbButeurs" min="0" max="14">
+            <div id="buteurs-container"></div>
+        </div>
+
+        <!-- Section passeurs -->
+        <div class="actions-group">
+            <label for="nbPasseurs">Nombre de passeurs :</label>
+            <input type="number" id="nbPasseurs" min="0" max="14">
+            <div id="passeurs-container"></div>
+        </div>
+
+        <button onclick="soumettreMatch()">Enregistrer</button>
+        <p id="resultatMessage"></p>
+
     </div>
-
-    <!-- Section passeurs -->
-    <div class="actions-group">
-        <label for="nbPasseurs">Nombre de passeurs :</label>
-        <input type="number" id="nbPasseurs" min="0" max="14">
-        <div id="passeurs-container"></div>
-    </div>
-
-    <button onclick="soumettreMatch()">Enregistrer</button>
-    <p id="resultatMessage"></p>
 
 
 
