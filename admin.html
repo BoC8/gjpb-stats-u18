@@ -184,8 +184,6 @@
 
             const { data: matchs, error } = await supabase.from('matchs').select('*, actions(*)').order('date', { ascending: false });
             if (error) { console.error('Erreur charg match:', error); return; }
-
-            console.log("📦 Matchs récupérés :", data);
             
             const tbody = document.querySelector('#tableauMatchs tbody'); tbody.innerHTML = '';
             matchs.forEach(match => {
