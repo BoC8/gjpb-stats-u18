@@ -126,12 +126,12 @@
         function genererChamps(containerId, prefix) {
             const container = document.getElementById(containerId);
             container.innerHTML = ''; // reset
-            const nb = document.getElementById(`nb${prefix[0].toUpperCase() + prefix.slice(1)}s`).value;
+            const nb = parseInt(document.getElementById(`nb${prefix[0].toUpperCase() + prefix.slice(1)}s`).value);
 
             for (let i = 0; i < nb; i++) {
                 const select = document.createElement('select');
                 select.name = `${prefix}_${i}`;
-                select.id = `${prefix}_${i}`; // ⬅️ AJOUT ESSENTIEL
+                select.id = `${prefix}_${i}`; // ✅ CRUCIAL : l’id permet de retrouver le champ plus tard
                 joueurs.forEach(nom => {
                     const option = document.createElement('option');
                     option.value = nom;
@@ -141,6 +141,7 @@
                 container.appendChild(select);
             }
         }
+
 
 
 
