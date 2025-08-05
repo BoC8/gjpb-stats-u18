@@ -32,7 +32,7 @@
 
 <body>
 
-    <h1>Ajouter un match !!</h1>
+    <h1>Ajouter un match </h1>
 
     <input type="date" id="date">
     <select id="equipe">
@@ -310,12 +310,22 @@
             // Insère les valeurs dans les <select>
             buteurs.forEach((nom, i) => {
                 const select = document.querySelector(`[name="buteur_${i}"]`);
-                if (select) select.value = nom;
+                if (select) {
+                    const option = Array.from(select.options).find(opt => opt.value === nom);
+                    if (option) {
+                        select.value = nom;
+                    }
+                }
             });
 
             passeurs.forEach((nom, i) => {
                 const select = document.querySelector(`[name="passeur_${i}"]`);
-                if (select) select.value = nom;
+                if (select) {
+                    const option = Array.from(select.options).find(opt => opt.value === nom);
+                    if (option) {
+                        select.value = nom;
+                    }
+                }
             });
 
             // Scroll en haut du formulaire pour bien voir
