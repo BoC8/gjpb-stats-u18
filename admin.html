@@ -32,7 +32,7 @@
 
 <body>
 
-    <h1>Ajouter un match </h1>
+    <h1>Ajouter un match! </h1>
 
     <input type="date" id="date">
     <select id="equipe">
@@ -270,17 +270,8 @@
 
 
 
-        async function modifierMatch(id) {
-            matchEnCoursId = id;
-
-            // 1. Charger les données du match
-            const { data: match, error: err1 } = await supabase.from("matchs").select("*").eq("id", id).single();
-            if (err1 || !match) {
-                alert("Erreur chargement du match");
-                return;
-            }
-
-            // 2. Pré-remplir les champs du formulaire
+        function remplirChampsMatch(match) {
+            // Champs simples
             document.getElementById("date").value = match.date;
             document.getElementById("equipe").value = match.equipe;
             document.getElementById("adversaire").value = match.adversaire;
@@ -290,59 +281,44 @@
             document.getElementById("buts_adv").value = match.buts_adv;
             document.getElementById("resultat").value = match.resultat;
 
-            // 3. Charger les actions liées à ce match
-            const { data: actions, error: err2 } = await supabase
-                .from("actions")
-                .select("joueur, type")
-                .eq("match_id", id);
+            // Séparer actions
+            const buteurs = match.actions.filter(a => a.type === "Goal");
+            const passeurs = match.actions.filter(a => a.type === "Assist");
 
-            if (err2) {
-                alert("Erreur chargement des actions");
-                return;
-            }
-
-            const buteurs = actions.filter(a => a.type === "Goal").map(a => a.joueur);
-            const passeurs = actions.filter(a => a.type === "Assist").map(a => a.joueur);
-
-            // 4. Remplir le formulaire dynamique des buteurs/passeurs
+            // Remplir le nombre
             document.getElementById("nbButeurs").value = buteurs.length;
             document.getElementById("nbPasseurs").value = passeurs.length;
 
-            // Recrée les champs <select>
+            // Générer dynamiquement les champs
             genererChamps("buteurs-container", "buteur");
             genererChamps("passeurs-container", "passeur");
 
-            // console.log("Contenu du DOM après génération des selects :");
-            // console.log(document.getElementById("buteurs-container").innerHTML);
+            // Remplir les champs buteurs
+            buteurs.forEach((action, index) => {
+                const select = document.getElementById(`buteur_${index}`);
+                if (select) {
+                    select.value = action.nom;
+                    console.log(`✔️ Buteur ${index} : ${action.nom}`);
+                } else {
+                    console.warn(`❌ Champ select introuvable pour buteur ${index}`);
+                }
+            });
 
-            // Exemple pour les buteurs
-            match.actions
-                .filter(a => a.type === 'Goal')
-                .forEach((action, index) => {
-                    const select = document.getElementById(`buteur_${index}`);
-                    if (select) {
-                        select.value = action.nom;
-                    } else {
-                        console.warn(`❌ Champ select introuvable pour buteur ${index}`);
-                    }
-                });
+            // Remplir les champs passeurs
+            passeurs.forEach((action, index) => {
+                const select = document.getElementById(`passeur_${index}`);
+                if (select) {
+                    select.value = action.nom;
+                    console.log(`✔️ Passeur ${index} : ${action.nom}`);
+                } else {
+                    console.warn(`❌ Champ select introuvable pour passeur ${index}`);
+                }
+            });
 
-            // Et idem pour les passeurs
-            match.actions
-                .filter(a => a.type === 'Assist')
-                .forEach((action, index) => {
-                    const select = document.getElementById(`passeur_${index}`);
-                    if (select) {
-                        select.value = action.nom;
-                    } else {
-                        console.warn(`❌ Champ select introuvable pour passeur ${index}`);
-                    }
-                });
-
-
-            // Scroll en haut du formulaire pour bien voir
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            // Stocker l'id en global ou attribut data si besoin
+            matchEnCours = match.id;
         }
+
 
 
 
