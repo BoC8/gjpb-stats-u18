@@ -194,7 +194,6 @@
         }
 
 
-
         async function chargerMatchs() {
             const { data: matchs, error } = await supabase
                 .from('matchs')
@@ -202,68 +201,159 @@
                 .order('date', { ascending: false });
 
             if (error) {
-                console.error("Erreur chargement matchs :", error);
+                console.error("❌ Erreur chargement matchs :", error);
                 return;
             }
 
             const tableau = document.getElementById('tableauMatchs');
-            tableau.innerHTML = `
-        <tr>
-            <th>Date</th>
-            <th>Équipe</th>
-            <th>Adversaire</th>
-            <th>Score</th>
-            <th>Compétition</th>
-            <th>Buteurs</th>
-            <th>Passeurs</th>
-            <th>Actions</th>
-        </tr>
-    `;
+            tableau.innerHTML = ''; // reset
 
             matchs.forEach(match => {
-                const ligne = document.createElement('tr');
-
-                const buteurs = match.actions
-                    ?.filter(a => a.type === 'but')
-                    .map(a => a.joueur)
-                    .join(', ') || '';
-
-                const passeurs = match.actions
-                    ?.filter(a => a.type === 'passe')
-                    .map(a => a.joueur)
-                    .join(', ') || '';
-
-                ligne.innerHTML = `
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
             <td>${match.date}</td>
             <td>${match.equipe}</td>
             <td>${match.adversaire}</td>
-            <td>${match.buts_gjpb} - ${match.buts_adv}</td>
+            <td>${match.lieu}</td>
             <td>${match.competition}</td>
-            <td>${buteurs}</td>
-            <td>${passeurs}</td>
+            <td>${match.buts_gjpb} - ${match.buts_adv}</td>
+            <td>${match.resultat}</td>
             <td>
                 <button class="modifier">✏️</button>
                 <button class="supprimer">🗑️</button>
             </td>
         `;
 
-                // Ajouter la ligne au tableau
-                tableau.appendChild(ligne);
-
-                // === 🎯 BOUTON MODIFIER ===
-                const btnModifier = ligne.querySelector('.modifier');
+                // 📝 Bouton modifier
+                const btnModifier = tr.querySelector('.modifier');
                 btnModifier.addEventListener('click', () => {
                     console.log("📝 Modification demandée pour :", match);
-                    // Étape 2 : remplissage des champs viendra ensuite ici
+
+                    // Remplir les champs simples
+                    document.getElementById('date').value = match.date;
+                    document.getElementById('equipe').value = match.equipe;
+                    document.getElementById('adversaire').value = match.adversaire;
+                    document.getElementById('lieu').value = match.lieu;
+                    document.getElementById('competition').value = match.competition;
+                    document.getElementById('buts_gjpb').value = match.buts_gjpb;
+                    document.getElementById('buts_adv').value = match.buts_adv;
+                    document.getElementById('resultat').value = match.resultat;
+
+                    // Stocker l’ID du match dans le formulaire pour l’étape suivante
+                    document.getElementById('formulaire').dataset.matchId = match.id;
+
+                    console.log("✅ Champs remplis pour modification !");
                 });
 
-                // === 🗑️ BOUTON SUPPRIMER (facultatif ici, si déjà présent) ===
-                const btnSupprimer = ligne.querySelector('.supprimer');
-                btnSupprimer.addEventListener('click', () => {
-                    supprimerMatch(match.id);
+                // 🗑️ Bouton supprimer (facultatif, à compléter)
+                const btnSupprimer = tr.querySelector('.supprimer');
+                btnSupprimer.addEventListener('click', async () => {
+                    const confirmDelete = confirm("Supprimer ce match ?");
+                    if (!confirmDelete) return;
+
+                    const { error: deleteError } = await supabase
+                        .from('matchs')
+                        .delete()
+                        .eq('id', match.id);
+
+                    if (deleteError) {
+                        console.error("❌ Erreur suppression :", deleteError);
+                        alert("Erreur lors de la suppression.");
+                    } else {
+                        console.log("✅ Match supprimé");
+                        chargerMatchs(); // rafraîchir la liste
+                    }
                 });
+
+                tableau.appendChild(tr);
             });
         }
+
+
+        //     async function chargerMatchs() {
+        //         const { data: matchs, error } = await supabase
+        //             .from('matchs')
+        //             .select('*, actions(*)')
+        //             .order('date', { ascending: false });
+
+        //         if (error) {
+        //             console.error("Erreur chargement matchs :", error);
+        //             return;
+        //         }
+
+        //         const tableau = document.getElementById('tableauMatchs');
+        //         tableau.innerHTML = `
+        //     <tr>
+        //         <th>Date</th>
+        //         <th>Équipe</th>
+        //         <th>Adversaire</th>
+        //         <th>Score</th>
+        //         <th>Compétition</th>
+        //         <th>Buteurs</th>
+        //         <th>Passeurs</th>
+        //         <th>Actions</th>
+        //     </tr>
+        // `;
+
+        //         matchs.forEach(match => {
+        //             const ligne = document.createElement('tr');
+
+        //             const buteurs = match.actions
+        //                 ?.filter(a => a.type === 'but')
+        //                 .map(a => a.joueur)
+        //                 .join(', ') || '';
+
+        //             const passeurs = match.actions
+        //                 ?.filter(a => a.type === 'passe')
+        //                 .map(a => a.joueur)
+        //                 .join(', ') || '';
+
+        //             ligne.innerHTML = `
+        //         <td>${match.date}</td>
+        //         <td>${match.equipe}</td>
+        //         <td>${match.adversaire}</td>
+        //         <td>${match.buts_gjpb} - ${match.buts_adv}</td>
+        //         <td>${match.competition}</td>
+        //         <td>${buteurs}</td>
+        //         <td>${passeurs}</td>
+        //         <td>
+        //             <button class="modifier">✏️</button>
+        //             <button class="supprimer">🗑️</button>
+        //         </td>
+        //     `;
+
+        //             // Ajouter la ligne au tableau
+        //             tableau.appendChild(ligne);
+
+        //             // === 🎯 BOUTON MODIFIER ===
+        //             const btnModifier = ligne.querySelector('.modifier');
+        //             btnModifier.addEventListener('click', () => {
+        //                 console.log("📝 Modification demandée pour :", match);
+
+        //                 // Remplir les champs simples
+        //                 document.getElementById('date').value = match.date;
+        //                 document.getElementById('equipe').value = match.equipe;
+        //                 document.getElementById('adversaire').value = match.adversaire;
+        //                 document.getElementById('lieu').value = match.lieu;
+        //                 document.getElementById('competition').value = match.competition;
+        //                 document.getElementById('buts_gjpb').value = match.buts_gjpb;
+        //                 document.getElementById('buts_adv').value = match.buts_adv;
+        //                 document.getElementById('resultat').value = match.resultat;
+
+        //                 // Stocker l’ID du match en cours de modification
+        //                 document.getElementById('formulaire').dataset.matchId = match.id;
+
+        //                 console.log("✅ Champs remplis pour modification !");
+        //             });
+
+
+        //             // === 🗑️ BOUTON SUPPRIMER (facultatif ici, si déjà présent) ===
+        //             const btnSupprimer = ligne.querySelector('.supprimer');
+        //             btnSupprimer.addEventListener('click', () => {
+        //                 supprimerMatch(match.id);
+        //             });
+        //         });
+        //     }
 
 
 
