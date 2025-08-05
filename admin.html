@@ -312,34 +312,32 @@
             genererChamps("buteurs-container", "buteur");
             genererChamps("passeurs-container", "passeur");
 
-            console.log("Contenu du DOM après génération des selects :");
-            console.log(document.getElementById("buteurs-container").innerHTML);
+            // console.log("Contenu du DOM après génération des selects :");
+            // console.log(document.getElementById("buteurs-container").innerHTML);
 
-
-            // ⏳ Attendre que les selects soient bien injectés dans le DOM
-            setTimeout(() => {
-                // Remplissage des buteurs
-                buteurs.forEach((nom, i) => {
-                    const select = document.querySelector(`[name="buteur_${i}"]`);
+            // Exemple pour les buteurs
+            match.actions
+                .filter(a => a.type === 'Goal')
+                .forEach((action, index) => {
+                    const select = document.getElementById(`buteur_${index}`);
                     if (select) {
-                        const option = Array.from(select.options).find(opt => opt.value === nom);
-                        if (option) {
-                            select.value = nom;
-                        }
+                        select.value = action.nom;
+                    } else {
+                        console.warn(`❌ Champ select introuvable pour buteur ${index}`);
                     }
                 });
 
-                // Remplissage des passeurs
-                passeurs.forEach((nom, i) => {
-                    const select = document.querySelector(`[name="passeur_${i}"]`);
+            // Et idem pour les passeurs
+            match.actions
+                .filter(a => a.type === 'Assist')
+                .forEach((action, index) => {
+                    const select = document.getElementById(`passeur_${index}`);
                     if (select) {
-                        const option = Array.from(select.options).find(opt => opt.value === nom);
-                        if (option) {
-                            select.value = nom;
-                        }
+                        select.value = action.nom;
+                    } else {
+                        console.warn(`❌ Champ select introuvable pour passeur ${index}`);
                     }
                 });
-            }, 50); // 50ms pour laisser le temps au DOM d’injecter les selects
 
 
             // Scroll en haut du formulaire pour bien voir
