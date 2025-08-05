@@ -202,48 +202,37 @@
             }
 
             for (const match of matchs) {
-                for (const match of matchs) {
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-    <td colspan="10">Test match ID ${match.id}</td>
-    <td>
-      <button onclick="supprimerMatch(${match.id})">🗑️</button>
-    </td>
-  `;
-                    table.appendChild(tr);
-                }
+                // Récupérer les actions (buteurs et passeurs) liées à ce match
+                const { data: actions, error: errActions } = await supabase
+                    .from("actions")
+                    .select("joueur, type")
+                    .eq("match_id", match.id);
 
+                const buteurs = actions?.filter(a => a.type === "Goal").map(a => a.joueur).join(", ") || "";
+                const passeurs = actions?.filter(a => a.type === "Assist").map(a => a.joueur).join(", ") || "";
 
+                const tr = document.createElement("tr");
 
-                // // Récupérer les actions (buteurs et passeurs) liées à ce match
-                // const { data: actions, error: errActions } = await supabase
-                //     .from("actions")
-                //     .select("joueur, type")
-                //     .eq("match_id", match.id);
+                console.log("match.id =", match.id, typeof match.id);
 
-                // const buteurs = actions?.filter(a => a.type === "Goal").map(a => a.joueur).join(", ") || "";
-                // const passeurs = actions?.filter(a => a.type === "Assist").map(a => a.joueur).join(", ") || "";
+                // Utiliser les backticks pour permettre l’injection dynamique
+                tr.innerHTML = `
+                <td>${match.date}</td>
+                <td>${match.equipe}</td>
+                <td>${match.adversaire}</td>
+                <td>${match.lieu}</td>
+                <td>${match.competition}</td>
+                <td>${match.buts_gjpb} - ${match.buts_adv}</td>
+                <td>${match.resultat}</td>
+                <td>${buteurs}</td>
+                <td>${passeurs}</td>
+                <td>
+                    <button onclick='modifierMatch(${match.id})'>✏️</button>
+                    <button onclick='supprimerMatch(${match.id})'>🗑️</button>
+                </td>
+                `;
 
-                // const tr = document.createElement("tr");
-
-                // // Utiliser les backticks pour permettre l’injection dynamique
-                // tr.innerHTML = `
-                // <td>${match.date}</td>
-                // <td>${match.equipe}</td>
-                // <td>${match.adversaire}</td>
-                // <td>${match.lieu}</td>
-                // <td>${match.competition}</td>
-                // <td>${match.buts_gjpb} - ${match.buts_adv}</td>
-                // <td>${match.resultat}</td>
-                // <td>${buteurs}</td>
-                // <td>${passeurs}</td>
-                // <td>
-                //     <button onclick='modifierMatch(${match.id})'>✏️</button>
-                //     <button onclick='supprimerMatch(${match.id})'>🗑️</button>
-                // </td>
-                // `;
-
-                // table.appendChild(tr);
+                table.appendChild(tr);
             }
         }
 
