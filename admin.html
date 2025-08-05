@@ -184,13 +184,13 @@
                 .from('matchs')
                 .select('*, actions(*)')
                 .order('date', { ascending: false });
+                
+            console.log("📦 Matchs récupérés :", matchs);
 
             if (error) {
                 console.error('Erreur charg match:', error);
                 return;
             }
-
-            console.log("📦 Matchs récupérés :", matchs);
 
             const tbody = document.querySelector('#tableauMatchs tbody');
             tbody.innerHTML = '';
