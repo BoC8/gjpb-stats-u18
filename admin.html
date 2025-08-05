@@ -33,7 +33,7 @@
 <body>
     <div id="formulaire">
 
-        <h1>Ajouter un match ! </h1>
+        <h1>Ajouter un match !! </h1>
 
         <input type="date" id="date">
         <select id="equipe">
@@ -131,18 +131,17 @@
             for (let i = 0; i < nb; i++) {
                 const select = document.createElement('select');
                 select.name = `${prefix}_${i}`;
-                select.id = `${prefix}_${i}`; // 🟢 Ajout du ID pour plus de flexibilité
-
+                select.id = `${prefix}_${i}`; // ⬅️ AJOUT ESSENTIEL
                 joueurs.forEach(nom => {
                     const option = document.createElement('option');
                     option.value = nom;
                     option.textContent = nom;
                     select.appendChild(option);
                 });
-
                 container.appendChild(select);
             }
         }
+
 
 
 
