@@ -126,6 +126,8 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnbndnYmN0YXFhZWF3empudXFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MjYzNjUsImV4cCI6MjA2OTQwMjM2NX0.E0ug5jpRQVh55aq1ewToqol7h7aRPkg7YvwbKpQtVHo';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        console.log("Ceci est un test");
+        
         let joueurs = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -260,7 +262,28 @@
             form.removeAttribute('data-match-id');
             chargerMatchs();
         }
+
+
+        (function () {
+            const debugDiv = document.getElementById("debug");
+            const originalLog = console.log;
+            console.log = function (...args) {
+                originalLog(...args);
+                if (debugDiv) {
+                    debugDiv.textContent += args.map(a =>
+                        typeof a === 'object' ? JSON.stringify(a, null, 2) : a
+                    ).join(' ') + '\n';
+                }
+            };
+        })();
+
     </script>
+
+
+    <div id="debug"
+        style="white-space: pre-wrap; background:#111; color:#0f0; padding:10px; margin-top:20px; font-size:12px;">
+    </div>
+
 </body>
 
 </html>
