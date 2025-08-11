@@ -97,7 +97,10 @@
 </head>
 
 <body>
-    <h1>Admin — Ajouter / Modifier un match !!!</h1>
+    <div style="background-color: #f9f7e4; padding: 10px; text-align: center;">
+        <h1>Admin — Ajouter / Modifier un match !!!</h1>
+    </div>
+
 
     <form id="form" data-match-id="">
         <div class="row">
@@ -156,18 +159,20 @@
             <div id="passeurs-container"></div>
         </div>
 
-        <div class="group">
+        <div class="group" style="text-align: center;">
             <button id="saveBtn">Enregistrer</button>
-            <button id="resetBtn" type="button" style="margin-left:8px;">Réinitialiser</button>
+            <button id="resetBtn" type="button" style="margin-left:8px; background-color: black; color: white;">Réinitialiser</button>
             <div id="msg"></div>
         </div>
     </form>
+    <br><br><br>
 
-    <h2>Matchs enregistrés</h2>
+    <h2 style="text-align: center;">⚽Matchs enregistrés⚽</h2>
     <div class="table-wrap">
         <table id="matchsTable">
             <thead>
-                <tr>
+                <tr style="background-color: gray;">
+                    <th>Actions</th>
                     <th>Date</th>
                     <th>Équipe</th>
                     <th>Adversaire</th>
@@ -177,7 +182,6 @@
                     <th>Résultat</th>
                     <th>Buteurs</th>
                     <th>Passeurs</th>
-                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -228,8 +232,6 @@
             joueurs = (data || []).map(j => j.nom);
             if (!joueurs.length) {
                 msg("⚠️ Aucun joueur trouvé (vérifie RLS/roles sur 'joueurs').", true);
-            } else {
-                msg(`✅ ${joueurs.length} joueurs chargés.`);
             }
         }
 
@@ -312,6 +314,10 @@
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
+          <td class="actions">
+            <button data-id="${m.id}" class="edit">✏️</button>
+            <button data-id="${m.id}" class="del">🗑️</button>
+          </td>      
           <td>${m.date || ''}</td>
           <td>${m.equipe || ''}</td>
           <td>${m.adversaire || ''}</td>
@@ -321,10 +327,6 @@
           <td>${m.resultat || ''}</td>
           <td>${buts}</td>
           <td>${pas}</td>
-          <td class="actions">
-            <button data-id="${m.id}" class="edit">✏️</button>
-            <button data-id="${m.id}" class="del">🗑️</button>
-          </td>
         `;
                 tbody.appendChild(tr);
             });
