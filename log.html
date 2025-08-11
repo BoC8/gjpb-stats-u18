@@ -3,36 +3,121 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>Connexion</title>
+    <title>Debug Supabase — joueurs</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: system-ui, Arial;
+            margin: 24px;
+            max-width: 800px
+        }
+
+        code {
+            background: #f6f8fa;
+            padding: 2px 6px;
+            border-radius: 6px
+        }
+
+        .ok {
+            color: #0a7d25
+        }
+
+        .warn {
+            color: #b36b00
+        }
+
+        .err {
+            color: #b00020
+        }
+
+        pre {
+            background: #f6f8fa;
+            padding: 12px;
+            border-radius: 8px;
+            overflow: auto
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Connexion</h1>
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Mot de passe" />
-    <button onclick="login()">Se connecter</button>
-    <p id="message"></p>
+    <h1>Debug Supabase — lecture de <code>joueurs</code></h1>
+
+    <div id="cfg"></div>
+    <hr />
+    <h2>Résultats</h2>
+    <p id="rest"></p>
+    <p id="sdk"></p>
+    <details>
+        <summary>JSON REST (premiers items)</summary>
+        <pre id="restJson"></pre>
+    </details>
+    <details>
+        <summary>JSON SDK (premiers items)</summary>
+        <pre id="sdkJson"></pre>
+    </details>
 
     <script>
-        const supabase = window.supabase.createClient(
-            'https://lgnwgbctaqaeawzjnuqh.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnbndnYmN0YXFhZWF3empudXFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MjYzNjUsImV4cCI6MjA2OTQwMjM2NX0.E0ug5jpRQVh55aq1ewToqol7h7aRPkg7YvwbKpQtVHo'
-        );
+        // 🔧 REMPLACE ICI par les valeurs de Project Settings > API
+        const SUPABASE_URL = 'https://lgnwgbctaqaeawzjnuqh.supabase.co';
+        const SUPABASE_ANON_KEY = 'PASTE_YOUR_PUBLIC_ANON_KEY_HERE';
 
-        async function login() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+        // Affiche la config utilisée (clé tronquée)
+        document.getElementById('cfg').innerHTML =
+            `<b>URL utilisée :</b> <code>${SUPABASE_URL}</code><br>` +
+            `<b>anon key :</b> <code>${SUPABASE_ANON_KEY.slice(0, 12)}…</code>`;
 
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-            if (error) {
-                document.getElementById('message').textContent = "Erreur : " + error.message;
-            } else {
-                document.getElementById('message').textContent = "Connecté !";
-                window.location.href = "admin.html";
+        // 1) Test API REST directe (bypasse supabase-js)
+        async function testREST() {
+            const url = `${SUPABASE_URL}/rest/v1/joueurs?select=nom&order=nom`;
+            try {
+                const r = await fetch(url, {
+                    headers: {
+                        apikey: SUPABASE_ANON_KEY,
+                        Authorization: 'Bearer ' + SUPABASE_ANON_KEY
+                    }
+                });
+                const j = await r.json();
+                document.getElementById('rest').innerHTML =
+                    r.ok
+                        ? `<span class="ok">REST OK</span> — ${Array.isArray(j) ? j.length : 0} joueur(s)`
+                        : `<span class="err">REST ${r.status}</span>`;
+                document.getElementById('restJson').textContent = JSON.stringify(j?.slice?.(0, 10) ?? j, null, 2);
+                return { ok: r.ok, data: j, status: r.status };
+            } catch (e) {
+                document.getElementById('rest').innerHTML = `<span class="err">REST erreur</span> — ${e}`;
+                return { ok: false, error: e };
             }
         }
+
+        // 2) Test via supabase-js
+        async function testSDK() {
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const { data, error } = await supabase.from('joueurs').select('nom').order('nom');
+            if (error) {
+                document.getElementById('sdk').innerHTML = `<span class="err">SDK erreur</span> — ${error.message}`;
+            } else {
+                document.getElementById('sdk').innerHTML = `<span class="ok">SDK OK</span> — ${data.length} joueur(s)`;
+                document.getElementById('sdkJson').textContent = JSON.stringify(data.slice(0, 10), null, 2);
+            }
+            return { data, error };
+        }
+
+        (async () => {
+            const rest = await testREST();
+            const sdk = await testSDK();
+
+            // Aide rapide selon les cas
+            if (rest.ok && Array.isArray(rest.data) && rest.data.length === 0) {
+                console.warn('REST renvoie [], donc ce projet renvoie vide → vérifier RLS/GRANT/URL/clé.');
+            }
+            if (!rest.ok && rest.status === 401) {
+                console.warn('401 → vérifie apikey/Authorization (anon key).');
+            }
+            if (!rest.ok && rest.status === 404) {
+                console.warn('404 → mauvais chemin (table), mais ici il est correct si la table existe bien.');
+            }
+        })();
     </script>
 </body>
 
