@@ -79,10 +79,10 @@
         const { createClient } = window.supabase;
         const supabase = createClient(supabaseUrl, supabaseKey);
 
-        fetch(URL, {
+        fetch(supabaseUrl, {
             headers: {
-                apikey: KEY,
-                Authorization: 'Bearer ' + KEY
+                apikey: supabaseKey,
+                Authorization: 'Bearer ' + supabaseKey
             }
         }).then(r => r.json()).then(j => console.log('API brute →', j));
 
