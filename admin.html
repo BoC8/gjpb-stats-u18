@@ -82,15 +82,34 @@
         let joueurs = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
-            const { data, error } = await supabase.from('joueurs').select('nom');
-            if (error) return console.error('Erreur chargement joueurs :', error);
+            const msg = document.getElementById('resultatMessage');
+
+            // 1) Essai principal
+            let { data, error } = await supabase.from('joueurs').select('nom').order('nom', { ascending: true });
+
+            // 2) Debug visible
+            if (error) {
+                console.error('Erreur chargement joueurs :', error);
+                msg.textContent = '❌ Erreur chargement joueurs : ' + (error.message || 'inconnue');
+                return;
+            }
+            if (!data || data.length === 0) {
+                msg.textContent = '⚠️ Aucun joueur trouvé (table "joueurs" vide ou policy SELECT manquante).';
+                // (Optionnel) nouveau test large :
+                const test = await supabase.from('joueurs').select('*');
+                console.log('Test joueurs * :', test);
+                return;
+            }
+
+            // 3) OK, on peuple les listes
             joueurs = data.map(j => j.nom);
+            msg.textContent = `✅ ${joueurs.length} joueur(s) chargé(s).`;
 
             document.getElementById('nbButeurs').addEventListener('input', () => {
-                genererChamps('buteurs-container', 'buteur', parseInt(document.getElementById('nbButeurs').value));
+                genererChamps('buteurs-container', 'buteur', parseInt(document.getElementById('nbButeurs').value || '0', 10));
             });
             document.getElementById('nbPasseurs').addEventListener('input', () => {
-                genererChamps('passeurs-container', 'passeur', parseInt(document.getElementById('nbPasseurs').value));
+                genererChamps('passeurs-container', 'passeur', parseInt(document.getElementById('nbPasseurs').value || '0', 10));
             });
         });
 
