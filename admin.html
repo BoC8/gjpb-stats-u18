@@ -79,13 +79,12 @@
         const { createClient } = window.supabase;
         const supabase = createClient(supabaseUrl, supabaseKey);
 
-        (async () => {
-            let { data: joueurs, error } = await supabase
-                .from('joueurs')
-                .select('nom');
-
-            console.log("Résultat test joueurs :", joueurs, "Erreur :", error);
-        })();
+        fetch(URL, {
+            headers: {
+                apikey: KEY,
+                Authorization: 'Bearer ' + KEY
+            }
+        }).then(r => r.json()).then(j => console.log('API brute →', j));
 
         let joueurs = [];
 
