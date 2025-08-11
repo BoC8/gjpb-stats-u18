@@ -3,26 +3,75 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Admin - GJPB Stats</title>
+    <title>Admin - Ajouter un match</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        input,
+        select,
+        button {
+            display: block;
+            margin: 10px 0;
+            padding: 8px;
+            width: 100%;
+        }
+
+        .group {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+        }
+    </style>
 </head>
 
 <body>
     <h1>Ajouter un match</h1>
 
     <input type="date" id="date">
-    <input type="text" id="equipe" placeholder="Équipe">
+    <select id="equipe">
+        <option value="18A">18A</option>
+        <option value="17">17</option>
+        <option value="18B">18B</option>
+    </select>
     <input type="text" id="adversaire" placeholder="Adversaire">
+    <select id="lieu">
+        <option value="Domicile">Domicile</option>
+        <option value="Extérieur">Extérieur</option>
+    </select>
+    <select id="competition">
+        <option value="Phase 1">Phase 1</option>
+        <option value="Phase 2">Phase 2</option>
+        <option value="Phase 3">Phase 3</option>
+        <option value="Amical">Amical</option>
+        <option value="Coupe">Coupe</option>
+    </select>
     <input type="number" id="buts_gjpb" placeholder="Buts GJPB">
-    <input type="number" id="buts_adv" placeholder="Buts Adversaire">
+    <input type="number" id="buts_adv" placeholder="Buts adversaire">
+    <select id="resultat">
+        <option value="V">Victoire</option>
+        <option value="N">Nul</option>
+        <option value="D">Défaite</option>
+    </select>
 
-    <label>Buteurs :</label>
-    <div id="buteurs-container"></div>
-
-    <label>Passeurs :</label>
-    <div id="passeurs-container"></div>
+    <div class="group">
+        <label for="nbButeurs">Nombre de buteurs :</label>
+        <input type="number" id="nbButeurs" min="0" max="14">
+        <div id="buteurs-container"></div>
+    </div>
+    <div class="group">
+        <label for="nbPasseurs">Nombre de passeurs :</label>
+        <input type="number" id="nbPasseurs" min="0" max="14">
+        <div id="passeurs-container"></div>
+    </div>
 
     <button onclick="soumettreMatch()">Enregistrer</button>
+    <p id="resultatMessage"></p>
 
     <script>
         const supabase = window.supabase.createClient(
@@ -33,38 +82,46 @@
         let joueurs = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
-            const { data, error } = await supabase.from('joueurs').select('*');
+            const { data, error } = await supabase.from('joueurs').select('nom');
             if (error) return console.error('Erreur chargement joueurs :', error);
             joueurs = data.map(j => j.nom);
 
-            // Créer 3 selects pour buteurs et passeurs (test simple)
-            for (let i = 0; i < 3; i++) {
-                ajouterSelect('buteurs-container', `buteur_${i}`);
-                ajouterSelect('passeurs-container', `passeur_${i}`);
-            }
+            document.getElementById('nbButeurs').addEventListener('input', () => {
+                genererChamps('buteurs-container', 'buteur', parseInt(document.getElementById('nbButeurs').value));
+            });
+            document.getElementById('nbPasseurs').addEventListener('input', () => {
+                genererChamps('passeurs-container', 'passeur', parseInt(document.getElementById('nbPasseurs').value));
+            });
         });
 
-        function ajouterSelect(containerId, selectId) {
-            const select = document.createElement('select');
-            select.id = selectId;
-            joueurs.forEach(nom => {
-                const opt = document.createElement('option');
-                opt.value = nom;
-                opt.textContent = nom;
-                select.appendChild(opt);
-            });
-            document.getElementById(containerId).appendChild(select);
+        function genererChamps(containerId, prefix, count) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                const select = document.createElement('select');
+                select.id = `${prefix}_${i}`;
+                joueurs.forEach(nom => {
+                    const opt = document.createElement('option');
+                    opt.value = nom;
+                    opt.textContent = nom;
+                    select.appendChild(opt);
+                });
+                container.appendChild(select);
+            }
         }
 
         async function soumettreMatch() {
             const date = document.getElementById('date').value;
             const equipe = document.getElementById('equipe').value;
             const adversaire = document.getElementById('adversaire').value;
+            const lieu = document.getElementById('lieu').value;
+            const competition = document.getElementById('competition').value;
             const buts_gjpb = parseInt(document.getElementById('buts_gjpb').value) || 0;
             const buts_adv = parseInt(document.getElementById('buts_adv').value) || 0;
+            const resultat = document.getElementById('resultat').value;
 
-            const { data: match, error } = await supabase.from('matchs').insert([{ date, equipe, adversaire, buts_gjpb, buts_adv }]).select().single();
-            if (error) return console.error('Erreur ajout match :', error);
+            const { data: match, error } = await supabase.from('matchs').insert([{ date, equipe, adversaire, lieu, competition, buts_gjpb, buts_adv, resultat }]).select().single();
+            if (error) return document.getElementById('resultatMessage').innerText = 'Erreur ajout match';
 
             const id = match.id;
             const actions = [];
@@ -73,9 +130,9 @@
             document.querySelectorAll('#passeurs-container select').forEach(s => actions.push({ match_id: id, joueur: s.value, type: 'Assist' }));
 
             const { error: actErr } = await supabase.from('actions').insert(actions);
-            if (actErr) return console.error('Erreur ajout actions :', actErr);
+            if (actErr) return document.getElementById('resultatMessage').innerText = 'Erreur ajout actions';
 
-            alert("Match + actions enregistrés !");
+            document.getElementById('resultatMessage').innerText = 'Match enregistré avec succès';
         }
     </script>
 </body>
