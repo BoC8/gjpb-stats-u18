@@ -113,6 +113,10 @@
             });
         });
 
+        console.log('URL =', SUPABASE_URL);
+        console.log('anon key prefix =', SUPABASE_ANON_KEY.slice(0, 12));
+
+
         function genererChamps(containerId, prefix, count) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
