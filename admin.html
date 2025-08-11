@@ -11,7 +11,7 @@
             font-family: Arial, sans-serif;
             padding: 20px;
             max-width: 900px;
-            margin: auto;
+            margin: 0;
         }
 
         h1,
@@ -93,13 +93,25 @@
                 padding: 6px;
             }
         }
+
+        .header-admin {
+            background-color: #f9f7e4;
+            /* beige */
+            padding: 15px;
+            /* espace autour du texte */
+            width: 100%;
+            /* prend toute la largeur */
+            box-sizing: border-box;
+            /* padding inclus dans la largeur */
+        }
     </style>
 </head>
 
 <body>
-    <div style="background-color: #f9f7e4; padding: 10px; text-align: center;">
+    <div class="header-admin">
         <h1>Admin — Ajouter / Modifier un match !!!</h1>
     </div>
+
 
 
     <form id="form" data-match-id="">
@@ -161,7 +173,8 @@
 
         <div class="group" style="text-align: center;">
             <button id="saveBtn">Enregistrer</button>
-            <button id="resetBtn" type="button" style="margin-left:8px; background-color: black; color: white;">Réinitialiser</button>
+            <button id="resetBtn" type="button"
+                style="margin-left:8px; background-color: black; color: white;">Réinitialiser</button>
             <div id="msg"></div>
         </div>
     </form>
