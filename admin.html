@@ -101,38 +101,44 @@
 
     <form id="form" data-match-id="">
         <div class="row">
-            Date :
-            <input type="date" id="date" />
-            Équipe :
-            <select id="equipe">
-                <option value="18A">18A</option>
-                <option value="17">17</option>
-                <option value="18B">18B</option>
-            </select>
-            Adversaire :
-            <input type="text" id="adversaire" placeholder="Adversaire" />
-            Lieu :
-            <select id="lieu">
-                <option value="DOM">DOM</option>
-                <option value="EXT">EXT</option>
-            </select>
-            Compétition :
-            <select id="competition">
-                <option value="Phase 1">Phase 1</option>
-                <option value="Phase 2">Phase 2</option>
-                <option value="Phase 3">Phase 3</option>
-                <option value="Amical">Amical</option>
-                <option value="Coupe">Coupe</option>
-            </select>
-            Résultat :
-            <select id="resultat">
-                <option value="V">Victoire</option>
-                <option value="N">Nul</option>
-                <option value="D">Défaite</option>
-            </select>
-            <div class="group">
-                Score :
+            <div class="group">Date :
+                <input type="date" id="date" />
+            </div>
+            <div class="group">Équipe :
+                <select id="equipe">
+                    <option value="18A">18A</option>
+                    <option value="17">17</option>
+                    <option value="18B">18B</option>
+                </select>
+            </div>
+            <div class="group">Adversaire :
+                <input type="text" id="adversaire" placeholder="Adversaire" />
+            </div>
+            <div class="group">Lieu :
+                <select id="lieu">
+                    <option value="DOM">DOM</option>
+                    <option value="EXT">EXT</option>
+                </select>
+            </div>
+            <div class="group">Compétition :
+                <select id="competition">
+                    <option value="Phase 1">Phase 1</option>
+                    <option value="Phase 2">Phase 2</option>
+                    <option value="Phase 3">Phase 3</option>
+                    <option value="Amical">Amical</option>
+                    <option value="Coupe">Coupe</option>
+                </select>
+            </div>
+            <div class="group">Résultat :
+                <select id="resultat">
+                    <option value="V">Victoire</option>
+                    <option value="N">Nul</option>
+                    <option value="D">Défaite</option>
+                </select>
+            </div>
+            <div class="group">Score :
                 <input type="number" id="buts_gjpb" placeholder="GJPB" min="0" style="width:80px;" />
+                -
                 <input type="number" id="buts_adv" placeholder="Adversaire" min="0" style="width:80px;" />
             </div>
 
