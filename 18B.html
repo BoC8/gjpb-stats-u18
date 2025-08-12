@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club de Foot Jeunesse - Accueil</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* === VARIABLES CSS === */
+        :root {
+            --color-sky-blue: #6EC1FF;
+            --color-light-blue: #9FD6FF;
+            --color-white: #ffffff;
+            --color-navy: #1e3a5f;
+            --color-gold: #FFD700;
+            --color-text-dark: #2c3e50;
+            --color-text-light: #7f8c8d;
+
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --max-width: 1100px;
+            --padding-mobile: 1rem;
+            --padding-desktop: 2rem;
+            --border-radius: 12px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        /* === RESET & BASE === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--color-text-dark);
+            background: linear-gradient(135deg, var(--color-white) 0%, var(--color-light-blue) 100%);
+            min-height: 100vh;
+        }
+
+        /* === CONTENEUR PRINCIPAL === */
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 var(--padding-mobile);
+        }
+
+        /* === HEADER === */
+        .header {
+            background: var(--color-white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 var(--padding-mobile);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-navy);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        /* Navigation desktop */
+        .nav-desktop {
+            display: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex: 1;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-text-dark);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus {
+            background: var(--color-light-blue);
+            color: var(--color-navy);
+            outline: 2px solid var(--color-sky-blue);
+        }
+
+        .login-btn {
+            background: var(--color-sky-blue);
+            color: var(--color-white);
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .login-btn:hover,
+        .login-btn:focus {
+            background: var(--color-navy);
+            transform: translateY(-1px);
+            outline: 2px solid var(--color-gold);
+        }
+
+        /* Menu mobile */
+        .mobile-menu-btn {
+            display: block;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--color-navy);
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-btn:hover,
+        .mobile-menu-btn:focus {
+            background: var(--color-light-blue);
+            outline: 2px solid var(--color-sky-blue);
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--color-white);
+            box-shadow: var(--shadow);
+            padding: 1rem;
+        }
+
+        .mobile-menu.open {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        .mobile-nav-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .mobile-nav-links a {
+            display: block;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: var(--color-text-dark);
+            font-weight: 500;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .mobile-nav-links a:hover,
+        .mobile-nav-links a:focus {
+            background: var(--color-light-blue);
+            color: var(--color-navy);
+        }
+
+        /* === SECTION INTRO === */
+        .intro {
+            text-align: center;
+            padding: 3rem 0 2rem;
+        }
+
+        .intro h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--color-navy);
+            margin-bottom: 1rem;
+        }
+
+        .intro p {
+            font-size: 1.1rem;
+            color: var(--color-text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* === CARDS SECTION === */
+        .cards-section {
+            padding: 2rem 0 4rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--color-white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid transparent;
+        }
+
+        .card:hover,
+        .card:focus {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-color: var(--color-sky-blue);
+            outline: none;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1.5rem;
+            fill: var(--color-sky-blue);
+            transition: var(--transition);
+        }
+
+        .card:hover .card-icon {
+            fill: var(--color-navy);
+            transform: scale(1.1);
+        }
+
+        /* Animation supplémentaire pour la baguette magique */
+        .magic-wand:hover {
+            animation: sparkle 0.6s ease-in-out;
+        }
+
+        @keyframes sparkle {
+
+            0%,
+            100% {
+                filter: brightness(1);
+            }
+
+            50% {
+                filter: brightness(1.3) drop-shadow(0 0 8px var(--color-gold));
+            }
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            color: var(--color-text-light);
+            font-size: 1rem;
+        }
+
+        /* === FOOTER === */
+        .footer {
+            background: var(--color-navy);
+            color: var(--color-white);
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+
+        .footer a {
+            color: var(--color-light-blue);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .footer a:hover,
+        .footer a:focus {
+            color: var(--color-gold);
+            outline: 2px solid var(--color-gold);
+            border-radius: 4px;
+            padding: 2px 4px;
+        }
+
+        /* === RESPONSIVE === */
+        @media (min-width: 768px) {
+            .container {
+                padding: 0 var(--padding-desktop);
+            }
+
+            .header-content {
+                padding: 0 var(--padding-desktop);
+            }
+
+            .nav-desktop {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: none;
+            }
+
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .intro h1 {
+                font-size: 3rem;
+            }
+        }
+
+        /* === ACCESSIBILITÉ === */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+
+
+
+
+        /* grid 3 colonnes */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        @media (min-width: 720px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            min-height: 280px
+        }
+
+        .card h2 {
+            margin: 0 0 10px;
+            font-size: 18px
+        }
+
+        .loader,
+        .empty {
+            color: var(--muted);
+            text-align: center;
+            padding: 16px
+        }
+
+        .table-wrap {
+            overflow-x: auto
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        th,
+        td {
+            padding: 8px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+            white-space: nowrap
+        }
+
+        th {
+            font-size: 13px;
+            color: #374151
+        }
+
+        tbody tr:hover {
+            background: #f9fafb
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header avec navigation -->
+    <header class="header">
+        <div class="header-content">
+            <!-- Logo -->
+            <a href="index.html" class="logo" aria-label="Accueil du club de foot jeunesse">
+                <img src="logo-gjpb.png" alt="Logo GJPB">
+            </a>
+
+            <!-- Navigation desktop -->
+            <nav class="nav-desktop" aria-label="Navigation principale">
+                <ul class="nav-links">
+                    <li><a href="18A.html" aria-label="Équipe 18 ans A">18A</a></li>
+                    <li><a href="17.html" aria-label="Équipe 17 ans">17</a></li>
+                    <li><a href="18B.html" aria-label="Équipe 18 ans B">18B</a></li>
+                </ul>
+                <a href="login.html" class="login-btn" aria-label="Se connecter à votre compte">Se connecter</a>
+            </nav>
+
+            <!-- Bouton menu mobile -->
+            <button class="mobile-menu-btn" aria-label="Ouvrir le menu de navigation" aria-expanded="false"
+                aria-controls="mobile-menu">
+                <span aria-hidden="true">☰</span>
+            </button>
+        </div>
+
+        <!-- Menu mobile -->
+        <nav id="mobile-menu" class="mobile-menu" aria-label="Navigation mobile">
+            <ul class="mobile-nav-links">
+                <li><a href="18A.html" aria-label="Équipe 18 ans A">18A</a></li>
+                <li><a href="17.html" aria-label="Équipe 17 ans">17</a></li>
+                <li><a href="18B.html" aria-label="Équipe 18 ans B">18B</a></li>
+            </ul>
+            <a href="login.html" class="login-btn" aria-label="Se connecter à votre compte">Se connecter</a>
+        </nav>
+    </header>
+
+    <main>
+        <br>
+        <h1 style="text-align: center;">Informations sur les 18B</h1>
+        <br>
+        <p class="sub">Buteurs, passeurs et total (buts + passes) calculés depuis les actions des matchs de l’équipe
+            17.</p>
+
+        <section class="grid">
+            <!-- Buteurs -->
+            <article class="card" id="card-goals">
+                <h2>⚽ Buteurs 17</h2>
+                <div class="loader" id="load-goals">Chargement…</div>
+                <div class="table-wrap" style="display:none" id="wrap-goals">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Joueur</th>
+                                <th>Buts</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-goals"></tbody>
+                    </table>
+                </div>
+                <div class="empty" style="display:none" id="empty-goals">Aucun buteur.</div>
+            </article>
+
+            <!-- Passeurs -->
+            <article class="card" id="card-assists">
+                <h2>🎯 Passeurs 17</h2>
+                <div class="loader" id="load-assists">Chargement…</div>
+                <div class="table-wrap" style="display:none" id="wrap-assists">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Joueur</th>
+                                <th>Passes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-assists"></tbody>
+                    </table>
+                </div>
+                <div class="empty" style="display:none" id="empty-assists">Aucun passeur.</div>
+            </article>
+
+            <!-- Total -->
+            <article class="card" id="card-total">
+                <h2>📊 Total 17 (Buts + Passes)</h2>
+                <div class="loader" id="load-total">Chargement…</div>
+                <div class="table-wrap" style="display:none" id="wrap-total">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Joueur</th>
+                                <th>Total</th>
+                                <th>Buts</th>
+                                <th>Passes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-total"></tbody>
+                    </table>
+                </div>
+                <div class="empty" style="display:none" id="empty-total">Aucune action.</div>
+            </article>
+        </section>
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>
+                <a href="https://www.gjpb44.com/" aria-label="Visiter le site officiel du club">Site du club</a>
+                | © 2025 Club de Foot Jeunesse
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle menu mobile
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            const mobileMenu = document.querySelector('.mobile-menu');
+
+            if (menuBtn && mobileMenu) {
+                menuBtn.addEventListener('click', function () {
+                    const isOpen = mobileMenu.classList.contains('open');
+
+                    if (isOpen) {
+                        mobileMenu.classList.remove('open');
+                        menuBtn.setAttribute('aria-expanded', 'false');
+                        menuBtn.setAttribute('aria-label', 'Ouvrir le menu de navigation');
+                    } else {
+                        mobileMenu.classList.add('open');
+                        menuBtn.setAttribute('aria-expanded', 'true');
+                        menuBtn.setAttribute('aria-label', 'Fermer le menu de navigation');
+                    }
+                });
+            }
+
+            // Fermer le menu mobile au clic sur un lien
+            const mobileLinks = document.querySelectorAll('.mobile-nav-links a, .mobile-menu .login-btn');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function () {
+                    if (mobileMenu.classList.contains('open')) {
+                        mobileMenu.classList.remove('open');
+                        menuBtn.setAttribute('aria-expanded', 'false');
+                        menuBtn.setAttribute('aria-label', 'Ouvrir le menu de navigation');
+                    }
+                });
+            });
+
+            // Fermer le menu mobile avec Escape
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+                    mobileMenu.classList.remove('open');
+                    menuBtn.setAttribute('aria-expanded', 'false');
+                    menuBtn.setAttribute('aria-label', 'Ouvrir le menu de navigation');
+                    menuBtn.focus();
+                }
+            });
+        });
+
+        const SUPABASE_URL = 'https://lgnwgbctaqaeawzjnuqh.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnbndnYmN0YXFhZWF3empudXFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MjYzNjUsImV4cCI6MjA2OTQwMjM2NX0.E0ug5jpRQVh55aq1ewToqol7h7aRPkg7YvwbKpQtVHo';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+
+        function showSet(type, rows) {
+            const ids = {
+                goals: { load: 'load-goals', wrap: 'wrap-goals', empty: 'empty-goals', body: 'tbody-goals' },
+                assists: { load: 'load-assists', wrap: 'wrap-assists', empty: 'empty-assists', body: 'tbody-assists' },
+                total: { load: 'load-total', wrap: 'wrap-total', empty: 'empty-total', body: 'tbody-total' },
+            }[type];
+
+            const loader = document.getElementById(ids.load);
+            const wrap = document.getElementById(ids.wrap);
+            const empty = document.getElementById(ids.empty);
+            const tbody = document.getElementById(ids.body);
+
+            loader.style.display = 'none';
+            if (!rows.length) { empty.style.display = 'block'; wrap.style.display = 'none'; return; }
+
+            wrap.style.display = 'block';
+            tbody.innerHTML = '';
+
+            // Fonction pour récupérer la valeur qui sert à classer selon le tableau
+            const getValue = (r) => (
+                type === 'goals' ? r.buts :
+                    type === 'assists' ? r.passes :
+                        r.total
+            );
+
+            let lastValue = null;
+            let rankCounter = 1;
+
+            rows.forEach((r, i) => {
+                const value = getValue(r);
+
+                // Affiche le rang pour le premier d’un groupe d’égalité, sinon "–"
+                const rankDisplay = (lastValue === null || value !== lastValue) ? rankCounter : '–';
+                lastValue = value;
+
+                let html = '';
+                if (type === 'goals') {
+                    html = `<td>${rankDisplay}</td><td>${r.joueur}</td><td><strong>${r.buts}</strong></td>`;
+                } else if (type === 'assists') {
+                    html = `<td>${rankDisplay}</td><td>${r.joueur}</td><td><strong>${r.passes}</strong></td>`;
+                } else {
+                    html = `<td>${rankDisplay}</td><td>${r.joueur}</td><td><strong>${r.total}</strong></td><td>${r.buts}</td><td>${r.passes}</td>`;
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = html;
+                tbody.appendChild(tr);
+
+                // On incrémente à chaque ligne pour obtenir 1, –, –, 4 …
+                rankCounter++;
+            });
+        }
+
+        async function loadAll() {
+            // 1) Matchs 18A
+            const { data: matchs, error: mErr } = await supabase
+                .from('matchs')
+                .select('id')
+                .eq('equipe', '18B');
+            if (mErr) { document.getElementById('load-goals').textContent = 'Erreur matchs'; return; }
+            const matchIds = (matchs || []).map(m => m.id);
+            if (!matchIds.length) {
+                ['goals', 'assists', 'total'].forEach(t => {
+                    document.getElementById('load-' + t).style.display = 'none';
+                    document.getElementById('empty-' + t).style.display = 'block';
+                });
+                return;
+            }
+
+            // 2) Actions Goals + Assists
+            const [goalsRes, assistsRes] = await Promise.all([
+                supabase.from('actions').select('joueur,match_id,type').eq('type', 'Goal').in('match_id', matchIds),
+                supabase.from('actions').select('joueur,match_id,type').eq('type', 'Assist').in('match_id', matchIds),
+            ]);
+            const goals = goalsRes.data || [];
+            const assists = assistsRes.data || [];
+
+            // 3) Agrégation
+            const agg = {
+                goals: new Map(), // joueur -> { buts, matches:Set }
+                assists: new Map(), // joueur -> { passes, matches:Set }
+            };
+
+            for (const a of goals) {
+                if (!a.joueur) continue;
+                if (!agg.goals.has(a.joueur)) agg.goals.set(a.joueur, { buts: 0, matches: new Set() });
+                const r = agg.goals.get(a.joueur);
+                r.buts += 1; r.matches.add(a.match_id);
+            }
+            for (const a of assists) {
+                if (!a.joueur) continue;
+                if (!agg.assists.has(a.joueur)) agg.assists.set(a.joueur, { passes: 0, matches: new Set() });
+                const r = agg.assists.get(a.joueur);
+                r.passes += 1; r.matches.add(a.match_id);
+            }
+
+            // 4) Lignes triées
+            const rowsGoals = Array.from(agg.goals.entries())
+                .map(([joueur, info]) => ({ joueur, buts: info.buts, matches: info.matches.size }))
+                .sort((a, b) => b.buts - a.buts || a.joueur.localeCompare(b.joueur));
+
+            const rowsAssists = Array.from(agg.assists.entries())
+                .map(([joueur, info]) => ({ joueur, passes: info.passes, matches: info.matches.size }))
+                .sort((a, b) => b.passes - a.passes || a.joueur.localeCompare(b.joueur));
+
+            // total en fusionnant
+            const mapTotal = new Map();
+            rowsGoals.forEach(r => mapTotal.set(r.joueur, { buts: r.buts, passes: 0 }));
+            rowsAssists.forEach(r => {
+                if (!mapTotal.has(r.joueur)) mapTotal.set(r.joueur, { buts: 0, passes: r.passes });
+                else mapTotal.get(r.joueur).passes = r.passes;
+            });
+            const rowsTotal = Array.from(mapTotal.entries())
+                .map(([joueur, info]) => ({ joueur, buts: info.buts, passes: info.passes, total: info.buts + info.passes }))
+                .sort((a, b) => b.total - a.total || a.joueur.localeCompare(b.joueur));
+
+            // 5) Affichage
+            showSet('goals', rowsGoals);
+            showSet('assists', rowsAssists);
+            showSet('total', rowsTotal);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadAll);
+    </script>
+</body>
+
+</html>
