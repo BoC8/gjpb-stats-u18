@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Classement — Tous les buteurs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --color-sky-blue: #6EC1FF;
+            --color-light-blue: #9FD6FF;
+            --color-white: #ffffff;
+            --color-navy: #1e3a5f;
+            --color-gold: #FFD700;
+            --color-text-dark: #2c3e50;
+            --color-text-light: #7f8c8d;
+            --color-success: #10b981;
+            --color-info: #3b82f6;
+            --color-warning: #f59e0b;
+
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --max-width: 1200px;
+            --padding-mobile: 1rem;
+            --padding-desktop: 2rem;
+            --border-radius: 16px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 40px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+            --gradient-primary: linear-gradient(135deg, var(--color-sky-blue) 0%, var(--color-navy) 100%);
+            --gradient-card: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--color-text-dark);
+            background: linear-gradient(135deg, var(--color-white) 0%, var(--color-light-blue) 100%);
+            min-height: 100vh;
+        }
+
+        /* === CONTENEUR PRINCIPAL === */
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 var(--padding-mobile);
+        }
+
+        /* === HEADER (repris de votre template) === */
+        header {
+            background: var(--color-white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            align-items: center;
+            height: 70px;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 var(--padding-mobile);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-navy);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .nav-desktop {
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-text-dark);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus {
+            background: var(--color-light-blue);
+            color: var(--color-navy);
+            outline: 2px solid var(--color-sky-blue);
+        }
+
+        .login-btn {
+            justify-self: end;
+            background: var(--color-sky-blue);
+            color: var(--color-white);
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .login-btn:hover,
+        .login-btn:focus {
+            background: var(--color-navy);
+            transform: translateY(-1px);
+            outline: 2px solid var(--color-gold);
+        }
+
+        /* Menu mobile */
+        .mobile-menu-btn {
+            display: block;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--color-navy);
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-btn:hover,
+        .mobile-menu-btn:focus {
+            background: var(--color-light-blue);
+            outline: 2px solid var(--color-sky-blue);
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--color-white);
+            box-shadow: var(--shadow);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .mobile-menu.open {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        .mobile-nav-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .mobile-nav-links a {
+            display: block;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: var(--color-text-dark);
+            font-weight: 500;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .mobile-nav-links a:hover,
+        .mobile-nav-links a:focus {
+            background: var(--color-light-blue);
+            color: var(--color-navy);
+        }
+
+        /* === PAGE HEADER AMÉLIORÉ === */
+        .page-hero {
+            background: var(--gradient-primary);
+            padding: 4rem 0 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white" opacity="0.1"/><circle cx="80" cy="40" r="1" fill="white" opacity="0.15"/><circle cx="40" cy="80" r="1.5" fill="white" opacity="0.1"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+        }
+
+        .page-hero h1 {
+            color: var(--color-white);
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-hero p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            fill: var(--color-gold);
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+        }
+
+        /* === STATISTIQUES EN TEMPS RÉEL === */
+        .stats-bar {
+            background: var(--color-white);
+            padding: 2rem 0;
+            border-top: 1px solid rgba(110, 193, 255, 0.2);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            background: var(--gradient-card);
+            transition: var(--transition);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-navy);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--color-text-light);
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* === MAIN CONTENT AMÉLIORÉ === */
+        main {
+            max-width: var(--max-width);
+            margin: 2rem auto;
+            padding: 0 var(--padding-mobile);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* === CARDS AMÉLIORÉES === */
+        .card {
+            background: var(--color-white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 0;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(110, 193, 255, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--color-sky-blue);
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            background: var(--gradient-card);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            text-align: center;
+            position: relative;
+        }
+
+        .card-header h2 {
+            font-size: 1.5rem;
+            color: var(--color-navy);
+            margin: 0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .card-icon {
+            width: 24px;
+            height: 24px;
+            fill: var(--color-sky-blue);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* === LOADER AMÉLIORÉ === */
+        .loader {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 3rem 1rem;
+            color: var(--color-text-light);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--color-light-blue);
+            border-top: 3px solid var(--color-sky-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* === TABLEAUX AMÉLIORÉS === */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 12px;
+            background: var(--color-white);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 320px;
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-sky-blue) 100%);
+            color: var(--color-white);
+            padding: 1rem 0.75rem;
+            font-weight: 600;
+            text-align: left;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        th:first-child {
+            border-top-left-radius: 12px;
+        }
+
+        th:last-child {
+            border-top-right-radius: 12px;
+        }
+
+        td {
+            padding: 1rem 0.75rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+
+        tbody tr {
+            transition: var(--transition);
+        }
+
+        tbody tr:hover {
+            background: linear-gradient(135deg, rgba(110, 193, 255, 0.05) 0%, rgba(159, 214, 255, 0.05) 100%);
+            transform: scale(1.01);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* === BADGES POUR LES RANGS === */
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .rank-1 {
+            background: linear-gradient(135deg, var(--color-gold) 0%, #fbbf24 100%);
+            color: var(--color-white);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+        }
+
+        .rank-2 {
+            background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+            color: var(--color-white);
+            box-shadow: 0 4px 12px rgba(156, 163, 175, 0.3);
+        }
+
+        .rank-3 {
+            background: linear-gradient(135deg, #cd7c2f 0%, #92400e 100%);
+            color: var(--color-white);
+            box-shadow: 0 4px 12px rgba(205, 124, 47, 0.3);
+        }
+
+        .rank-other {
+            background: var(--color-light-blue);
+            color: var(--color-navy);
+        }
+
+        /* === EMPTY STATE AMÉLIORÉ === */
+        .empty {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--color-text-light);
+        }
+
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1rem;
+            fill: var(--color-light-blue);
+        }
+
+        /* === FOOTER === */
+        .footer {
+            background: var(--color-navy);
+            color: var(--color-white);
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer a {
+            color: var(--color-light-blue);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .footer a:hover,
+        .footer a:focus {
+            color: var(--color-gold);
+            outline: 2px solid var(--color-gold);
+            border-radius: 4px;
+            padding: 2px 4px;
+        }
+
+        /* === RESPONSIVE === */
+        @media (min-width: 768px) {
+            .container {
+                padding: 0 var(--padding-desktop);
+            }
+
+            .header-content {
+                padding: 0 var(--padding-desktop);
+            }
+
+            .nav-desktop {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: none;
+            }
+
+            main {
+                padding: 0 var(--padding-desktop);
+            }
+        }
+
+        /* === ACCESSIBILITÉ === */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header avec navigation -->
+    <header class="header">
+        <div class="header-content">
+            <!-- Logo -->
+            <a href="index.html" class="logo" aria-label="Accueil du club de foot jeunesse">
+                <img src="logo-gjpb.png" alt="Logo GJPB">
+            </a>
+
+            <!-- Navigation desktop -->
+            <nav class="nav-desktop" aria-label="Navigation principale">
+                <ul class="nav-links">
+                    <li><a href="18A.html" aria-label="Équipe 18 ans A">18A</a></li>
+                    <li><a href="17.html" aria-label="Équipe 17 ans">17</a></li>
+                    <li><a href="18B.html" aria-label="Équipe 18 ans B">18B</a></li>
+                </ul>
+                <a href="login.html" class="login-btn" aria-label="Se connecter à votre compte">Se connecter</a>
+
+            </nav>
+
+            <!-- Bouton menu mobile -->
+            <button class="mobile-menu-btn" aria-label="Ouvrir le menu de navigation" aria-expanded="false"
+                aria-controls="mobile-menu">
+                <span aria-hidden="true">☰</span>
+            </button>
+        </div>
+
+        <!-- Menu mobile -->
+        <nav id="mobile-menu" class="mobile-menu" aria-label="Navigation mobile">
+            <ul class="mobile-nav-links">
+                <li><a href="18A.html" aria-label="Équipe 18 ans A">18A</a></li>
+                <li><a href="17.html" aria-label="Équipe 17 ans">17</a></li>
+                <li><a href="18B.html" aria-label="Équipe 18 ans B">18B</a></li>
+            </ul>
+            <a href="login.html" class="login-btn" aria-label="Se connecter à votre compte">Se connecter</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="page-hero">
+        <div class="container">
+            <!-- Icône cible comme dans l'accueil -->
+            <svg class="hero-icon" viewBox="0 0 100 100" aria-hidden="true">
+                <circle cx="50" cy="50" r="45" fill="#dc3545" stroke="#333" stroke-width="2" />
+                <circle cx="50" cy="50" r="35" fill="white" stroke="#333" stroke-width="1.5" />
+                <circle cx="50" cy="50" r="25" fill="#dc3545" stroke="#333" stroke-width="1.5" />
+                <circle cx="50" cy="50" r="15" fill="white" stroke="#333" stroke-width="1.5" />
+                <circle cx="50" cy="50" r="8" fill="var(--color-gold)" stroke="#333" stroke-width="1" />
+            </svg>
+
+            <h1>Classement des Buteurs</h1>
+            <p>Découvrez nos meilleurs buteurs et nos joueurs les plus décisifs toutes équipes confondues</p>
+        </div>
+    </section>
+
+    <!-- Statistiques en temps réel -->
+    <section class="stats-bar">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" id="total-goals">--</span>
+                    <span class="stat-label">Buts marqués</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="total-players">--</span>
+                    <span class="stat-label">Buteurs actifs</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="total-assists">--</span>
+                    <span class="stat-label">Passes décisives</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="total-passers">--</span>
+                    <span class="stat-label">Passeurs actifs</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main>
+        <div class="grid">
+            <!-- Buteurs -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        Top Buteurs
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div id="loader-goals" class="loader">
+                        <div class="spinner"></div>
+                        <div>Chargement des statistiques...</div>
+                    </div>
+                    <div class="table-wrap" id="wrap-goals" style="display:none">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rang</th>
+                                    <th>Joueur</th>
+                                    <th>Buts</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-goals"></tbody>
+                        </table>
+                    </div>
+                    <div id="empty-goals" class="empty" style="display:none">
+                        <svg class="empty-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        </svg>
+                        <div>Aucun but enregistré pour le moment</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Combiné -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z" />
+                        </svg>
+                        Buts + Passes
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div id="loader-combo" class="loader">
+                        <div class="spinner"></div>
+                        <div>Chargement des statistiques...</div>
+                    </div>
+                    <div class="table-wrap" id="wrap-combo" style="display:none">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rang</th>
+                                    <th>Joueur</th>
+                                    <th>Total</th>
+                                    <th>Buts</th>
+                                    <th>Passes</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-combo"></tbody>
+                        </table>
+                    </div>
+                    <div id="empty-combo" class="empty" style="display:none">
+                        <svg class="empty-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        </svg>
+                        <div>Aucune donnée disponible</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>
+                <a href="https://www.gjpb44.com/" aria-label="Visiter le site officiel du club">Site du club</a>
+                | © 2025 Club de Foot Jeunesse
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle menu mobile
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            const mobileMenu = document.querySelector('.mobile-menu');
+
+            if (menuBtn && mobileMenu) {
+                menuBtn.addEventListener('click', function () {
+                    const isOpen = mobileMenu.classList.contains('open');
+
+                    if (isOpen) {
+                        mobileMenu.classList.remove('open');
+                        menuBtn.setAttribute('aria-expanded', 'false');
+                        menuBtn.setAttribute('aria-label', 'Ouvrir le menu de navigation');
+                    } else {
+                        mobileMenu.classList.add('open');
+                        menuBtn.setAttribute('aria-expanded', 'true');
+                        menuBtn.setAttribute('aria-label', 'Fermer le menu de navigation');
+                    }
+                });
+            }
+
+            // Fermer le menu mobile au clic sur un lien
+            const mobileLinks = document.querySelectorAll('.mobile-nav-links a, .mobile-menu .login-btn');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function () {
+                    if (mobileMenu.classList.contains('open')) {
+                        mobileMenu.classList.remove('open');
+                        menuBtn.setAttribute('aria-expanded', 'false');
+                        menuBtn.setAttribute('aria-label', 'Ouvrir le menu de navigation');
+                    }
+                });
+            });
+
+            // Fermer le menu mobile avec Escape
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+                    mobileMenu.classList.remove('open');
+                    menuBtn.setAttribute('aria-expanded', 'false');
+                    menuBtn.setAttribute('aria-label', 'Ouvrir le menu de navigation');
+                    menuBtn.focus();
+                }
+            });
+        });
+
+        // Configuration Supabase
+        const SUPABASE_URL = 'https://lgnwgbctaqaeawzjnuqh.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnbndnYmN0YXFhZWF3empudXFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MjYzNjUsImV4cCI6MjA2OTQwMjM2NX0.E0ug5jpRQVh55aq1ewToqol7h7aRPkg7YvwbKpQtVHo'
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+
+        // Variables globales pour les statistiques
+        let totalGoals = 0;
+        let totalPlayers = 0;
+        let totalAssists = 0;
+        let totalPassers = 0;
+
+        function updateStats() {
+            document.getElementById('total-goals').textContent = totalGoals;
+            document.getElementById('total-players').textContent = totalPlayers;
+            document.getElementById('total-assists').textContent = totalAssists;
+            document.getElementById('total-passers').textContent = totalPassers;
+        }
+
+        function renderWithRanking(rows, containerId, compareKey = 'buts', extraCols = '') {
+            const tbody = document.getElementById(containerId);
+            tbody.innerHTML = '';
+            let lastVal = null;
+            let rank = 1;
+
+            rows.forEach((r, index) => {
+                const same = lastVal !== null && r[compareKey] === lastVal;
+                const displayRank = same ? '–' : rank;
+                lastVal = r[compareKey];
+
+                // Créer badge pour le rang
+                let rankBadge = '';
+                if (displayRank !== '–') {
+                    const rankClass = displayRank === 1 ? 'rank-1' : displayRank === 2 ? 'rank-2' : displayRank === 3 ? 'rank-3' : 'rank-other';
+                    rankBadge = `<span class="rank-badge ${rankClass}">${displayRank}</span>`;
+                } else {
+                    rankBadge = `<span class="rank-badge rank-other">${displayRank}</span>`;
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${rankBadge}</td><td><strong>${r.joueur}</strong></td>` + extraCols(r);
+                tbody.appendChild(tr);
+                rank++;
+            });
+        }
+
+        async function loadGoals() {
+            try {
+                const { data, error } = await supabase.from('actions').select('joueur, match_id').eq('type', 'Goal');
+                if (error) {
+                    console.error('Erreur lors du chargement des buts:', error);
+                    return;
+                }
+
+                const stats = new Map();
+                data.forEach(a => {
+                    if (!stats.has(a.joueur)) stats.set(a.joueur, { buts: 0, matches: new Set() });
+                    stats.get(a.joueur).buts++;
+                    stats.get(a.joueur).matches.add(a.match_id);
+                });
+
+                const rows = Array.from(stats, ([joueur, s]) => ({
+                    joueur,
+                    buts: s.buts,
+                    matches: s.matches.size
+                })).sort((a, b) => b.buts - a.buts || a.joueur.localeCompare(b.joueur));
+
+                // Mettre à jour les statistiques globales
+                totalGoals = data.length;
+                totalPlayers = rows.length;
+                updateStats();
+
+                document.getElementById('loader-goals').style.display = 'none';
+                if (!rows.length) {
+                    document.getElementById('empty-goals').style.display = 'block';
+                    return;
+                }
+
+                document.getElementById('wrap-goals').style.display = 'block';
+                renderWithRanking(rows, 'tbody-goals', 'buts', r => `<td><strong style="color: var(--color-success); font-size: 1.1rem;">${r.buts}</strong></td>`);
+
+                // Animation d'apparition progressive des lignes
+                const tableRows = document.querySelectorAll('#tbody-goals tr');
+                tableRows.forEach((row, index) => {
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        row.style.transition = 'all 0.5s ease';
+                        row.style.opacity = '1';
+                        row.style.transform = 'translateY(0)';
+                    }, index * 100);
+                });
+
+            } catch (error) {
+                console.error('Erreur inattendue:', error);
+                document.getElementById('loader-goals').style.display = 'none';
+                document.getElementById('empty-goals').style.display = 'block';
+            }
+        }
+
+        async function loadCombo() {
+            try {
+                const { data, error } = await supabase.from('actions').select('joueur,type');
+                if (error) {
+                    console.error('Erreur lors du chargement des stats combinées:', error);
+                    return;
+                }
+
+                const stats = new Map();
+                data.forEach(a => {
+                    if (!stats.has(a.joueur)) stats.set(a.joueur, { buts: 0, passes: 0 });
+                    if (a.type === 'Goal') stats.get(a.joueur).buts++;
+                    if (a.type === 'Assist') stats.get(a.joueur).passes++;
+                });
+
+                const rows = Array.from(stats, ([joueur, s]) => ({
+                    joueur,
+                    buts: s.buts,
+                    passes: s.passes,
+                    total: s.buts + s.passes
+                })).sort((a, b) => b.total - a.total || a.joueur.localeCompare(b.joueur));
+
+                // Mettre à jour les statistiques des passes
+                totalAssists = data.filter(a => a.type === 'Assist').length;
+                totalPassers = rows.filter(r => r.passes > 0).length;
+                updateStats();
+
+                document.getElementById('loader-combo').style.display = 'none';
+                if (!rows.length) {
+                    document.getElementById('empty-combo').style.display = 'block';
+                    return;
+                }
+
+                document.getElementById('wrap-combo').style.display = 'block';
+                renderWithRanking(rows, 'tbody-combo', 'total', r => `
+                    <td><strong style="color: var(--color-info); font-size: 1.1rem;">${r.total}</strong></td>
+                    <td style="color: var(--color-success);">${r.buts}</td>
+                    <td style="color: var(--color-warning);">${r.passes}</td>
+                `);
+
+                // Animation d'apparition progressive des lignes
+                const tableRows = document.querySelectorAll('#tbody-combo tr');
+                tableRows.forEach((row, index) => {
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        row.style.transition = 'all 0.5s ease';
+                        row.style.opacity = '1';
+                        row.style.transform = 'translateY(0)';
+                    }, index * 100);
+                });
+
+            } catch (error) {
+                console.error('Erreur inattendue:', error);
+                document.getElementById('loader-combo').style.display = 'none';
+                document.getElementById('empty-combo').style.display = 'block';
+            }
+        }
+
+        // Animation de compteur pour les statistiques
+        function animateCounter(element, finalValue, duration = 2000) {
+            let startValue = 0;
+            const increment = finalValue / (duration / 16);
+
+            const counter = setInterval(() => {
+                startValue += increment;
+                if (startValue >= finalValue) {
+                    element.textContent = finalValue;
+                    clearInterval(counter);
+                } else {
+                    element.textContent = Math.floor(startValue);
+                }
+            }, 16);
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            loadGoals();
+            loadCombo();
+
+            // Observer pour détecter quand les stats apparaissent à l'écran
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counters = entry.target.querySelectorAll('.stat-number');
+                        counters.forEach(counter => {
+                            const finalValue = parseInt(counter.textContent);
+                            if (!isNaN(finalValue) && finalValue > 0) {
+                                animateCounter(counter, finalValue);
+                            }
+                        });
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            });
+
+            // Démarrer l'observation une fois les données chargées
+            setTimeout(() => {
+                const statsBar = document.querySelector('.stats-bar');
+                if (statsBar) {
+                    statsObserver.observe(statsBar);
+                }
+            }, 3000);
+        });
+    </script>
+</body>
+
+</html>
