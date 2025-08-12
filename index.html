@@ -7,7 +7,9 @@
     <title>Club de Foot Jeunesse - Accueil</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
     <style>
         /* === VARIABLES CSS === */
@@ -19,14 +21,19 @@
             --color-gold: #FFD700;
             --color-text-dark: #2c3e50;
             --color-text-light: #7f8c8d;
+            --color-success: #10b981;
+            --color-info: #3b82f6;
 
             --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            --max-width: 1100px;
+            --max-width: 1200px;
             --padding-mobile: 1rem;
             --padding-desktop: 2rem;
-            --border-radius: 12px;
+            --border-radius: 16px;
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 40px rgba(0, 0, 0, 0.15);
             --transition: all 0.3s ease;
+            --gradient-primary: linear-gradient(135deg, var(--color-sky-blue) 0%, var(--color-navy) 100%);
+            --gradient-card: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
         }
 
         /* === RESET & BASE === */
@@ -42,6 +49,7 @@
             color: var(--color-text-dark);
             background: linear-gradient(135deg, var(--color-white) 0%, var(--color-light-blue) 100%);
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* === CONTENEUR PRINCIPAL === */
@@ -52,21 +60,18 @@
         }
 
         /* === HEADER === */
-        .header {
+        header {
             background: var(--color-white);
             box-shadow: var(--shadow);
             position: sticky;
             top: 0;
             z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
 
         .header-content {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
             align-items: center;
-            justify-content: space-between;
             height: 70px;
             max-width: var(--max-width);
             margin: 0 auto;
@@ -92,7 +97,7 @@
         /* Navigation desktop */
         .nav-desktop {
             display: none;
-            gap: 2rem;
+            justify-content: center;
             align-items: center;
         }
 
@@ -100,7 +105,6 @@
             display: flex;
             gap: 20px;
             justify-content: center;
-            flex: 1;
             list-style: none;
         }
 
@@ -122,6 +126,7 @@
         }
 
         .login-btn {
+            justify-self: end;
             background: var(--color-sky-blue);
             color: var(--color-white);
             padding: 0.75rem 1.5rem;
@@ -154,6 +159,7 @@
         .mobile-menu-btn:hover,
         .mobile-menu-btn:focus {
             background: var(--color-light-blue);
+            transform: rotate(90deg);
             outline: 2px solid var(--color-sky-blue);
         }
 
@@ -166,6 +172,7 @@
             background: var(--color-white);
             box-shadow: var(--shadow);
             padding: 1rem;
+            text-align: center;
         }
 
         .mobile-menu.open {
@@ -176,7 +183,7 @@
         @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(10px);
             }
 
             to {
@@ -202,6 +209,7 @@
             font-weight: 500;
             border-radius: 6px;
             transition: var(--transition);
+            position: relative;
         }
 
         .mobile-nav-links a:hover,
@@ -210,99 +218,313 @@
             color: var(--color-navy);
         }
 
-        /* === SECTION INTRO === */
-        .intro {
+        /* === HERO SECTION AMÉLIORÉE === */
+        .hero {
+            background: var(--gradient-primary);
+            padding: 6rem 0 4rem;
             text-align: center;
-            padding: 3rem 0 2rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .intro h1 {
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: var(--color-navy);
-            margin-bottom: 1rem;
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white" opacity="0.1"/><circle cx="80" cy="40" r="1" fill="white" opacity="0.15"/><circle cx="40" cy="80" r="1.5" fill="white" opacity="0.1"/><circle cx="60" cy="60" r="1" fill="white" opacity="0.2"/><circle cx="30" cy="70" r="1.2" fill="white" opacity="0.12"/></svg>');
+            animation: float 20s ease-in-out infinite;
         }
 
-        .intro p {
-            font-size: 1.1rem;
-            color: var(--color-text-light);
-            max-width: 600px;
-            margin: 0 auto;
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            33% {
+                transform: translateY(-15px) rotate(120deg);
+            }
+
+            66% {
+                transform: translateY(-10px) rotate(240deg);
+            }
         }
 
-        /* === CARDS SECTION === */
-        .cards-section {
-            padding: 2rem 0 4rem;
+        .hero-content {
+            position: relative;
+            z-index: 2;
         }
 
-        .cards-grid {
+        .hero h1 {
+            color: var(--color-white);
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% {
+                text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            }
+
+            100% {
+                text-shadow: 0 4px 20px rgba(255, 215, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        .hero p {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-emoji {
+            font-size: 4rem;
+            display: inline-block;
+            animation: bounce 2s ease-in-out infinite;
+            margin: 0 0.5rem;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-10px) rotate(10deg);
+            }
+
+            60% {
+                transform: translateY(-5px) rotate(-5deg);
+            }
+        }
+
+        /* === STATISTIQUES RAPIDES === */
+        .quick-stats {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            margin-top: 2rem;
+            border-radius: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stats-grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(4, 1fr);
             gap: 2rem;
             max-width: 800px;
             margin: 0 auto;
         }
 
+        .stat-item {
+            text-align: center;
+            color: var(--color-white);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* === CARDS SECTION AMÉLIORÉE === */
+        .cards-section {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--color-navy);
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
         .card {
-            background: var(--color-white);
+            background: var(--gradient-card);
             border-radius: var(--border-radius);
-            padding: 2rem;
+            padding: 3rem 2rem;
             text-align: center;
             box-shadow: var(--shadow);
             transition: var(--transition);
             text-decoration: none;
             color: inherit;
             border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: var(--transition);
+        }
+
+        .card:hover::before {
+            left: 100%;
+            transition: left 0.6s ease;
         }
 
         .card:hover,
         .card:focus {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-hover);
             border-color: var(--color-sky-blue);
             outline: none;
         }
 
         .card-icon {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 1.5rem;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
             fill: var(--color-sky-blue);
             transition: var(--transition);
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
         }
 
         .card:hover .card-icon {
             fill: var(--color-navy);
-            transform: scale(1.1);
+            transform: scale(1.15) rotate(5deg);
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
         }
 
-        /* Animation supplémentaire pour la baguette magique */
-        .magic-wand:hover {
-            animation: sparkle 0.6s ease-in-out;
+        /* Animations spéciales pour chaque icône */
+        .target-icon:hover {
+            animation: targetPulse 0.8s ease-in-out;
         }
 
-        @keyframes sparkle {
+        @keyframes targetPulse {
 
             0%,
             100% {
-                filter: brightness(1);
+                transform: scale(1.15) rotate(5deg);
             }
 
             50% {
-                filter: brightness(1.3) drop-shadow(0 0 8px var(--color-gold));
+                transform: scale(1.25) rotate(5deg);
+            }
+        }
+
+        .magic-wand:hover {
+            animation: sparkleWave 1s ease-in-out;
+        }
+
+        @keyframes sparkleWave {
+
+            0%,
+            100% {
+                transform: scale(1.15) rotate(5deg);
+                filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+            }
+
+            50% {
+                transform: scale(1.2) rotate(15deg);
+                filter: drop-shadow(0 8px 20px rgba(255, 215, 0, 0.4));
             }
         }
 
         .card h3 {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 600;
             color: var(--color-navy);
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+
+        .card:hover h3 {
+            color: var(--color-sky-blue);
         }
 
         .card p {
             color: var(--color-text-light);
-            font-size: 1rem;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            transition: var(--transition);
+        }
+
+        .card:hover p {
+            color: var(--color-text-dark);
+        }
+
+        /* Badge "Nouveau" */
+        .card-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--gradient-primary);
+            color: var(--color-white);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.9;
+            }
         }
 
         /* === FOOTER === */
@@ -310,8 +532,25 @@
             background: var(--color-navy);
             color: var(--color-white);
             text-align: center;
-            padding: 2rem 0;
+            padding: 3rem 0;
             margin-top: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 2;
         }
 
         .footer a {
@@ -319,18 +558,43 @@
             text-decoration: none;
             font-weight: 500;
             transition: var(--transition);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
         }
 
         .footer a:hover,
         .footer a:focus {
             color: var(--color-gold);
-            outline: 2px solid var(--color-gold);
-            border-radius: 4px;
-            padding: 2px 4px;
+            background: rgba(255, 215, 0, 0.1);
+            transform: translateY(-2px);
+            outline: none;
         }
 
         /* === RESPONSIVE === */
-        @media (min-width: 768px) {
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .card {
+                padding: 2rem 1.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (min-width: 769px) {
             .container {
                 padding: 0 var(--padding-desktop);
             }
@@ -351,8 +615,8 @@
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .intro h1 {
-                font-size: 3rem;
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
             }
         }
 
@@ -376,6 +640,28 @@
             white-space: nowrap;
             border: 0;
         }
+
+        /* === LOADING ANIMATION === */
+        .card {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -396,6 +682,7 @@
                     <li><a href="18B.html" aria-label="Équipe 18 ans B">18B</a></li>
                 </ul>
                 <a href="login.html" class="login-btn" aria-label="Se connecter à votre compte">Se connecter</a>
+
             </nav>
 
             <!-- Bouton menu mobile -->
@@ -416,22 +703,56 @@
         </nav>
     </header>
 
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>
+                    <span class="hero-emoji">⚽</span>
+                    U18's Stats
+                    <span class="hero-emoji">⚽</span>
+                </h1>
+                <p>
+                    Plongez dans l'univers des performances de nos jeunes talents U18 et découvrez leurs statistiques
+                    en temps réel tout au long de cette saison passionnante !
+                </p>
+
+                <!-- Statistiques rapides -->
+                <div class="quick-stats">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-number" id="stat-goals">0</span>
+                            <span class="stat-label">Buts marqués</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="stat-assists">0</span>
+                            <span class="stat-label">Passes décisives</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="stat-matches">0</span>
+                            <span class="stat-label">Matchs joués</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="stat-teams">0</span>
+                            <span class="stat-label">Équipes actives</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Contenu principal -->
     <main class="container">
-        <!-- Section intro -->
-        <section class="intro">
-            <h1>⚽ U18's stats ⚽</h1>
-            <p>On te dévoile les performances des jeunes de la catégorie u18 et leurs statistiques tout au long de la
-                saison.
-            </p>
-        </section>
-
         <!-- Section cards -->
         <section class="cards-section">
+            <h2 class="section-title">Explorez les statistiques</h2>
+
             <div class="cards-grid">
                 <!-- Card Buteurs -->
                 <a href="buteurs.html" class="card" aria-label="Consulter le classement des buteurs">
-                    <svg class="card-icon" viewBox="0 0 100 100" aria-hidden="true">
+                    <div class="card-badge">Hot 🔥</div>
+                    <svg class="card-icon target-icon" viewBox="0 0 100 100" aria-hidden="true">
                         <!-- Cible avec cercles concentriques alternant rouge et blanc -->
                         <circle cx="50" cy="50" r="45" fill="#dc3545" stroke="#333" stroke-width="2" />
                         <circle cx="50" cy="50" r="35" fill="white" stroke="#333" stroke-width="1.5" />
@@ -439,12 +760,14 @@
                         <circle cx="50" cy="50" r="15" fill="white" stroke="#333" stroke-width="1.5" />
                         <circle cx="50" cy="50" r="8" fill="var(--color-gold)" stroke="#333" stroke-width="1" />
                     </svg>
-                    <h3>Classement des buteurs</h3>
-                    <p>Découvrez qui mène le classement des meilleurs buteurs de nos équipes.</p>
+                    <h3>Classement des meilleurs buteurs</h3>
+                    <p>Découvrez qui domine le terrain et mène le classement des buteurs. Des statistiques détaillées,
+                        des performances exceptionnelles et la course au titre de meilleur buteur !</p>
                 </a>
 
                 <!-- Card Passeurs -->
                 <a href="passeurs.html" class="card" aria-label="Consulter le classement des passeurs">
+                    <div class="card-badge">Nouveau ✨</div>
                     <svg class="card-icon magic-wand" viewBox="0 0 100 100" aria-hidden="true">
                         <!-- Baguette magique -->
                         <line x1="20" y1="80" x2="75" y2="25" stroke="currentColor" stroke-width="4"
@@ -477,9 +800,9 @@
                                 begin="1.2s" />
                         </circle>
                     </svg>
-                    <h3>Classement des passeurs</h3>
-                    <p>Consultez les statistiques des joueurs qui offrent le plus de passes décisives.
-                    </p>
+                    <h3>Classement des passeurs décisifs</h3>
+                    <p>Les architectes du jeu ! Explorez les statistiques des joueurs qui créent les opportunités et
+                        transforment les matchs avec leurs passes décisives magistrales.</p>
                 </a>
             </div>
         </section>
@@ -488,10 +811,12 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>
-                <a href="https://www.gjpb44.com/" aria-label="Visiter le site officiel du club">Site du club</a>
-                | © 2025 Club de Foot Jeunesse
-            </p>
+            <div class="footer-content">
+                <p>
+                    <a href="https://www.gjpb44.com/" aria-label="Visiter le site officiel du club">🌐 Site du club</a>
+                    | © 2025 Club de Foot Jeunesse | Fait avec ❤️ pour nos champions
+                </p>
+            </div>
         </div>
     </footer>
 
@@ -516,6 +841,7 @@
                     }
                 });
             }
+            loadQuickStats();
 
             // Fermer le menu mobile au clic sur un lien
             const mobileLinks = document.querySelectorAll('.mobile-nav-links a, .mobile-menu .login-btn');
@@ -538,7 +864,119 @@
                     menuBtn.focus();
                 }
             });
+
+            // Animation des compteurs au scroll
+            const observerOptions = {
+                threshold: 0.5,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const animateCounter = (element, finalValue, duration = 2000) => {
+                let startValue = 0;
+                const increment = finalValue / (duration / 16);
+
+                const counter = setInterval(() => {
+                    startValue += increment;
+                    if (startValue >= finalValue) {
+                        element.textContent = finalValue;
+                        clearInterval(counter);
+                    } else {
+                        element.textContent = Math.floor(startValue);
+                    }
+                }, 16);
+            };
+
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const statNumbers = entry.target.querySelectorAll('.stat-number');
+                        statNumbers.forEach(stat => {
+                            const finalValue = parseInt(stat.textContent);
+                            stat.textContent = '0';
+                            setTimeout(() => {
+                                animateCounter(stat, finalValue, 1500);
+                            }, 200);
+                        });
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const quickStats = document.querySelector('.quick-stats');
+            if (quickStats) {
+                statsObserver.observe(quickStats);
+            }
         });
+
+        // === Supabase config ===
+        const SUPABASE_URL = 'https://lgnwgbctaqaeawzjnuqh.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnbndnYmN0YXFhZWF3empudXFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MjYzNjUsImV4cCI6MjA2OTQwMjM2NX0.E0ug5jpRQVh55aq1ewToqol7h7aRPkg7YvwbKpQtVHo'
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+
+        // Récupère et remplit les stats:
+        async function loadQuickStats() {
+            // 1) Buts marqués = nb de lignes dans actions(type='Goal')
+            const { count: goalsCount, error: goalsErr } = await supabase
+                .from('actions')
+                .select('id', { count: 'exact', head: true })
+                .eq('type', 'Goal');
+
+            // 2) Passes décisives = nb de lignes dans actions(type='Assist')
+            const { count: assistsCount, error: assistsErr } = await supabase
+                .from('actions')
+                .select('id', { count: 'exact', head: true })
+                .eq('type', 'Assist');
+
+            // 3) Matchs joués = nb de lignes dans matchs
+            const { count: matchesCount, error: matchesErr } = await supabase
+                .from('matchs')
+                .select('id', { count: 'exact', head: true });
+
+            // 4) Équipes actives = nb de valeurs distinctes de 'equipe' dans matchs
+            // (on lit les équipes puis on déduplique côté client)
+            const { data: teamsRows, error: teamsErr } = await supabase
+                .from('matchs')
+                .select('equipe');
+
+            if (goalsErr || assistsErr || matchesErr || teamsErr) {
+                console.error({ goalsErr, assistsErr, matchesErr, teamsErr });
+                return;
+            }
+
+            const teamsActive = new Set((teamsRows || []).map(r => r.equipe)).size;
+
+            // Alimente le DOM (ces spans existent après l’étape 1)
+            document.getElementById('stat-goals').textContent = goalsCount ?? 0;
+            document.getElementById('stat-assists').textContent = assistsCount ?? 0;
+            document.getElementById('stat-matches').textContent = matchesCount ?? 0;
+            document.getElementById('stat-teams').textContent = teamsActive;
+            startCounters();
+        }
+
+        let countersStarted = false;
+        function startCounters() {
+            if (countersStarted) return; // ne lance qu'une fois
+            countersStarted = true;
+
+            const duration = 800; // ms
+            document.querySelectorAll('.stat-number').forEach(el => {
+                const target = Number(el.dataset.target || el.textContent || 0);
+                const startVal = 0;
+                const startTs = performance.now();
+
+                function tick(now) {
+                    const p = Math.min((now - startTs) / duration, 1);
+                    const val = Math.round(startVal + (target - startVal) * p);
+                    el.textContent = val;
+                    if (p < 1) requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
+            });
+        }
+
+
     </script>
 </body>
 
