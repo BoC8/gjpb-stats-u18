@@ -99,11 +99,17 @@
             display: none;
             justify-content: center;
             align-items: center;
+            gap: 70px;
+        }
+
+        .login-desktop {
+            justify-self: end;
+            display: none;
         }
 
         .nav-links {
             display: flex;
-            gap: 20px;
+            gap: 50px;
             justify-content: center;
             list-style: none;
         }
@@ -218,6 +224,10 @@
             color: var(--color-navy);
         }
 
+        /* ========================================================================================================= */
+
+        /* === MAIN === */
+
         /* === HERO SECTION AMÉLIORÉE === */
         .hero {
             background: var(--gradient-primary);
@@ -287,7 +297,7 @@
         }
 
         .hero-emoji {
-            font-size: 4rem;
+            font-size: 3rem;
             display: inline-block;
             animation: bounce 2s ease-in-out infinite;
             margin: 0 0.5rem;
@@ -527,6 +537,30 @@
             }
         }
 
+        /* === LOADING ANIMATION === */
+        .card {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ================================================================================================== */
+
         /* === FOOTER === */
         .footer {
             background: var(--color-navy);
@@ -592,6 +626,10 @@
             .section-title {
                 font-size: 2rem;
             }
+
+            .login-desktop {
+                display: none;
+            }
         }
 
         @media (min-width: 769px) {
@@ -605,6 +643,10 @@
 
             .nav-desktop {
                 display: flex;
+            }
+
+            .login-desktop {
+                display: inline-flex;
             }
 
             .mobile-menu-btn {
@@ -640,28 +682,6 @@
             white-space: nowrap;
             border: 0;
         }
-
-        /* === LOADING ANIMATION === */
-        .card {
-            opacity: 0;
-            animation: fadeInUp 0.6s ease forwards;
-        }
-
-        .card:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
     </style>
 </head>
 
@@ -681,9 +701,9 @@
                     <li><a href="17.html" aria-label="Équipe 17 ans">17</a></li>
                     <li><a href="18B.html" aria-label="Équipe 18 ans B">18B</a></li>
                 </ul>
-                <a href="login.html" class="login-btn" aria-label="Se connecter à votre compte">Se connecter</a>
-
             </nav>
+            <a href="login.html" class="login-btn login-desktop" aria-label="Se connecter à votre compte">Se
+                connecter</a>
 
             <!-- Bouton menu mobile -->
             <button class="mobile-menu-btn" aria-label="Ouvrir le menu de navigation" aria-expanded="false"
@@ -742,7 +762,6 @@
         </div>
     </section>
 
-    <!-- Contenu principal -->
     <main class="container">
         <!-- Section cards -->
         <section class="cards-section">
@@ -751,7 +770,7 @@
             <div class="cards-grid">
                 <!-- Card Buteurs -->
                 <a href="buteurs.html" class="card" aria-label="Consulter le classement des buteurs">
-                    <div class="card-badge">Hot 🔥</div>
+                    <div class="card-badge">NEW 🔥</div>
                     <svg class="card-icon target-icon" viewBox="0 0 100 100" aria-hidden="true">
                         <!-- Cible avec cercles concentriques alternant rouge et blanc -->
                         <circle cx="50" cy="50" r="45" fill="#dc3545" stroke="#333" stroke-width="2" />
@@ -767,7 +786,7 @@
 
                 <!-- Card Passeurs -->
                 <a href="passeurs.html" class="card" aria-label="Consulter le classement des passeurs">
-                    <div class="card-badge">Nouveau ✨</div>
+                    <div class="card-badge">NEW 🔥</div>
                     <svg class="card-icon magic-wand" viewBox="0 0 100 100" aria-hidden="true">
                         <!-- Baguette magique -->
                         <line x1="20" y1="80" x2="75" y2="25" stroke="currentColor" stroke-width="4"
@@ -813,8 +832,8 @@
         <div class="container">
             <div class="footer-content">
                 <p>
-                    <a href="https://www.gjpb44.com/" aria-label="Visiter le site officiel du club">🌐 Site du club</a>
-                    | © 2025 Club de Foot Jeunesse | Fait avec ❤️ pour nos champions
+                    <a href="https://www.gjpb44.com/" aria-label="Visiter le site officiel du club">🌐 Site GJPB</a>
+                    | © 2025 - By Clément Bolomey
                 </p>
             </div>
         </div>
@@ -975,7 +994,6 @@
                 requestAnimationFrame(tick);
             });
         }
-
 
     </script>
 </body>
