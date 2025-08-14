@@ -633,18 +633,10 @@
         }
 
         .result-item {
-            /* background: rgba(255, 255, 255, 0.8);
-            padding: 1rem;
-            border-radius: 8px;
-            border-left: 4px solid var(--color-sky-blue);
-            display: flex;
-            justify-content: space-between;
-            align-items: center; */
             display: grid;
-            grid-template-columns: auto 1fr 84px 1fr;
-            /* ajuste 84px si besoin */
+            grid-template-columns: auto 1fr auto 1fr;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             padding: .55rem .8rem;
             border-bottom: 1px solid #e5e7eb;
             border-radius: 10px;
@@ -656,11 +648,8 @@
             flex-direction: column;
             justify-content: center;
             line-height: 1.05;
-            /* très proche */
             gap: 2px;
-            /* très proche */
             min-width: 90px;
-            /* évite que ça se casse trop vite */
         }
 
         .date {
@@ -683,6 +672,11 @@
         .result-teams {
             font-weight: 600;
             color: var(--color-navy);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            line-height: 1.1;
+            gap: 2px;
         }
 
         .result-score {
@@ -698,6 +692,12 @@
             margin-right: 0.5rem;
         }
 
+        .team-part {
+            display: block;
+            color: #2f80f2;
+            font-size: 0.85rem;
+        }
+
         .gjpb {
             color: #2f80f2;
             margin: 1rem;
@@ -708,17 +708,8 @@
             font-weight: 400;
         }
 
-        /* Pastille “mini card” du score */
+        /* Pastille "mini card" du score */
         .score-chip {
-            /* display: inline-block;
-            padding: .25rem .6rem;
-            border-radius: 9999px;
-            background: #cbdef1;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
-            border: 1px solid rgba(0, 0, 0, .06);
-            font-weight: 700;
-            min-width: 72px;
-            text-align: center; */
             display: inline-block;
             padding: .22rem .6rem;
             border-radius: 9999px;
@@ -791,20 +782,46 @@
                 gap: 1rem;
             }
 
+            /* Optimisations spécifiques pour les résultats sur mobile */
+            .result-item {
+                grid-template-columns: auto 1fr 60px 1fr;
+                gap: 4px;
+                padding: .4rem .5rem;
+                font-size: 0.85rem;
+            }
+
+            .compdate {
+                min-width: 70px;
+                gap: 1px;
+            }
+
             .date {
-                font-size: 0.6rem;
+                font-size: 0.7rem;
             }
 
             .competition {
-                font-size: 0.6rem;
-            }
-
-            .results-grid {
-                font-size: 0.6rem;
+                font-size: 0.7rem;
             }
 
             .score-chip {
-                font-size: 0.6rem;
+                font-size: 0.75rem;
+                padding: .15rem .4rem;
+                min-width: 50px;
+            }
+
+            .team-part {
+                font-size: 0.75rem;
+                margin: 0.2rem;
+            }
+
+            .gjpb {
+                margin: 0.3rem;
+                font-size: 0.85rem;
+            }
+
+            .adversaire {
+                margin: 0.3rem;
+                font-size: 0.85rem;
             }
 
             .record-grid {
@@ -1240,8 +1257,8 @@
         }
 
         function formatScoreLine(match) {
-            const teamLabel = `<span class="gjpb">GJPB ${match.equipe}</span>`;
-            const adv = `<span class="adversaire">${match.adversaire || 'N/A'}</span>`;
+            const teamLabel = formatTeamName(`GJPB ${match.equipe}`);
+            const adv = formatTeamName(match.adversaire || 'N/A');
             const x = Number(match.buts_gjpb ?? 0);
             const y = Number(match.buts_adv ?? 0);
             const lieu = (match.lieu || '').toLowerCase();
@@ -1252,18 +1269,36 @@
 
             if (lieu === 'dom' || lieu === 'domicile') {
                 return {
-                    left: `${teamLabel}`,
+                    left: teamLabel,
                     score: `<span class="score-chip">${x} - ${y}</span>`,
-                    right: `${adv}`,
+                    right: adv,
                     date: compDate
                 };
             }
             return {
-                left: `${adv}`,
+                left: adv,
                 score: `<span class="score-chip">${y} - ${x}</span>`,
-                right: `${teamLabel}`,
+                right: teamLabel,
                 date: compDate
             };
+        }
+
+        function formatTeamName(teamName) {
+            if (teamName.length > 10) {
+                // Chercher un espace pour couper intelligemment
+                const spaceIndex = teamName.indexOf(' ', 5); // Cherche un espace après le 5ème caractère
+                if (spaceIndex !== -1 && spaceIndex <= 12) {
+                    const firstPart = teamName.substring(0, spaceIndex);
+                    const secondPart = teamName.substring(spaceIndex + 1);
+                    return `<span class="team-part">${firstPart}</span><span class="team-part">${secondPart}</span>`;
+                } else {
+                    // Si pas d'espace approprié, couper à 10 caractères
+                    const firstPart = teamName.substring(0, 10);
+                    const secondPart = teamName.substring(10);
+                    return `<span class="team-part">${firstPart}</span><span class="team-part">${secondPart}</span>`;
+                }
+            }
+            return `<span class="gjpb">${teamName}</span>`;
         }
 
 
