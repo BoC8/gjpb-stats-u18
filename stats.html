@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Classements — GJPB</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --color-sky-blue: #6EC1FF;
+            --color-light-blue: #9FD6FF;
+            --color-white: #fff;
+            --color-navy: #1e3a5f;
+            --color-gold: #FFD700;
+            --color-text-dark: #2c3e50;
+            --color-text-light: #7f8c8d;
+            --border-radius: 16px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, .08);
+            --shadow-hover: 0 8px 40px rgba(0, 0, 0, .15);
+            --maxw: 1200px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            color: var(--color-text-dark);
+            background: linear-gradient(135deg, var(--color-white) 0%, var(--color-light-blue) 100%);
+        }
+
+        header {
+            background: #fff;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 20
+        }
+
+        .header-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            align-items: center;
+            height: 72px;
+            max-width: var(--maxw);
+            margin: 0 auto;
+            padding: 0 16px
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            color: var(--color-navy);
+            text-decoration: none;
+            font-weight: 700
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain
+        }
+
+        .nav-desktop {
+            display: none;
+            justify-content: center
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 48px;
+            list-style: none
+        }
+
+        .nav-links a {
+            color: var(--color-text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            padding: .5rem .75rem;
+            border-radius: 8px
+        }
+
+        .nav-links a:hover {
+            background: var(--color-light-blue)
+        }
+
+        .login-desktop {
+            justify-self: end;
+            display: none;
+            background: var(--color-sky-blue);
+            color: #fff;
+            text-decoration: none;
+            padding: .6rem 1rem;
+            border-radius: 12px
+        }
+
+        .mobile-menu-btn {
+            display: block;
+            background: none;
+            border: 0;
+            font-size: 1.6rem;
+            justify-self: end
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 72px;
+            background: #fff;
+            box-shadow: var(--shadow);
+            padding: 12px
+        }
+
+        .mobile-menu.open {
+            display: block
+        }
+
+        .mobile-nav-links {
+            list-style: none
+        }
+
+        .mobile-nav-links a {
+            display: block;
+            padding: .75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--color-text-dark)
+        }
+
+        .mobile-nav-links a:hover {
+            background: var(--color-light-blue)
+        }
+
+        main {
+            max-width: var(--maxw);
+            margin: 20px auto;
+            padding: 0 16px
+        }
+
+        .page-title {
+            margin: 6px 0 14px;
+            font-size: 1.75rem
+        }
+
+        .sub {
+            color: var(--color-text-light);
+            margin-bottom: 12px
+        }
+
+        /* ====== CARDS ====== */
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, .05);
+            overflow: hidden
+        }
+
+        .card-header {
+            padding: 14px;
+            background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
+            border-bottom: 1px solid rgba(0, 0, 0, .06);
+            text-align: center
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
+            color: var(--color-navy);
+            display: flex;
+            gap: .5rem;
+            justify-content: center;
+            align-items: center
+        }
+
+        .card-body {
+            padding: 14px
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 12px
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 420px
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, .06);
+            text-align: left;
+            white-space: nowrap
+        }
+
+        thead th {
+            background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-sky-blue) 100%);
+            color: #fff;
+            text-transform: uppercase;
+            font-size: .85rem
+        }
+
+        tbody tr:hover {
+            background: linear-gradient(135deg, rgba(110, 193, 255, .06), rgba(159, 214, 255, .06))
+        }
+
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-weight: 700
+        }
+
+        .rank-1 {
+            background: linear-gradient(135deg, var(--color-gold), #fbbf24);
+            color: #fff
+        }
+
+        .rank-2 {
+            background: linear-gradient(135deg, #9ca3af, #6b7280);
+            color: #fff
+        }
+
+        .rank-3 {
+            background: linear-gradient(135deg, #cd7c2f, #92400e);
+            color: #fff
+        }
+
+        .rank-other {
+            background: #e6f2ff;
+            color: #103d69
+        }
+
+        .loader {
+            color: var(--color-text-light);
+            text-align: center;
+            padding: 18px
+        }
+
+        .empty {
+            color: var(--color-text-light);
+            text-align: center;
+            padding: 18px
+        }
+
+        /* ====== CAROUSEL (mobile) ====== */
+        .rank-carousel {
+            overflow: hidden
+        }
+
+        .track {
+            display: flex;
+            transition: transform .35s ease
+        }
+
+        .panel {
+            min-width: 100%;
+            padding: 6px
+        }
+
+        .dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 9999px;
+            background: #cfe6ff
+        }
+
+        .dot.active {
+            background: #1e3a5f
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 10px
+        }
+
+        .tab {
+            padding: .4rem .7rem;
+            border-radius: 9999px;
+            border: 1px solid #e5e7eb;
+            background: #fff;
+            cursor: pointer;
+            font-weight: 600
+        }
+
+        .tab.active {
+            background: #1e3a5f;
+            color: #fff;
+            border-color: #1e3a5f
+        }
+
+        /* ====== Desktop : 3 colonnes côte à côte, on “désactive” le carrousel ====== */
+        @media (min-width: 900px) {
+            .rank-carousel {
+                overflow: visible
+            }
+
+            .track {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 16px;
+                transform: none !important
+            }
+
+            .panel {
+                min-width: auto
+            }
+
+            .dots,
+            .tabs {
+                display: none
+            }
+
+            .nav-desktop {
+                display: flex
+            }
+
+            .login-desktop {
+                display: inline-flex
+            }
+
+            .mobile-menu-btn {
+                display: none
+            }
+        }
+
+        /* ACCESSIBILITÉ – réduit le mouvement */
+        @media (prefers-reduced-motion: reduce) {
+            .track {
+                transition: none
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo"><img src="logo-gjpb.png" alt="">GJPB</a>
+            <nav class="nav-desktop" aria-label="Navigation principale">
+                <ul class="nav-links">
+                    <li><a href="18A.html">18A</a></li>
+                    <li><a href="17.html">17</a></li>
+                    <li><a href="18B.html">18B</a></li>
+                </ul>
+            </nav>
+            <a class="login-desktop" href="login.html">Se connecter</a>
+            <button class="mobile-menu-btn" aria-label="menu" aria-expanded="false">☰</button>
+        </div>
+        <nav class="mobile-menu" id="mobile-menu">
+            <ul class="mobile-nav-links">
+                <li><a href="18A.html">18A</a></li>
+                <li><a href="17.html">17</a></li>
+                <li><a href="18B.html">18B</a></li>
+                <li><a href="login.html">Se connecter</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1 class="page-title">Classements</h1>
+        <p class="sub">Buteurs, passeurs et total (toutes équipes confondues).</p>
+
+        <!-- Onglets visibles sur mobile pour cliquer en plus du swipe -->
+        <div class="tabs" aria-hidden="false">
+            <button class="tab active" data-index="0">Buteurs</button>
+            <button class="tab" data-index="1">Passeurs</button>
+            <button class="tab" data-index="2">Total</button>
+        </div>
+
+        <!-- CARROUSEL -->
+        <div class="rank-carousel" id="carousel" aria-live="polite">
+            <div class="track" id="track">
+                <!-- PANEL 1: BUTEURS -->
+                <section class="panel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Top Buteurs</h2>
+                        </div>
+                        <div class="card-body">
+                            <div id="load-goals" class="loader">Chargement…</div>
+                            <div class="table-wrap" id="wrap-goals" style="display:none">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Joueur</th>
+                                            <th>Buts</th>
+                                            <th>Matches</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-goals"></tbody>
+                                </table>
+                            </div>
+                            <div id="empty-goals" class="empty" style="display:none">Aucun but trouvé.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PANEL 2: PASSEURS -->
+                <section class="panel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Top Passeurs</h2>
+                        </div>
+                        <div class="card-body">
+                            <div id="load-assists" class="loader">Chargement…</div>
+                            <div class="table-wrap" id="wrap-assists" style="display:none">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Joueur</th>
+                                            <th>Passes</th>
+                                            <th>Matches</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-assists"></tbody>
+                                </table>
+                            </div>
+                            <div id="empty-assists" class="empty" style="display:none">Aucune passe trouvée.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PANEL 3: TOTAL -->
+                <section class="panel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Buts + Passes</h2>
+                        </div>
+                        <div class="card-body">
+                            <div id="load-total" class="loader">Chargement…</div>
+                            <div class="table-wrap" id="wrap-total" style="display:none">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Joueur</th>
+                                            <th>Total</th>
+                                            <th>Buts</th>
+                                            <th>Passes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-total"></tbody>
+                                </table>
+                            </div>
+                            <div id="empty-total" class="empty" style="display:none">Aucune donnée trouvée.</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Indicateurs -->
+        <div class="dots" id="dots" aria-hidden="false">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
+        </div>
+    </main>
+
+    <footer style="background:var(--color-navy);color:#fff;text-align:center;padding:24px;margin-top:28px">
+        <a href="https://www.gjpb44.com/" style="color:#cfe6ff;text-decoration:none">🌐 Site GJPB</a>
+        <span> | © 2025 - By Clément Bolomey</span>
+    </footer>
+
+    <script>
+        // ====== MENU MOBILE
+        (function () {
+            const btn = document.querySelector('.mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            if (!btn || !menu) return;
+            btn.addEventListener('click', () => {
+                const open = menu.classList.toggle('open');
+                btn.setAttribute('aria-expanded', String(open));
+            });
+        })();
+
+        // ====== SUPABASE
+        const SUPABASE_URL = 'https://lgnwgbctaqaeawzjnuqh.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnbndnYmN0YXFhZWF3empudXFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MjYzNjUsImV4cCI6MjA2OTQwMjM2NX0.E0ug5jpRQVh55aq1ewToqol7h7aRPkg7YvwbKpQtVHo';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: false } });
+
+        // ====== RENDU RANG + LIGNES
+        function renderWithRanking(rows, tbodyId, key, getExtraCols) {
+            const tbody = document.getElementById(tbodyId);
+            tbody.innerHTML = '';
+            let last = null, rank = 1;
+            rows.forEach(r => {
+                const same = last !== null && r[key] === last;
+                const display = same ? '–' : rank;
+                last = r[key];
+                const badgeClass = display === '–' ? 'rank-other' :
+                    display === 1 ? 'rank-1' :
+                        display === 2 ? 'rank-2' :
+                            display === 3 ? 'rank-3' : 'rank-other';
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td><span class="rank-badge ${badgeClass}">${display}</span></td>
+                      <td><strong>${r.joueur}</strong></td>${getExtraCols(r)}`;
+                tbody.appendChild(tr);
+                rank++;
+            });
+        }
+
+        // ====== CHARGEMENTS
+        async function loadGoals() {
+            const { data, error } = await supabase.from('actions').select('joueur,match_id').eq('type', 'Goal');
+            const loader = document.getElementById('load-goals'), wrap = document.getElementById('wrap-goals'), empty = document.getElementById('empty-goals');
+            loader.style.display = 'none';
+            if (error) { empty.textContent = 'Erreur: ' + error.message; empty.style.display = 'block'; return; }
+            const map = new Map();
+            (data || []).forEach(a => {
+                if (!a.joueur) return;
+                if (!map.has(a.joueur)) map.set(a.joueur, { buts: 0, matches: new Set() });
+                const ref = map.get(a.joueur); ref.buts++; ref.matches.add(a.match_id);
+            });
+            const rows = Array.from(map, ([joueur, s]) => ({ joueur, buts: s.buts, matches: s.matches.size }))
+                .sort((a, b) => b.buts - a.buts || a.joueur.localeCompare(b.joueur));
+            if (!rows.length) { empty.style.display = 'block'; return; }
+            wrap.style.display = 'block';
+            renderWithRanking(rows, 'tbody-goals', 'buts', r => `<td><strong>${r.buts}</strong></td><td>${r.matches}</td>`);
+        }
+
+        async function loadAssists() {
+            const { data, error } = await supabase.from('actions').select('joueur,match_id').eq('type', 'Assist');
+            const loader = document.getElementById('load-assists'), wrap = document.getElementById('wrap-assists'), empty = document.getElementById('empty-assists');
+            loader.style.display = 'none';
+            if (error) { empty.textContent = 'Erreur: ' + error.message; empty.style.display = 'block'; return; }
+            const map = new Map();
+            (data || []).forEach(a => {
+                if (!a.joueur) return;
+                if (!map.has(a.joueur)) map.set(a.joueur, { passes: 0, matches: new Set() });
+                const ref = map.get(a.joueur); ref.passes++; ref.matches.add(a.match_id);
+            });
+            const rows = Array.from(map, ([joueur, s]) => ({ joueur, passes: s.passes, matches: s.matches.size }))
+                .sort((a, b) => b.passes - a.passes || a.joueur.localeCompare(b.joueur));
+            if (!rows.length) { empty.style.display = 'block'; return; }
+            wrap.style.display = 'block';
+            renderWithRanking(rows, 'tbody-assists', 'passes', r => `<td><strong>${r.passes}</strong></td><td>${r.matches}</td>`);
+        }
+
+        async function loadTotal() {
+            const { data, error } = await supabase.from('actions').select('joueur,type');
+            const loader = document.getElementById('load-total'), wrap = document.getElementById('wrap-total'), empty = document.getElementById('empty-total');
+            loader.style.display = 'none';
+            if (error) { empty.textContent = 'Erreur: ' + error.message; empty.style.display = 'block'; return; }
+            const map = new Map();
+            (data || []).forEach(a => {
+                if (!a.joueur) return;
+                if (!map.has(a.joueur)) map.set(a.joueur, { buts: 0, passes: 0 });
+                const ref = map.get(a.joueur);
+                if (a.type === 'Goal') ref.buts++;
+                else if (a.type === 'Assist') ref.passes++;
+            });
+            const rows = Array.from(map, ([joueur, s]) => ({ joueur, buts: s.buts, passes: s.passes, total: s.buts + s.passes }))
+                .sort((a, b) => b.total - a.total || a.joueur.localeCompare(b.joueur));
+            if (!rows.length) { empty.style.display = 'block'; return; }
+            wrap.style.display = 'block';
+            renderWithRanking(rows, 'tbody-total', 'total', r => `<td><strong>${r.total}</strong></td><td>${r.buts}</td><td>${r.passes}</td>`);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadGoals(); loadAssists(); loadTotal();
+        });
+
+        // ====== CARROUSEL SWIPE (mobile) + onglets + points
+        (function () {
+            const carousel = document.getElementById('carousel');
+            const track = document.getElementById('track');
+            const dots = document.getElementById('dots').querySelectorAll('.dot');
+            const tabs = document.querySelectorAll('.tab');
+            let index = 0, startX = 0, currentX = 0, dragging = false, width = () => carousel.clientWidth;
+
+            function goTo(i, animate = true) {
+                // boucle infinie : 0->1->2->0 ...
+                if (i < 0) i = 2;
+                if (i > 2) i = 0;
+                index = i;
+                track.style.transition = animate ? 'transform .35s ease' : 'none';
+                track.style.transform = `translateX(${-index * width()}px)`;
+                dots.forEach(d => d.classList.toggle('active', Number(d.dataset.index) === index));
+                tabs.forEach(t => t.classList.toggle('active', Number(t.dataset.index) === index));
+            }
+
+            // Au redimensionnement (rotation/mobile), recalcule la position
+            window.addEventListener('resize', () => goTo(index, false));
+
+            // Onglets & Dots (clic)
+            dots.forEach(d => d.addEventListener('click', () => goTo(Number(d.dataset.index))));
+            tabs.forEach(t => t.addEventListener('click', () => goTo(Number(t.dataset.index))));
+
+            // Gestes tactiles
+            track.addEventListener('pointerdown', (e) => { dragging = true; startX = e.clientX; currentX = startX; track.setPointerCapture(e.pointerId); track.style.transition = 'none'; });
+            track.addEventListener('pointermove', (e) => {
+                if (!dragging) return;
+                currentX = e.clientX;
+                const dx = currentX - startX;
+                track.style.transform = `translateX(${-index * width() + dx}px)`;
+            });
+            function endDrag(e) {
+                if (!dragging) return;
+                dragging = false;
+                const dx = currentX - startX;
+                const threshold = Math.min(120, width() * 0.2);
+                if (dx > threshold) goTo(index - 1);
+                else if (dx < -threshold) goTo(index + 1);
+                else goTo(index);
+            }
+            track.addEventListener('pointerup', endDrag);
+            track.addEventListener('pointercancel', endDrag);
+            track.addEventListener('pointerleave', endDrag);
+
+            // init
+            goTo(0, false);
+        })();
+    </script>
+</body>
+
+</html>
