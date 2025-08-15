@@ -187,29 +187,47 @@
         }
 
         .table-wrap {
-            overflow-x: auto;
-            border-radius: 12px
+            border-radius: 12px;
+            /* Suppression du overflow-x: auto pour éviter le scroll horizontal */
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 420px
+            /* Suppression du min-width pour permettre l'adaptation complète */
         }
 
         th,
         td {
-            padding: 10px;
+            padding: 8px 4px;
+            /* Réduction du padding pour les petits écrans */
             border-bottom: 1px solid rgba(0, 0, 0, .06);
             text-align: left;
-            white-space: nowrap
+            /* Suppression du white-space: nowrap pour permettre le retour à la ligne si nécessaire */
+        }
+
+        /* Ajustements spécifiques pour mobile */
+        @media (max-width: 899px) {
+
+            th,
+            td {
+                font-size: 0.9rem;
+                /* Réduction de la taille de police sur mobile */
+            }
+
+            .rank-badge {
+                width: 25px;
+                height: 25px;
+                font-size: 0.8rem;
+            }
         }
 
         thead th {
             background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-sky-blue) 100%);
             color: #fff;
             text-transform: uppercase;
-            font-size: .85rem
+            font-size: .8rem;
+            /* Réduction de la taille des en-têtes */
         }
 
         tbody tr:hover {
@@ -223,7 +241,9 @@
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            font-weight: 700
+            font-weight: 700;
+            flex-shrink: 0;
+            /* Empêche le badge de se rétrécir */
         }
 
         .rank-1 {
@@ -260,17 +280,23 @@
 
         /* ====== CAROUSEL (mobile) ====== */
         .rank-carousel {
-            overflow: hidden
+            overflow: hidden;
+            touch-action: pan-y;
+            /* Permet seulement le scroll vertical, améliore le swipe horizontal */
         }
 
         .track {
             display: flex;
-            transition: transform .35s ease
+            transition: transform .35s ease;
+            touch-action: pan-y;
+            /* Idem pour le track */
         }
 
         .panel {
             min-width: 100%;
-            padding: 6px
+            padding: 6px;
+            flex-shrink: 0;
+            /* Empêche les panels de se rétrécir */
         }
 
         .dots {
@@ -284,7 +310,8 @@
             width: 8px;
             height: 8px;
             border-radius: 9999px;
-            background: #cfe6ff
+            background: #cfe6ff;
+            cursor: pointer;
         }
 
         .dot.active {
@@ -304,7 +331,9 @@
             border: 1px solid #e5e7eb;
             background: #fff;
             cursor: pointer;
-            font-weight: 600
+            font-weight: 600;
+            font-size: 0.9rem;
+            /* Réduction de la taille pour mobile */
         }
 
         .tab.active {
@@ -313,17 +342,19 @@
             border-color: #1e3a5f
         }
 
-        /* ====== Desktop : 3 colonnes côte à côte, on “désactive” le carrousel ====== */
+        /* ====== Desktop : 3 colonnes côte à côte, on "désactive" le carrousel ====== */
         @media (min-width: 900px) {
             .rank-carousel {
-                overflow: visible
+                overflow: visible;
+                touch-action: auto;
             }
 
             .track {
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
                 gap: 16px;
-                transform: none !important
+                transform: none !important;
+                touch-action: auto;
             }
 
             .panel {
@@ -346,9 +377,30 @@
             .mobile-menu-btn {
                 display: none
             }
+
+            /* Restauration des styles desktop pour les tableaux */
+            th,
+            td {
+                padding: 10px;
+                font-size: inherit;
+            }
+
+            .rank-badge {
+                width: 30px;
+                height: 30px;
+                font-size: inherit;
+            }
+
+            thead th {
+                font-size: .85rem;
+            }
+
+            .tab {
+                font-size: inherit;
+            }
         }
 
-        /* ACCESSIBILITÉ – réduit le mouvement */
+        /* ACCESSIBILITÉ — réduit le mouvement */
         @media (prefers-reduced-motion: reduce) {
             .track {
                 transition: none
@@ -360,7 +412,7 @@
 <body>
     <header>
         <div class="header-content">
-            <a href="index.html" class="logo"><img src="logo-gjpb.png" alt="">GJPB</a>
+            <a href="index.html" class="logo"><img src="logo-gjpb.png" alt=""></a>
             <nav class="nav-desktop" aria-label="Navigation principale">
                 <ul class="nav-links">
                     <li><a href="18A.html">18A</a></li>
@@ -509,9 +561,9 @@
             let last = null, rank = 1;
             rows.forEach(r => {
                 const same = last !== null && r[key] === last;
-                const display = same ? '–' : rank;
+                const display = same ? '—' : rank;
                 last = r[key];
-                const badgeClass = display === '–' ? 'rank-other' :
+                const badgeClass = display === '—' ? 'rank-other' :
                     display === 1 ? 'rank-1' :
                         display === 2 ? 'rank-2' :
                             display === 3 ? 'rank-3' : 'rank-other';
@@ -611,13 +663,22 @@
             tabs.forEach(t => t.addEventListener('click', () => goTo(Number(t.dataset.index))));
 
             // Gestes tactiles
-            track.addEventListener('pointerdown', (e) => { dragging = true; startX = e.clientX; currentX = startX; track.setPointerCapture(e.pointerId); track.style.transition = 'none'; });
+            track.addEventListener('pointerdown', (e) => {
+                dragging = true;
+                startX = e.clientX;
+                currentX = startX;
+                track.setPointerCapture(e.pointerId);
+                track.style.transition = 'none';
+            });
+
             track.addEventListener('pointermove', (e) => {
                 if (!dragging) return;
+                e.preventDefault(); // Empêche le scroll par défaut
                 currentX = e.clientX;
                 const dx = currentX - startX;
                 track.style.transform = `translateX(${-index * width() + dx}px)`;
             });
+
             function endDrag(e) {
                 if (!dragging) return;
                 dragging = false;
@@ -627,6 +688,7 @@
                 else if (dx < -threshold) goTo(index + 1);
                 else goTo(index);
             }
+
             track.addEventListener('pointerup', endDrag);
             track.addEventListener('pointercancel', endDrag);
             track.addEventListener('pointerleave', endDrag);
