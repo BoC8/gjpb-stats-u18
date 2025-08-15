@@ -662,16 +662,16 @@
             dots.forEach(d => d.addEventListener('click', () => goTo(Number(d.dataset.index))));
             tabs.forEach(t => t.addEventListener('click', () => goTo(Number(t.dataset.index))));
 
-            // Gestes tactiles
-            track.addEventListener('pointerdown', (e) => {
+            // Gestes tactiles - attachés au carousel pour couvrir toute la zone visible
+            carousel.addEventListener('pointerdown', (e) => {
                 dragging = true;
                 startX = e.clientX;
                 currentX = startX;
-                track.setPointerCapture(e.pointerId);
+                carousel.setPointerCapture(e.pointerId);
                 track.style.transition = 'none';
             });
 
-            track.addEventListener('pointermove', (e) => {
+            carousel.addEventListener('pointermove', (e) => {
                 if (!dragging) return;
                 e.preventDefault(); // Empêche le scroll par défaut
                 currentX = e.clientX;
@@ -689,9 +689,9 @@
                 else goTo(index);
             }
 
-            track.addEventListener('pointerup', endDrag);
-            track.addEventListener('pointercancel', endDrag);
-            track.addEventListener('pointerleave', endDrag);
+            carousel.addEventListener('pointerup', endDrag);
+            carousel.addEventListener('pointercancel', endDrag);
+            carousel.addEventListener('pointerleave', endDrag);
 
             // init
             goTo(0, false);
