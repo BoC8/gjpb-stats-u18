@@ -399,7 +399,7 @@
                 <section class="panel">
                     <div class="card">
                         <div class="card-header">
-                            <h2>Top Buteurs</h2>
+                            <h2>Top Goals</h2>
                         </div>
                         <div class="card-body">
                             <div id="load-goals" class="loader">Chargement…</div>
@@ -407,10 +407,9 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>#</th>
+                                            <th>Rank</th>
                                             <th>Joueur</th>
                                             <th>Buts</th>
-                                            <th>Matches</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbody-goals"></tbody>
@@ -425,7 +424,7 @@
                 <section class="panel">
                     <div class="card">
                         <div class="card-header">
-                            <h2>Top Passeurs</h2>
+                            <h2>Top Assists</h2>
                         </div>
                         <div class="card-body">
                             <div id="load-assists" class="loader">Chargement…</div>
@@ -433,10 +432,9 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>#</th>
+                                            <th>Rank</th>
                                             <th>Joueur</th>
                                             <th>Passes</th>
-                                            <th>Matches</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbody-assists"></tbody>
@@ -451,7 +449,7 @@
                 <section class="panel">
                     <div class="card">
                         <div class="card-header">
-                            <h2>Buts + Passes</h2>
+                            <h2>G/A</h2>
                         </div>
                         <div class="card-body">
                             <div id="load-total" class="loader">Chargement…</div>
@@ -459,11 +457,9 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>#</th>
+                                            <th>Rank</th>
                                             <th>Joueur</th>
                                             <th>Total</th>
-                                            <th>Buts</th>
-                                            <th>Passes</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbody-total"></tbody>
@@ -543,7 +539,7 @@
                 .sort((a, b) => b.buts - a.buts || a.joueur.localeCompare(b.joueur));
             if (!rows.length) { empty.style.display = 'block'; return; }
             wrap.style.display = 'block';
-            renderWithRanking(rows, 'tbody-goals', 'buts', r => `<td><strong>${r.buts}</strong></td><td>${r.matches}</td>`);
+            renderWithRanking(rows, 'tbody-goals', 'buts', r => `<td><strong>${r.buts}</strong></td>`);
         }
 
         async function loadAssists() {
@@ -561,7 +557,7 @@
                 .sort((a, b) => b.passes - a.passes || a.joueur.localeCompare(b.joueur));
             if (!rows.length) { empty.style.display = 'block'; return; }
             wrap.style.display = 'block';
-            renderWithRanking(rows, 'tbody-assists', 'passes', r => `<td><strong>${r.passes}</strong></td><td>${r.matches}</td>`);
+            renderWithRanking(rows, 'tbody-assists', 'passes', r => `<td><strong>${r.passes}</strong></td>`);
         }
 
         async function loadTotal() {
@@ -581,7 +577,7 @@
                 .sort((a, b) => b.total - a.total || a.joueur.localeCompare(b.joueur));
             if (!rows.length) { empty.style.display = 'block'; return; }
             wrap.style.display = 'block';
-            renderWithRanking(rows, 'tbody-total', 'total', r => `<td><strong>${r.total}</strong></td><td>${r.buts}</td><td>${r.passes}</td>`);
+            renderWithRanking(rows, 'tbody-total', 'total', r => `<td><strong>${r.total}</strong></td>`);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
