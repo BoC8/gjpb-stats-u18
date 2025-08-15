@@ -7,7 +7,9 @@
     <title>Club de Foot Jeunesse - Accueil</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
     <style>
         /* === VARIABLES CSS === */
@@ -19,14 +21,19 @@
             --color-gold: #FFD700;
             --color-text-dark: #2c3e50;
             --color-text-light: #7f8c8d;
+            --color-success: #10b981;
+            --color-info: #3b82f6;
 
             --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            --max-width: 1100px;
+            --max-width: 1200px;
             --padding-mobile: 1rem;
             --padding-desktop: 2rem;
-            --border-radius: 12px;
+            --border-radius: 16px;
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 40px rgba(0, 0, 0, 0.15);
             --transition: all 0.3s ease;
+            --gradient-primary: linear-gradient(135deg, var(--color-sky-blue) 0%, var(--color-navy) 100%);
+            --gradient-card: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
         }
 
         /* === RESET & BASE === */
@@ -42,6 +49,7 @@
             color: var(--color-text-dark);
             background: linear-gradient(135deg, var(--color-white) 0%, var(--color-light-blue) 100%);
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* === CONTENEUR PRINCIPAL === */
@@ -52,21 +60,18 @@
         }
 
         /* === HEADER === */
-        .header {
+        header {
             background: var(--color-white);
             box-shadow: var(--shadow);
             position: sticky;
             top: 0;
             z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
 
         .header-content {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
             align-items: center;
-            justify-content: space-between;
             height: 70px;
             max-width: var(--max-width);
             margin: 0 auto;
@@ -92,15 +97,20 @@
         /* Navigation desktop */
         .nav-desktop {
             display: none;
-            gap: 2rem;
+            justify-content: center;
             align-items: center;
+            gap: 70px;
+        }
+
+        .login-desktop {
+            justify-self: end;
+            display: none;
         }
 
         .nav-links {
             display: flex;
-            gap: 20px;
+            gap: 50px;
             justify-content: center;
-            flex: 1;
             list-style: none;
         }
 
@@ -122,6 +132,7 @@
         }
 
         .login-btn {
+            justify-self: end;
             background: var(--color-sky-blue);
             color: var(--color-white);
             padding: 0.75rem 1.5rem;
@@ -177,7 +188,7 @@
         @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(10px);
             }
 
             to {
@@ -203,6 +214,7 @@
             font-weight: 500;
             border-radius: 6px;
             transition: var(--transition);
+            position: relative;
         }
 
         .mobile-nav-links a:hover,
@@ -211,108 +223,34 @@
             color: var(--color-navy);
         }
 
-        /* === SECTION INTRO === */
-        .intro {
-            text-align: center;
-            padding: 3rem 0 2rem;
-        }
+        /* === MAIN === */
 
-        .intro h1 {
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: var(--color-navy);
-            margin-bottom: 1rem;
-        }
 
-        .intro p {
-            font-size: 1.1rem;
-            color: var(--color-text-light);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* === CARDS SECTION === */
-        .cards-section {
-            padding: 2rem 0 4rem;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background: var(--color-white);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            text-align: center;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            text-decoration: none;
-            color: inherit;
-            border: 2px solid transparent;
-        }
-
-        .card:hover,
-        .card:focus {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-            border-color: var(--color-sky-blue);
-            outline: none;
-        }
-
-        .card-icon {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 1.5rem;
-            fill: var(--color-sky-blue);
-            transition: var(--transition);
-        }
-
-        .card:hover .card-icon {
-            fill: var(--color-navy);
-            transform: scale(1.1);
-        }
-
-        /* Animation supplémentaire pour la baguette magique */
-        .magic-wand:hover {
-            animation: sparkle 0.6s ease-in-out;
-        }
-
-        @keyframes sparkle {
-
-            0%,
-            100% {
-                filter: brightness(1);
-            }
-
-            50% {
-                filter: brightness(1.3) drop-shadow(0 0 8px var(--color-gold));
-            }
-        }
-
-        .card h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--color-navy);
-            margin-bottom: 0.5rem;
-        }
-
-        .card p {
-            color: var(--color-text-light);
-            font-size: 1rem;
-        }
 
         /* === FOOTER === */
         .footer {
             background: var(--color-navy);
             color: var(--color-white);
             text-align: center;
-            padding: 2rem 0;
+            padding: 3rem 0;
             margin-top: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 2;
         }
 
         .footer a {
@@ -320,18 +258,47 @@
             text-decoration: none;
             font-weight: 500;
             transition: var(--transition);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
         }
 
         .footer a:hover,
         .footer a:focus {
             color: var(--color-gold);
-            outline: 2px solid var(--color-gold);
-            border-radius: 4px;
-            padding: 2px 4px;
+            background: rgba(255, 215, 0, 0.1);
+            transform: translateY(-2px);
+            outline: none;
         }
 
         /* === RESPONSIVE === */
-        @media (min-width: 768px) {
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .card {
+                padding: 2rem 1.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .login-desktop {
+                display: none;
+            }
+        }
+
+        @media (min-width: 769px) {
             .container {
                 padding: 0 var(--padding-desktop);
             }
@@ -344,6 +311,10 @@
                 display: flex;
             }
 
+            .login-desktop {
+                display: inline-flex;
+            }
+
             .mobile-menu-btn {
                 display: none;
             }
@@ -352,8 +323,8 @@
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .intro h1 {
-                font-size: 3rem;
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
             }
         }
 
@@ -396,8 +367,9 @@
                     <li><a href="17.html" aria-label="Équipe 17 ans">17</a></li>
                     <li><a href="18B.html" aria-label="Équipe 18 ans B">18B</a></li>
                 </ul>
-                <a href="login.html" class="login-btn" aria-label="Se connecter à votre compte">Se connecter</a>
             </nav>
+            <a href="login.html" class="login-btn login-desktop" aria-label="Se connecter à votre compte">Se
+                connecter</a>
 
             <!-- Bouton menu mobile -->
             <button class="mobile-menu-btn" aria-label="Ouvrir le menu de navigation" aria-expanded="false"
@@ -432,14 +404,15 @@
         <br><br><br><br><br><br>
     </main>
 
-
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>
-                <a href="https://www.gjpb44.com/" aria-label="Visiter le site officiel du club">Site du club</a>
-                | © 2025 Club de Foot Jeunesse
-            </p>
+            <div class="footer-content">
+                <p>
+                    <a href="https://www.gjpb44.com/" aria-label="Visiter le site officiel du club">🌐 Site GJPB</a>
+                    | © 2025 - By Clément Bolomey
+                </p>
+            </div>
         </div>
     </footer>
 
@@ -486,27 +459,85 @@
                     menuBtn.focus();
                 }
             });
+
+            // Animation des compteurs au scroll
+            const observerOptions = {
+                threshold: 0.5,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const animateCounter = (element, finalValue, duration = 2000) => {
+                let startValue = 0;
+                const increment = finalValue / (duration / 16);
+
+                const counter = setInterval(() => {
+                    startValue += increment;
+                    if (startValue >= finalValue) {
+                        element.textContent = finalValue;
+                        clearInterval(counter);
+                    } else {
+                        element.textContent = Math.floor(startValue);
+                    }
+                }, 16);
+            };
+
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const statNumbers = entry.target.querySelectorAll('.stat-number');
+                        statNumbers.forEach(stat => {
+                            const finalValue = parseInt(stat.textContent);
+                            stat.textContent = '0';
+                            setTimeout(() => {
+                                animateCounter(stat, finalValue, 1500);
+                            }, 200);
+                        });
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const quickStats = document.querySelector('.quick-stats');
+            if (quickStats) {
+                statsObserver.observe(quickStats);
+            }
         });
 
+        // 1) Init Supabase
+        const SUPABASE_URL = 'https://lgnwgbctaqaeawzjnuqh.supabase.co';          // ← ton URL
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnbndnYmN0YXFhZWF3empudXFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MjYzNjUsImV4cCI6MjA2OTQwMjM2NX0.E0ug5jpRQVh55aq1ewToqol7h7aRPkg7YvwbKpQtVHo';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: true } // garde la session (localStorage)
+        });
 
-        const supabase = window.supabase.createClient(
-            'https://lgnwgbctaqaeawzjnuqh.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnbndnYmN0YXFhZWF3empudXFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MjYzNjUsImV4cCI6MjA2OTQwMjM2NX0.E0ug5jpRQVh55aq1ewToqol7h7aRPkg7YvwbKpQtVHo'
-        );
+        // 2) Redirige si déjà connecté
+        (async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) window.location.href = 'admin-eriyfgibadiuodb.html';
+        })();
 
+        // 3) Login au clic
         async function login() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const email = document.getElementById('email')?.value?.trim();
+            const password = document.getElementById('password')?.value;
+            const msg = document.getElementById('message');
+
+            msg.textContent = 'Connexion…';
 
             const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
             if (error) {
-                document.getElementById('message').textContent = "Erreur : " + error.message;
-            } else {
-                document.getElementById('message').textContent = "Connecté !";
-                window.location.href = "admin.html";
+                msg.textContent = 'Identifiants invalides.';
+                msg.style.color = 'crimson';
+                return;
             }
+
+            // Succès → redirection
+            msg.textContent = 'Connecté, redirection…';
+            msg.style.color = 'green';
+            window.location.href = 'admin-eriyfgibadiuodb.html';
         }
+
     </script>
 </body>
 
