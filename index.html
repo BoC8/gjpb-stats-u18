@@ -696,20 +696,28 @@
             margin-right: 0.5rem;
         }
 
+        /* === STYLES SÉPARÉS POUR ÉQUIPES GJPB ET ADVERSAIRES === */
         .team-part {
             display: block;
-            color: #2f80f2;
             font-size: 0.85rem;
         }
 
-        .gjpb {
+        /* Styles pour les équipes GJPB */
+        .team-gjpb {
             color: #2f80f2;
-            margin: 1rem;
+            font-weight: 700;
+            padding: 0.2rem 0.4rem;
+            border-radius: 6px;
+            margin: 0.2rem;
         }
 
-        .adversaire {
-            margin: 1rem;
+        /* Styles pour les équipes adversaires */
+        .team-adversaire {
+            color: #4d525c;
             font-weight: 400;
+            padding: 0.2rem 0.4rem;
+            border-radius: 6px;
+            margin: 0.2rem;
         }
 
         /* Pastille "mini card" du score */
@@ -815,17 +823,13 @@
 
             .team-part {
                 font-size: 0.75rem;
-                margin: 0.2rem;
             }
 
-            .gjpb {
-                margin: 0.3rem;
-                font-size: 0.85rem;
-            }
-
-            .adversaire {
-                margin: 0.3rem;
-                font-size: 0.85rem;
+            .team-gjpb,
+            .team-adversaire {
+                margin: 0.1rem;
+                font-size: 0.75rem;
+                padding: 0.1rem 0.3rem;
             }
 
             .record-grid {
@@ -880,7 +884,7 @@
             }
 
             .cards-grid {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .stats-grid {
@@ -994,20 +998,28 @@
                     <span class="hero-emoji">⚽</span>
                 </h1>
                 <p>
-                    Plongez dans l'univers des performances de nos jeunes U18 et découvrez leurs statistiques
-                    en temps réel tout au long de cette saison 2025-2026 !
+                    Plongez dans l'univers des performances de nos jeunes U18. Découvrez leurs statistiques et celles de
+                    leurs équipes
+                    en temps réel tout au long de la saison !
                 </p>
 
                 <!-- Info saison -->
                 <div class="season-info">
                     <div class="season-title">📅 Saison 2025-2026 📅</div>
-                    <div class="divisions">U18-D1 • 17-D2 • 18-D4</div>
+                    <div class="divisions">
+                        <a href="18A.html" style="text-decoration: none; color: #1e3a5f; font-weight: bold;">U18-D1</a>
+                        •
+                        <a href="17.html" style="text-decoration: none; color: #1e3a5f; font-weight: bold;">U17-D2</a> •
+                        <a href="18B.html" style="text-decoration: none; color: #1e3a5f; font-weight: bold;">U18-D4</a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <main class="container">
+        <br>
+        <h2 class="section-title">Nos équipes</h2>
         <!-- Section statistiques -->
         <section class="stats-section">
             <div class="stats-grid">
@@ -1042,28 +1054,27 @@
             <a href="resultats.html" class="results-btn">📊 Voir tous les résultats</a>
         </section>
 
+        <!-- Card Derniers résultats -->
+        <div class="card" id="latest-results-card">
+            <div class="card-badge">LIVE 🔥</div>
+            <svg class="card-icon" viewBox="0 0 100 100" aria-hidden="true">
+                <rect x="15" y="20" width="70" height="60" fill="currentColor" stroke="#333" stroke-width="2" rx="8" />
+                <rect x="25" y="30" width="50" height="40" fill="var(--color-navy)" rx="4" />
+                <text x="35" y="50" fill="var(--color-gold)" font-size="12" font-weight="bold">3</text>
+                <text x="50" y="50" fill="white" font-size="8">-</text>
+                <text x="60" y="50" fill="var(--color-gold)" font-size="12" font-weight="bold">1</text>
+            </svg>
+            <h3>Affichage des derniers résultats</h3>
+            <div class="results-grid" id="latest-results">
+                <!-- Sera rempli par JavaScript -->
+            </div>
+        </div>
+
         <!-- Section cards -->
         <section class="cards-section">
-            <h2 class="section-title">Explorer les statistiques</h2>
+            <h2 class="section-title">Explorer les données</h2>
 
             <div class="cards-grid">
-                <!-- Card Derniers résultats -->
-                <div class="card" id="latest-results-card">
-                    <div class="card-badge">LIVE 🔥</div>
-                    <svg class="card-icon" viewBox="0 0 100 100" aria-hidden="true">
-                        <rect x="15" y="20" width="70" height="60" fill="currentColor" stroke="#333" stroke-width="2"
-                            rx="8" />
-                        <rect x="25" y="30" width="50" height="40" fill="var(--color-navy)" rx="4" />
-                        <text x="35" y="50" fill="var(--color-gold)" font-size="12" font-weight="bold">3</text>
-                        <text x="50" y="50" fill="white" font-size="8">-</text>
-                        <text x="60" y="50" fill="var(--color-gold)" font-size="12" font-weight="bold">1</text>
-                    </svg>
-                    <h3>Derniers résultats</h3>
-                    <div class="results-grid" id="latest-results">
-                        <!-- Sera rempli par JavaScript -->
-                    </div>
-                </div>
-
                 <!-- Card Statistiques -->
                 <a href="stats.html" class="card" aria-label="Consulter les statistiques">
                     <div class="card-badge">HOT 🔥</div>
@@ -1074,9 +1085,8 @@
                         <circle cx="50" cy="50" r="15" fill="white" stroke="#333" stroke-width="1.5" />
                         <circle cx="50" cy="50" r="8" fill="var(--color-gold)" stroke="#333" stroke-width="1" />
                     </svg>
-                    <h3>Classements & Statistiques</h3>
-                    <p>Découvrez les classements des buteurs, passeurs décisifs et toutes les statistiques détaillées de
-                        nos joueurs.</p>
+                    <h3>Classements individuels</h3>
+                    <p>Découvrez les classements des buteurs, passeurs décisifs et joueurs les plus décisifs.</p>
                 </a>
 
                 <!-- Card Calendrier -->
@@ -1097,9 +1107,8 @@
                         <circle cx="45" cy="52" r="2" fill="var(--color-gold)" />
                         <circle cx="65" cy="62" r="2" fill="#dc3545" />
                     </svg>
-                    <h3>Calendrier des matchs</h3>
-                    <p>Consultez tous les matchs à venir, les horaires, les adversaires et ne manquez aucun rendez-vous
-                        !</p>
+                    <h3>Voir le calendrier des matchs</h3>
+                    <p>Consultez tous les matchs à venir, les horaires et les adversaires !</p>
                 </a>
             </div>
         </section>
@@ -1261,8 +1270,8 @@
         }
 
         function formatScoreLine(match) {
-            const teamLabel = formatTeamName(`GJPB ${match.equipe}`);
-            const adv = formatTeamName(match.adversaire || 'N/A');
+            const teamLabel = formatTeamName(`GJPB ${match.equipe}`, true); // true = équipe GJPB
+            const adv = formatTeamName(match.adversaire || 'N/A', false); // false = adversaire
             const x = Number(match.buts_gjpb ?? 0);
             const y = Number(match.buts_adv ?? 0);
             const lieu = (match.lieu || '').toLowerCase();
@@ -1287,27 +1296,27 @@
             };
         }
 
-        function formatTeamName(teamName) {
+        function formatTeamName(teamName, isGjpb = false) {
+            const baseClass = isGjpb ? 'team-gjpb' : 'team-adversaire';
+
             if (teamName.length > 10) {
                 // Chercher un espace pour couper intelligemment
-                const spaceIndex = teamName.indexOf(' ', 5); // Cherche un espace après le 5ème caractère
+                const spaceIndex = teamName.indexOf(' ', 5);
                 if (spaceIndex !== -1 && spaceIndex <= 12) {
                     const firstPart = teamName.substring(0, spaceIndex);
                     const secondPart = teamName.substring(spaceIndex + 1);
                     return `
-                    <span class="team-part">${firstPart}</span>
-                    <span class="team-part">${secondPart}</span>`;
+                    <span class="team-part ${baseClass}">${firstPart}</span>
+                    <span class="team-part ${baseClass}">${secondPart}</span>`;
                 } else {
                     // Si pas d'espace approprié, couper à 10 caractères
                     const firstPart = teamName.substring(0, 10);
                     const secondPart = teamName.substring(10);
-                    return `<span class="team-part">${firstPart}</span><span class="team-part">${secondPart}</span>`;
+                    return `<span class="team-part ${baseClass}">${firstPart}</span><span class="team-part ${baseClass}">${secondPart}</span>`;
                 }
             }
-            return `<span class="gjpb">${teamName}</span>`;
+            return `<span class="${baseClass}">${teamName}</span>`;
         }
-
-
 
         // === DERNIERS RÉSULTATS ===
         async function loadLatestResults() {
@@ -1340,7 +1349,6 @@
                 const resultItem = document.createElement('div');
                 resultItem.className = `result-item ${resultClass}`;
 
-                // Affichage compact : équipe(s) + score cohérent DOM/EXT
                 resultItem.innerHTML = `
                     <div class="result-date">${view.date}</div>
                     <div class="result-teams">${view.left}</div>
