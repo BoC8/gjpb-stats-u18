@@ -13,17 +13,24 @@
         :root {
             --color-sky-blue: #6EC1FF;
             --color-light-blue: #9FD6FF;
-            --color-white: #fff;
+            --color-white: #ffffff;
             --color-navy: #1e3a5f;
             --color-gold: #FFD700;
-            --color-silver: #C0C0C0;
-            --color-bronze: #CD7F32;
             --color-text-dark: #2c3e50;
             --color-text-light: #7f8c8d;
+            --color-success: #10b981;
+            --color-info: #3b82f6;
+
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --max-width: 1200px;
+            --padding-mobile: 1rem;
+            --padding-desktop: 2rem;
             --border-radius: 16px;
-            --shadow: 0 4px 20px rgba(0, 0, 0, .08);
-            --shadow-hover: 0 8px 40px rgba(0, 0, 0, .15);
-            --maxw: 1200px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 40px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+            --gradient-primary: linear-gradient(135deg, var(--color-sky-blue) 0%, var(--color-navy) 100%);
+            --gradient-card: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
         }
 
         * {
@@ -34,113 +41,182 @@
 
         body {
             font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            line-height: 1.6;
             color: var(--color-text-dark);
             background: linear-gradient(135deg, var(--color-white) 0%, var(--color-light-blue) 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            }
+
+        /* === CONTENEUR PRINCIPAL === */
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 var(--padding-mobile);
         }
 
+        /* === HEADER === */
         header {
-            background: #fff;
+            background: var(--color-white);
             box-shadow: var(--shadow);
             position: sticky;
             top: 0;
-            z-index: 20
+            z-index: 100;
         }
 
         .header-content {
             display: grid;
             grid-template-columns: 1fr 2fr 1fr;
             align-items: center;
-            height: 72px;
-            max-width: var(--maxw);
+            height: 70px;
+            max-width: var(--max-width);
             margin: 0 auto;
-            padding: 0 16px
+            padding: 0 var(--padding-mobile);
         }
 
         .logo {
-            display: flex;
-            align-items: center;
-            gap: .5rem;
+            font-size: 1.5rem;
+            font-weight: 600;
             color: var(--color-navy);
             text-decoration: none;
-            font-weight: 700
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .logo img {
             width: 40px;
             height: 40px;
-            object-fit: contain
+            object-fit: contain;
         }
 
+        /* Navigation desktop */
         .nav-desktop {
             display: none;
-            justify-content: center
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 48px;
-            list-style: none
-        }
-
-        .nav-links a {
-            color: var(--color-text-dark);
-            text-decoration: none;
-            font-weight: 500;
-            padding: .5rem .75rem;
-            border-radius: 8px
-        }
-
-        .nav-links a:hover {
-            background: var(--color-light-blue)
+            justify-content: center;
+            align-items: center;
+            gap: 70px;
         }
 
         .login-desktop {
             justify-self: end;
             display: none;
-            background: var(--color-sky-blue);
-            color: #fff;
-            text-decoration: none;
-            padding: .6rem 1rem;
-            border-radius: 12px
         }
 
+        .nav-links {
+            display: flex;
+            gap: 50px;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-text-dark);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus {
+            background: var(--color-light-blue);
+            color: var(--color-navy);
+            outline: 2px solid var(--color-sky-blue);
+        }
+
+        .login-btn {
+            justify-self: end;
+            background: var(--color-sky-blue);
+            color: var(--color-white);
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .login-btn:hover,
+        .login-btn:focus {
+            background: var(--color-navy);
+            transform: translateY(-1px);
+            outline: 2px solid var(--color-gold);
+        }
+
+        /* Menu mobile */
         .mobile-menu-btn {
             display: block;
             background: none;
-            border: 0;
-            font-size: 1.6rem;
-            justify-self: end
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--color-navy);
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-btn:hover,
+        .mobile-menu-btn:focus {
+            background: var(--color-light-blue);
+            outline: 2px solid var(--color-sky-blue);
         }
 
         .mobile-menu {
             display: none;
             position: absolute;
+            top: 100%;
             left: 0;
             right: 0;
-            top: 72px;
-            background: #fff;
+            background: var(--color-white);
             box-shadow: var(--shadow);
-            padding: 12px
+            padding: 1rem;
+            text-align: center;
         }
 
         .mobile-menu.open {
-            display: block
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .mobile-nav-links {
-            list-style: none
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        .mobile-nav-links li {
+            margin-bottom: 0.5rem;
         }
 
         .mobile-nav-links a {
             display: block;
-            padding: .75rem;
-            border-radius: 8px;
+            padding: 0.75rem 1rem;
             text-decoration: none;
-            color: var(--color-text-dark)
+            color: var(--color-text-dark);
+            font-weight: 500;
+            border-radius: 6px;
+            transition: var(--transition);
+            position: relative;
         }
 
-        .mobile-nav-links a:hover {
-            background: var(--color-light-blue)
+        .mobile-nav-links a:hover,
+        .mobile-nav-links a:focus {
+            background: var(--color-light-blue);
+            color: var(--color-navy);
         }
 
         main {
@@ -485,30 +561,87 @@
                 transition: none
             }
         }
+
+        /* === FOOTER === */
+        .footer {
+            background: var(--color-navy);
+            color: var(--color-white);
+            text-align: center;
+            padding: 3rem 0;
+            margin-top: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer a {
+            color: var(--color-light-blue);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+        }
+
+        .footer a:hover,
+        .footer a:focus {
+            color: var(--color-gold);
+            background: rgba(255, 215, 0, 0.1);
+            transform: translateY(-2px);
+            outline: none;
+        }
     </style>
 </head>
 
 <body>
-    <header>
+    <!-- Header avec navigation -->
+    <header class="header">
         <div class="header-content">
-            <a href="index.html" class="logo"><img src="logo-gjpb.png" alt=""></a>
+            <!-- Logo -->
+            <a href="index.html" class="logo" aria-label="Accueil du club de foot jeunesse">
+                <img src="logo-gjpb.png" alt="Logo GJPB">
+            </a>
+
+            <!-- Navigation desktop -->
             <nav class="nav-desktop" aria-label="Navigation principale">
                 <ul class="nav-links">
-                    <li><a href="18A.html">18A</a></li>
-                    <li><a href="17.html">17</a></li>
-                    <li><a href="18B.html">18B</a></li>
+                    <li><a href="18A.html" aria-label="Équipe 18 ans A">18A</a></li>
+                    <li><a href="17.html" aria-label="Équipe 17 ans">17</a></li>
+                    <li><a href="18B.html" aria-label="Équipe 18 ans B">18B</a></li>
                 </ul>
             </nav>
-            <a class="login-desktop" href="login.html">Se connecter</a>
-            <button class="mobile-menu-btn" aria-label="menu" aria-expanded="false">☰</button>
+            <a href="login.html" class="login-btn login-desktop" aria-label="Se connecter à votre compte">Se
+                connecter</a>
+
+            <!-- Bouton menu mobile -->
+            <button class="mobile-menu-btn" aria-label="Ouvrir le menu de navigation" aria-expanded="false"
+                aria-controls="mobile-menu">
+                <span aria-hidden="true">☰</span>
+            </button>
         </div>
-        <nav class="mobile-menu" id="mobile-menu">
+
+        <!-- Menu mobile -->
+        <nav id="mobile-menu" class="mobile-menu" aria-label="Navigation mobile">
             <ul class="mobile-nav-links">
-                <li><a href="18A.html">18A</a></li>
-                <li><a href="17.html">17</a></li>
-                <li><a href="18B.html">18B</a></li>
-                <li><a href="login.html">Se connecter</a></li>
+                <li><a href="18A.html" aria-label="Équipe 18 ans A">18A</a></li>
+                <li><a href="17.html" aria-label="Équipe 17 ans">17</a></li>
+                <li><a href="18B.html" aria-label="Équipe 18 ans B">18B</a></li>
             </ul>
+            <a href="login.html" class="login-btn" aria-label="Se connecter à votre compte">Se connecter</a>
         </nav>
     </header>
 
@@ -659,22 +792,63 @@
         </div>
     </main>
 
-    <footer style="background:var(--color-navy);color:#fff;text-align:center;padding:24px;margin-top:28px">
-        <a href="https://www.gjpb44.com/" style="color:#cfe6ff;text-decoration:none">🌐 Site GJPB</a>
-        <span> | © 2025 - By Clément Bolomey</span>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>
+                    <a href="https://www.gjpb44.com/" aria-label="Visiter le site officiel du club">🌐 Site GJPB</a>
+                    | © 2025 - By Clément Bolomey
+                </p>
+            </div>
+        </div>
     </footer>
 
     <script>
-        // ====== MENU MOBILE
-        (function () {
-            const btn = document.querySelector('.mobile-menu-btn');
-            const menu = document.getElementById('mobile-menu');
-            if (!btn || !menu) return;
-            btn.addEventListener('click', () => {
-                const open = menu.classList.toggle('open');
-                btn.setAttribute('aria-expanded', String(open));
+        // Toggle menu mobile
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            const mobileMenu = document.querySelector('.mobile-menu');
+
+            if (menuBtn && mobileMenu) {
+                menuBtn.addEventListener('click', function () {
+                    const isOpen = mobileMenu.classList.contains('open');
+
+                    if (isOpen) {
+                        mobileMenu.classList.remove('open');
+                        menuBtn.setAttribute('aria-expanded', 'false');
+                        menuBtn.setAttribute('aria-label', 'Ouvrir le menu de navigation');
+                    } else {
+                        mobileMenu.classList.add('open');
+                        menuBtn.setAttribute('aria-expanded', 'true');
+                        menuBtn.setAttribute('aria-label', 'Fermer le menu de navigation');
+                    }
+                });
+            }
+            loadQuickStats();
+
+            // Fermer le menu mobile au clic sur un lien
+            const mobileLinks = document.querySelectorAll('.mobile-nav-links a, .mobile-menu .login-btn');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function () {
+                    if (mobileMenu.classList.contains('open')) {
+                        mobileMenu.classList.remove('open');
+                        menuBtn.setAttribute('aria-expanded', 'false');
+                        menuBtn.setAttribute('aria-label', 'Ouvrir le menu de navigation');
+                    }
+                });
             });
-        })();
+
+            // Fermer le menu mobile avec Escape
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+                    mobileMenu.classList.remove('open');
+                    menuBtn.setAttribute('aria-expanded', 'false');
+                    menuBtn.setAttribute('aria-label', 'Ouvrir le menu de navigation');
+                    menuBtn.focus();
+                }
+            });
+        });
 
         // ====== GESTION DES FILTRES CHIPS
         (function() {
