@@ -16,6 +16,8 @@
             --color-white: #fff;
             --color-navy: #1e3a5f;
             --color-gold: #FFD700;
+            --color-silver: #C0C0C0;
+            --color-bronze: #CD7F32;
             --color-text-dark: #2c3e50;
             --color-text-light: #7f8c8d;
             --border-radius: 16px;
@@ -157,6 +159,94 @@
             margin-bottom: 12px
         }
 
+        /* ====== NOUVEAUX FILTRES AMÉLIORÉS ====== */
+        .filters-container {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 16px;
+            margin: 16px 0;
+            border: 1px solid rgba(0, 0, 0, .06);
+        }
+
+        .filters-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: var(--color-navy);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--color-text-dark);
+            margin-bottom: 4px;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .filter-chip {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .filter-chip:hover {
+            background: #e2e8f0;
+        }
+
+        .filter-chip.active {
+            background: var(--color-sky-blue);
+            color: white;
+            border-color: var(--color-sky-blue);
+        }
+
+        .filter-chip input[type="checkbox"] {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .filters-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .filter-options {
+                gap: 4px;
+            }
+            
+            .filter-chip {
+                font-size: 0.8rem;
+                padding: 3px 6px;
+            }
+        }
+
         /* ====== CARDS ====== */
         .card {
             background: #fff;
@@ -188,31 +278,24 @@
 
         .table-wrap {
             border-radius: 12px;
-            /* Suppression du overflow-x: auto pour éviter le scroll horizontal */
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            /* Suppression du min-width pour permettre l'adaptation complète */
         }
 
         th,
         td {
             padding: 8px 4px;
-            /* Réduction du padding pour les petits écrans */
             border-bottom: 1px solid rgba(0, 0, 0, .06);
             text-align: left;
-            /* Suppression du white-space: nowrap pour permettre le retour à la ligne si nécessaire */
         }
 
-        /* Ajustements spécifiques pour mobile */
         @media (max-width: 899px) {
-
             th,
             td {
                 font-size: 0.9rem;
-                /* Réduction de la taille de police sur mobile */
             }
 
             .rank-badge {
@@ -227,7 +310,6 @@
             color: #fff;
             text-transform: uppercase;
             font-size: .8rem;
-            /* Réduction de la taille des en-têtes */
         }
 
         tbody tr:hover {
@@ -243,22 +325,25 @@
             border-radius: 50%;
             font-weight: 700;
             flex-shrink: 0;
-            /* Empêche le badge de se rétrécir */
         }
 
-        .rank-1 {
+        /* ====== NOUVEAU SYSTÈME DE MÉDAILLES ====== */
+        .rank-gold {
             background: linear-gradient(135deg, var(--color-gold), #fbbf24);
-            color: #fff
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
         }
 
-        .rank-2 {
-            background: linear-gradient(135deg, #9ca3af, #6b7280);
-            color: #fff
+        .rank-silver {
+            background: linear-gradient(135deg, var(--color-silver), #9ca3af);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(192, 192, 192, 0.3);
         }
 
-        .rank-3 {
-            background: linear-gradient(135deg, #cd7c2f, #92400e);
-            color: #fff
+        .rank-bronze {
+            background: linear-gradient(135deg, var(--color-bronze), #92400e);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(205, 127, 50, 0.3);
         }
 
         .rank-other {
@@ -282,21 +367,18 @@
         .rank-carousel {
             overflow: hidden;
             touch-action: pan-y;
-            /* Permet seulement le scroll vertical, améliore le swipe horizontal */
         }
 
         .track {
             display: flex;
             transition: transform .35s ease;
             touch-action: pan-y;
-            /* Idem pour le track */
         }
 
         .panel {
             min-width: 100%;
             padding: 6px;
             flex-shrink: 0;
-            /* Empêche les panels de se rétrécir */
         }
 
         .dots {
@@ -333,7 +415,6 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 0.9rem;
-            /* Réduction de la taille pour mobile */
         }
 
         .tab.active {
@@ -342,7 +423,7 @@
             border-color: #1e3a5f
         }
 
-        /* ====== Desktop : 3 colonnes côte à côte, on "désactive" le carrousel ====== */
+        /* ====== Desktop : 3 colonnes côte à côte ====== */
         @media (min-width: 900px) {
             .rank-carousel {
                 overflow: visible;
@@ -378,7 +459,6 @@
                 display: none
             }
 
-            /* Restauration des styles desktop pour les tableaux */
             th,
             td {
                 padding: 10px;
@@ -400,7 +480,6 @@
             }
         }
 
-        /* ACCESSIBILITÉ — réduit le mouvement */
         @media (prefers-reduced-motion: reduce) {
             .track {
                 transition: none
@@ -436,6 +515,54 @@
     <main>
         <h1 class="page-title" style="text-align: center;">Classements</h1>
         <p class="sub" style="text-align: center;">Buteurs, passeurs et total (toutes équipes confondues).</p>
+
+        <!-- ====== NOUVEAUX FILTRES AMÉLIORÉS ====== -->
+        <div class="filters-container">
+            <div class="filters-header">
+                🔍 Filtres
+            </div>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <div class="filter-group-title">Compétitions</div>
+                    <div class="filter-options">
+                        <label class="filter-chip active">
+                            <input type="checkbox" class="comp-filter" value="Phase 1" checked>
+                            Phase 1
+                        </label>
+                        <label class="filter-chip active">
+                            <input type="checkbox" class="comp-filter" value="Phase 2" checked>
+                            Phase 2
+                        </label>
+                        <label class="filter-chip active">
+                            <input type="checkbox" class="comp-filter" value="Phase 3" checked>
+                            Phase 3
+                        </label>
+                        <label class="filter-chip active">
+                            <input type="checkbox" class="comp-filter" value="Coupe" checked>
+                            Coupe
+                        </label>
+                        <label class="filter-chip active">
+                            <input type="checkbox" class="comp-filter" value="Amical" checked>
+                            Amicaux
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <div class="filter-group-title">Lieu</div>
+                    <div class="filter-options">
+                        <label class="filter-chip active">
+                            <input type="checkbox" class="lieu-filter" value="DOM" checked>
+                            🏠 Domicile
+                        </label>
+                        <label class="filter-chip active">
+                            <input type="checkbox" class="lieu-filter" value="EXT" checked>
+                            ✈️ Extérieur
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Onglets visibles sur mobile pour cliquer en plus du swipe -->
         <div class="tabs" aria-hidden="false">
@@ -549,92 +676,221 @@
             });
         })();
 
+        // ====== GESTION DES FILTRES CHIPS
+        (function() {
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.addEventListener('click', function() {
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                    this.classList.toggle('active', checkbox.checked);
+                    
+                    // Déclencher le rechargement des données
+                    reloadAll();
+                });
+            });
+        })();
+
         // ====== SUPABASE
         const SUPABASE_URL = 'https://lgnwgbctaqaeawzjnuqh.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnbndnYmN0YXFhZWF3empudXFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MjYzNjUsImV4cCI6MjA2OTQwMjM2NX0.E0ug5jpRQVh55aq1ewToqol7h7aRPkg7YvwbKpQtVHo';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: false } });
 
-        // ====== RENDU RANG + LIGNES
+        // ====== NOUVEAU SYSTÈME DE MÉDAILLES ======
         function renderWithRanking(rows, tbodyId, key, getExtraCols) {
             const tbody = document.getElementById(tbodyId);
             tbody.innerHTML = '';
-            let last = null, rank = 1;
-            rows.forEach(r => {
-                const same = last !== null && r[key] === last;
-                const display = same ? '—' : rank;
-                last = r[key];
-                const badgeClass = display === '—' ? 'rank-other' :
-                    display === 1 ? 'rank-1' :
-                        display === 2 ? 'rank-2' :
-                            display === 3 ? 'rank-3' : 'rank-other';
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td><span class="rank-badge ${badgeClass}">${display}</span></td>
-                      <td><strong>${r.joueur}</strong></td>${getExtraCols(r)}`;
-                tbody.appendChild(tr);
-                rank++;
+            
+            if (rows.length === 0) return;
+            
+            // Grouper les joueurs par score
+            const groups = [];
+            let currentGroup = [];
+            let currentScore = null;
+            
+            rows.forEach(player => {
+                if (currentScore === null || player[key] === currentScore) {
+                    currentGroup.push(player);
+                    currentScore = player[key];
+                } else {
+                    groups.push(currentGroup);
+                    currentGroup = [player];
+                    currentScore = player[key];
+                }
+            });
+            
+            if (currentGroup.length > 0) {
+                groups.push(currentGroup);
+            }
+            
+            // Attribution des médailles par groupe
+            let currentRank = 1;
+            
+            groups.forEach((group, groupIndex) => {
+                let badgeClass;
+                let displayRank;
+                
+                if (groupIndex === 0) {
+                    // Premier groupe = Or
+                    badgeClass = 'rank-gold';
+                    displayRank = '🥇';
+                } else if (groupIndex === 1) {
+                    // Deuxième groupe = Argent
+                    badgeClass = 'rank-silver';
+                    displayRank = '🥈';
+                } else if (groupIndex === 2) {
+                    // Troisième groupe = Bronze
+                    badgeClass = 'rank-bronze';
+                    displayRank = '🥉';
+                } else {
+                    // Après le podium = numérotation classique avec "—" pour les ex-aequo
+                    badgeClass = 'rank-other';
+                    displayRank = currentRank;
+                }
+                
+                group.forEach((player, playerIndex) => {
+                    const tr = document.createElement('tr');
+                    
+                    // Pour les groupes après le podium : afficher "—" pour les ex-aequo sauf le premier du groupe
+                    let finalDisplayRank = displayRank;
+                    if (groupIndex >= 3 && playerIndex > 0) {
+                        finalDisplayRank = '—';
+                    }
+                    
+                    tr.innerHTML = `
+                        <td><span class="rank-badge ${badgeClass}">${finalDisplayRank}</span></td>
+                        <td><strong>${player.joueur}</strong></td>
+                        ${getExtraCols(player)}
+                    `;
+                    tbody.appendChild(tr);
+                });
+                
+                currentRank += group.length;
             });
         }
 
+        async function reloadAll() {
+            await ensureMatchesLoaded();
+            const allowed = allowedMatchIds();
+            await Promise.all([
+                loadGoals(allowed),
+                loadAssists(allowed),
+                loadTotal(allowed)
+            ]);
+        }
+
+        // init + écoute des filtres
+        document.addEventListener('DOMContentLoaded', async () => {
+            await reloadAll();
+        });
+
+        // --- Cache des matchs (id -> competition) ---
+        let MATCHES_MAP = null; // Map<id, { competition, lieu }>
+
+        async function ensureMatchesLoaded() {
+            if (MATCHES_MAP) return;
+            const { data, error } = await supabase.from('matchs').select('id, competition, lieu');
+            if (error) { console.error('Erreur matchs:', error); MATCHES_MAP = new Map(); return; }
+            MATCHES_MAP = new Map((data || []).map(m => [m.id, { competition: m.competition, lieu: m.lieu }]));
+        }
+
+        // Compétitions cochées -> Set<string>
+        function selectedCompetitions() {
+            const set = new Set();
+            document.querySelectorAll('.comp-filter:checked').forEach(cb => set.add(cb.value));
+            return set;
+        }
+
+        // Lieux cochés -> Set<string> (DOM / EXT)
+        function selectedLocations() {
+            const set = new Set();
+            document.querySelectorAll('.lieu-filter:checked').forEach(cb => set.add(cb.value));
+            return set;
+        }
+
+        // Ids de matchs autorisés selon compétitions ET lieux
+        function allowedMatchIds() {
+            const comps = selectedCompetitions();
+            const locs = selectedLocations();
+            const allowed = new Set();
+
+            for (const [id, meta] of (MATCHES_MAP || new Map())) {
+                // Normalise le lieu (DOM/EXT)
+                const L = String(meta.lieu || '').toUpperCase();
+                if (comps.has(meta.competition) && locs.has(L)) {
+                    allowed.add(id);
+                }
+            }
+            return allowed;
+        }
+
         // ====== CHARGEMENTS
-        async function loadGoals() {
-            const { data, error } = await supabase.from('actions').select('joueur,match_id').eq('type', 'Goal');
-            const loader = document.getElementById('load-goals'), wrap = document.getElementById('wrap-goals'), empty = document.getElementById('empty-goals');
+        async function loadGoals(allowedIds) {
+            const loader = document.getElementById('load-goals'), wrap = document.getElementById('wrap-goals'),
+                empty = document.getElementById('empty-goals');
+            loader.style.display = 'block'; wrap.style.display = 'none'; empty.style.display = 'none';
+
+            const { data, error } = await supabase.from('actions').select('joueur, match_id').eq('type', 'Goal');
             loader.style.display = 'none';
             if (error) { empty.textContent = 'Erreur: ' + error.message; empty.style.display = 'block'; return; }
+
             const map = new Map();
             (data || []).forEach(a => {
-                if (!a.joueur) return;
-                if (!map.has(a.joueur)) map.set(a.joueur, { buts: 0, matches: new Set() });
-                const ref = map.get(a.joueur); ref.buts++; ref.matches.add(a.match_id);
+                if (!a.joueur || !allowedIds.has(a.match_id)) return;
+                if (!map.has(a.joueur)) map.set(a.joueur, { buts: 0 });
+                map.get(a.joueur).buts++;
             });
-            const rows = Array.from(map, ([joueur, s]) => ({ joueur, buts: s.buts, matches: s.matches.size }))
+            const rows = Array.from(map, ([joueur, s]) => ({ joueur, buts: s.buts }))
                 .sort((a, b) => b.buts - a.buts || a.joueur.localeCompare(b.joueur));
             if (!rows.length) { empty.style.display = 'block'; return; }
             wrap.style.display = 'block';
             renderWithRanking(rows, 'tbody-goals', 'buts', r => `<td><strong>${r.buts}</strong></td>`);
         }
 
-        async function loadAssists() {
-            const { data, error } = await supabase.from('actions').select('joueur,match_id').eq('type', 'Assist');
-            const loader = document.getElementById('load-assists'), wrap = document.getElementById('wrap-assists'), empty = document.getElementById('empty-assists');
+        async function loadAssists(allowedIds) {
+            const loader = document.getElementById('load-assists'), wrap = document.getElementById('wrap-assists'),
+                empty = document.getElementById('empty-assists');
+            loader.style.display = 'block'; wrap.style.display = 'none'; empty.style.display = 'none';
+
+            const { data, error } = await supabase.from('actions').select('joueur, match_id').eq('type', 'Assist');
             loader.style.display = 'none';
             if (error) { empty.textContent = 'Erreur: ' + error.message; empty.style.display = 'block'; return; }
+
             const map = new Map();
             (data || []).forEach(a => {
-                if (!a.joueur) return;
-                if (!map.has(a.joueur)) map.set(a.joueur, { passes: 0, matches: new Set() });
-                const ref = map.get(a.joueur); ref.passes++; ref.matches.add(a.match_id);
+                if (!a.joueur || !allowedIds.has(a.match_id)) return;
+                if (!map.has(a.joueur)) map.set(a.joueur, { passes: 0 });
+                map.get(a.joueur).passes++;
             });
-            const rows = Array.from(map, ([joueur, s]) => ({ joueur, passes: s.passes, matches: s.matches.size }))
+            const rows = Array.from(map, ([joueur, s]) => ({ joueur, passes: s.passes }))
                 .sort((a, b) => b.passes - a.passes || a.joueur.localeCompare(b.joueur));
             if (!rows.length) { empty.style.display = 'block'; return; }
             wrap.style.display = 'block';
             renderWithRanking(rows, 'tbody-assists', 'passes', r => `<td><strong>${r.passes}</strong></td>`);
         }
 
-        async function loadTotal() {
-            const { data, error } = await supabase.from('actions').select('joueur,type');
-            const loader = document.getElementById('load-total'), wrap = document.getElementById('wrap-total'), empty = document.getElementById('empty-total');
+        async function loadTotal(allowedIds) {
+            const loader = document.getElementById('load-total'), wrap = document.getElementById('wrap-total'),
+                empty = document.getElementById('empty-total');
+            loader.style.display = 'block'; wrap.style.display = 'none'; empty.style.display = 'none';
+
+            const { data, error } = await supabase.from('actions').select('joueur, type, match_id');
             loader.style.display = 'none';
             if (error) { empty.textContent = 'Erreur: ' + error.message; empty.style.display = 'block'; return; }
+
             const map = new Map();
             (data || []).forEach(a => {
-                if (!a.joueur) return;
+                if (!a.joueur || !allowedIds.has(a.match_id)) return;
                 if (!map.has(a.joueur)) map.set(a.joueur, { buts: 0, passes: 0 });
                 const ref = map.get(a.joueur);
                 if (a.type === 'Goal') ref.buts++;
                 else if (a.type === 'Assist') ref.passes++;
             });
-            const rows = Array.from(map, ([joueur, s]) => ({ joueur, buts: s.buts, passes: s.passes, total: s.buts + s.passes }))
+            const rows = Array.from(map, ([joueur, s]) => ({ joueur, total: s.buts + s.passes, buts: s.buts, passes: s.passes }))
                 .sort((a, b) => b.total - a.total || a.joueur.localeCompare(b.joueur));
             if (!rows.length) { empty.style.display = 'block'; return; }
             wrap.style.display = 'block';
             renderWithRanking(rows, 'tbody-total', 'total', r => `<td><strong>${r.total}</strong></td>`);
         }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadGoals(); loadAssists(); loadTotal();
-        });
 
         // ====== CARROUSEL SWIPE (mobile) + onglets + points
         (function () {
