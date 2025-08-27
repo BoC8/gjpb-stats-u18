@@ -6,10 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Club de Foot Jeunesse - Accueil</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
     <style>
         /* === VARIABLES CSS === */
@@ -34,6 +33,15 @@
             --transition: all 0.3s ease;
             --gradient-primary: linear-gradient(135deg, var(--color-sky-blue) 0%, var(--color-navy) 100%);
             --gradient-card: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+
+            /* Variables pour la grille responsive */
+            --col-width-1: 1fr;
+            --col-width-2: 1fr;
+            --col-width-3: 1fr;
+            --col-width-4: 1fr;
+            --col-width-5: 1fr;
+            --col-width-6: 1fr;
+            --col-width-7: 1fr;
         }
 
         /* === RESET & BASE === */
@@ -223,239 +231,379 @@
             color: var(--color-navy);
         }
 
-        /* ========================================================================================================= */
-
         /* === MAIN === */
+        .wrap {
+            padding: 2rem var(--padding-mobile);
+        }
 
-        /* filtres */
+        .wrap h1 {
+            font-size: 2.5rem;
+            color: var(--color-navy);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .sub {
+            color: var(--color-text-light);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* FILTRES COMPACTS POUR MOBILE */
         .filters {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: var(--shadow);
+            margin: 10px 0;
+        }
+
+        .filters h2 {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            text-align: center;
+            color: var(--color-navy);
+        }
+
+        .filter-group {
+            margin-bottom: 8px;
+        }
+
+        .filter-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .filter-group-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--color-navy);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-options {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            background: #fff;
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            padding: 10px;
-            box-shadow: var(--shadow);
-            margin: 10px 0
+            gap: 4px;
         }
 
-        .filters label {
+        .filter-options label {
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-weight: 600
+            gap: 3px;
+            font-weight: 600;
+            white-space: nowrap;
+            font-size: 0.7rem;
+            padding: 3px 6px;
+            border-radius: 12px;
+            transition: var(--transition);
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid #e5e7eb;
+            line-height: 1.2;
         }
 
-        .filters input[type="checkbox"] {
-            transform: translateY(1px)
+        .filter-options label:hover {
+            background: rgba(110, 193, 255, 0.1);
+            border-color: var(--color-sky-blue);
+            transform: translateY(-1px);
         }
 
-        .filters .sep {
-            width: 1px;
-            height: 20px;
-            background: var(--line);
-            margin: 0 6px
+        .filter-options input[type="checkbox"] {
+            transform: scale(0.8);
+            accent-color: var(--color-sky-blue);
         }
 
-        /* nav */
+        /* Couleurs spécifiques pour les différents types de filtres */
+        .filter-options label.active-team {
+            background: linear-gradient(135deg, var(--color-sky-blue), var(--color-navy));
+            color: white;
+            border-color: var(--color-navy);
+        }
+
+        .filter-options label.active-championnat {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+
+        .filter-options label.active-coupe {
+            background: rgba(236, 72, 153, 0.15);
+            border-color: #ec4899;
+            color: #be185d;
+        }
+
+        .filter-options label.active-amical {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: #f59e0b;
+            color: #d97706;
+        }
+
+        .filter-options label.active-lieu {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: var(--color-success);
+            color: #047857;
+        }
+
+        .filter-options label.active-status {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: #6366f1;
+            color: #4338ca;
+        }
+
+        /* Séparateur visuel entre groupes - plus discret */
+        .filter-group:not(:last-child) {
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 6px;
+        }
+
+        /* Navigation */
         .cal-nav {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin: 12px 0
+            margin: 12px 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .cal-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn {
-            border: 1px solid var(--line);
+            border: 1px solid #e5e7eb;
             background: #fff;
             border-radius: 10px;
-            padding: .5rem .75rem;
-            cursor: pointer
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
         }
 
         .btn:hover {
-            background: #f8fafc
+            background: #f8fafc;
+            border-color: var(--color-sky-blue);
         }
 
         .month-title {
             font-weight: 800;
-            letter-spacing: .2px
+            letter-spacing: 0.2px;
+            font-size: 1.2rem;
+            color: var(--color-navy);
         }
 
-        /* calendrier */
+        /* Calendrier avec grille adaptative */
         .calendar {
             background: #fff;
-            border: 1px solid var(--line);
+            border: 1px solid #e5e7eb;
             border-radius: 16px;
             box-shadow: var(--shadow);
-            overflow: hidden
+            overflow: hidden;
+            margin-bottom: 2rem;
         }
 
         .cal-head,
         .cal-grid {
             display: grid;
-            grid-template-columns: repeat(7, 1fr)
+            grid-template-columns:
+                var(--col-width-1) var(--col-width-2) var(--col-width-3) var(--col-width-4) var(--col-width-5) var(--col-width-6) var(--col-width-7);
         }
 
         .cal-head div {
-            padding: .75rem;
+            padding: 0.75rem 0.25rem;
             text-align: center;
             font-weight: 700;
             background: linear-gradient(180deg, #fff, #f8fafc);
-            border-bottom: 1px solid var(--line)
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.85rem;
         }
 
         .day {
-            min-height: 110px;
-            border-right: 1px solid var(--line);
-            border-bottom: 1px solid var(--line);
-            padding: 8px;
-            position: relative
+            min-height: 100px;
+            border-right: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 6px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .day:hover {
+            background-color: #f8fafc;
         }
 
         .day:nth-child(7n) {
-            border-right: none
+            border-right: none;
         }
 
         .day .dnum {
             font-weight: 700;
-            font-size: .95rem
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+            flex-shrink: 0;
         }
 
         .day.other {
             background: linear-gradient(180deg, #fafafa, #fdfdfd);
-            color: #9ca3af
+            color: #9ca3af;
+        }
+
+        .day.empty {
+            background: #fafafa;
         }
 
         .today {
-            outline: 2px solid var(--accent-2);
+            outline: 2px solid var(--color-sky-blue);
             outline-offset: -2px;
-            border-radius: 8px
+            border-radius: 8px;
+            background: rgba(110, 193, 255, 0.05);
         }
 
         .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 4px;
-            padding: .15rem .45rem;
-            border-radius: 9999px;
-            border: 1px solid var(--line);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 2px;
+            padding: 0.15rem 0.4rem;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
             background: #f9fbff;
-            font-size: .83rem;
-            white-space: nowrap
+            font-size: 0.75rem;
+            line-height: 1.2;
+            overflow: hidden;
+        }
+
+        /* Couleurs selon la compétition */
+        .badge.amical {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-color: #f59e0b;
+        }
+
+        .badge.championnat {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            border-color: #3b82f6;
+        }
+
+        .badge.coupe {
+            background: linear-gradient(135deg, #fce7f3, #fbcfe8);
+            border-color: #ec4899;
+        }
+
+        .badge strong {
+            font-size: 0.7rem;
         }
 
         .tag {
-            font-size: .7rem;
+            font-size: 0.6rem;
             font-weight: 700;
-            padding: .05rem .35rem;
+            padding: 0.1rem 0.3rem;
             border-radius: 999px;
-            color: #fff
+            color: #fff;
+            flex-shrink: 0;
         }
 
         .tag.dom {
-            background: var(--dom)
+            background: #fefdfc;
+            color: #0291fe;
         }
 
         .tag.ext {
-            background: var(--ext)
+            background: #fefdfc;
+            color: #0291fe;
         }
 
         .tag.V {
-            background: var(--win)
+            background: #10b981;
         }
 
         .tag.N {
-            background: var(--draw)
+            background: #6b7280;
         }
 
         .tag.D {
-            background: var(--loss)
+            background: #ef4444;
         }
 
         .tag.todo {
-            background: var(--todo)
+            background: #3b82f6;
         }
 
-        /* À venir / À saisir (bleu) */
-
-        /* panneau "détail du jour" */
+        /* Panneau détail du jour */
         .day-detail {
             background: #fff;
-            border: 1px solid var(--line);
+            border: 1px solid #e5e7eb;
             border-radius: 16px;
             box-shadow: var(--shadow);
             margin: 14px 0;
-            padding: 10px
+            padding: 1.5rem;
         }
 
         .match-row {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px;
-            border-bottom: 1px solid var(--line)
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            background: #f8fafc;
         }
 
         .match-row:last-child {
-            border-bottom: 0
+            border-bottom: 0;
+            margin-bottom: 0;
         }
 
         .match-row .teams {
-            flex: 2
+            flex: 1;
+            min-width: 0;
+        }
+
+        .match-row .teams>div:first-child {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
         }
 
         .match-row .score {
-            flex: 0 0 76px;
+            flex: 0 0 auto;
             text-align: center;
-            font-weight: 800
+            font-weight: 800;
+            font-size: 1.1rem;
+            min-width: 60px;
         }
 
         .match-row .meta {
-            flex: 1;
+            flex: 0 0 auto;
             text-align: right;
-            color: var(--muted);
-            font-size: .9rem
+            color: var(--color-text-light);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        /* responsive */
-        @media (max-width:900px) {
-            .day {
-                min-height: 90px
-            }
-
-            .badge {
-                font-size: .8rem
-            }
+        .actions-sub {
+            margin: -6px 0 8px 0;
+            padding: 8px 12px;
+            background: #fff;
+            border: 1px dashed #e5e7eb;
+            border-radius: 8px;
+            color: var(--color-text-dark);
+            font-size: 0.9rem;
         }
 
-        @media (max-width:600px) {
-            .cal-head div {
-                font-size: .85rem
-            }
-
-            .day {
-                min-height: 84px
-            }
-
-            .badge {
-                font-size: .78rem
-            }
-
-            .match-row {
-                gap: 8px
-            }
-
-            .match-row .score {
-                flex-basis: 66px
-            }
+        .actions-sub .ap-line {
+            margin: 2px 0;
         }
 
-
-
-        /* ========================================================================================================= */
 
         /* === FOOTER === */
         .footer {
@@ -501,30 +649,202 @@
         }
 
         /* === RESPONSIVE === */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
+        @media (max-width: 480px) {
+            .wrap {
+                padding: 1rem 0.5rem;
             }
 
-            .hero p {
-                font-size: 1.1rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-            }
-
-            .card {
-                padding: 2rem 1.5rem;
-            }
-
-            .section-title {
+            .wrap h1 {
                 font-size: 2rem;
             }
 
+            .sub {
+                font-size: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            /* FILTRES ULTRA-COMPACTS POUR TRÈS PETITS ÉCRANS */
+            .filters {
+                padding: 8px;
+                border-radius: 8px;
+                margin: 8px 0;
+            }
+
+            .filters h2 {
+                font-size: 0.8rem;
+                margin-bottom: 6px;
+            }
+
+            .filter-group {
+                margin-bottom: 6px;
+            }
+
+            .filter-group-title {
+                font-size: 0.65rem;
+                margin-bottom: 3px;
+            }
+
+            .filter-options {
+                gap: 3px;
+            }
+
+            .filter-options label {
+                font-size: 0.6rem;
+                padding: 2px 4px;
+                gap: 2px;
+                border-radius: 8px;
+            }
+
+            .filter-options input[type="checkbox"] {
+                transform: scale(0.7);
+            }
+
+            .filter-group:not(:last-child) {
+                padding-bottom: 4px;
+            }
+
+            .cal-nav {
+                gap: 0.5rem;
+            }
+
+            .month-title {
+                font-size: 1.1rem;
+            }
+
+            .btn {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.8rem;
+            }
+
+            .cal-head div {
+                padding: 0.5rem 0.1rem;
+                font-size: 0.7rem;
+            }
+
+            .day {
+                min-height: 70px;
+                padding: 3px;
+            }
+
+            .day .dnum {
+                font-size: 0.75rem;
+                margin-bottom: 1px;
+            }
+
+            .badge {
+                font-size: 0.6rem;
+                padding: 0.1rem 0.25rem;
+                gap: 2px;
+                margin-top: 1px;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .badge strong {
+                font-size: 0.6rem;
+            }
+
+            .tag {
+                font-size: 0.5rem;
+                padding: 0.05rem 0.2rem;
+            }
+
+            /* Optimisation pour colonnes très étroites */
+            .day.empty .dnum {
+                font-size: 0.7rem;
+            }
+
+            /* Masquer certains éléments sur colonnes inactives très étroites */
+            .calendar {
+                font-size: 0.85rem;
+            }
+
+            .match-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+                padding: 0.75rem;
+            }
+
+            .match-row .score {
+                text-align: center;
+            }
+
+            .match-row .meta {
+                text-align: center;
+                justify-content: center;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 768px) {
             .login-desktop {
                 display: none;
+            }
+
+            .container {
+                padding: 0 0.5rem;
+            }
+
+            .header-content {
+                padding: 0 1rem;
+            }
+
+            /* FILTRES COMPACTS POUR TABLETTES */
+            .filters {
+                padding: 10px;
+            }
+
+            .filters h2 {
+                font-size: 0.85rem;
+                margin-bottom: 6px;
+            }
+
+            .filter-group {
+                margin-bottom: 6px;
+            }
+
+            .filter-group-title {
+                font-size: 0.55rem;
+                margin-bottom: 3px;
+            }
+
+            .filter-options {
+                gap: 3px;
+            }
+
+            .filter-options label {
+                font-size: 0.55rem;
+                padding: 2px 5px;
+                gap: 2px;
+            }
+
+            .filter-options input[type="checkbox"] {
+                transform: scale(0.8);
+            }
+
+            .filter-group:not(:last-child) {
+                padding-bottom: 5px;
+            }
+
+            #match-cal {
+                font-size: 0.7rem;
+            }
+
+            .actions-sub .ap-line {
+                font-size: 0.55rem;
+            }
+
+            .match-row .teams {
+                font-size: 0.7rem;
+            }
+
+            .match-row .score {
+                font-size: 0.85rem;
+            }
+
+            .match-row .meta {
+                font-size: 0.7rem;
             }
         }
 
@@ -549,12 +869,51 @@
                 display: none;
             }
 
-            .cards-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .filters {
+                flex-wrap: wrap;
+                overflow-x: visible;
+                font-size: 0.8rem;
+                padding: 20px;
             }
 
-            .stats-grid {
-                grid-template-columns: repeat(4, 1fr);
+            .filters h2 {
+                font-size: 1rem;
+                margin-bottom: 8px;
+            }
+
+            .filter-group {
+                margin-bottom: 16px;
+            }
+
+            .filter-group-title {
+                font-size: 0.85rem;
+                margin-bottom: 8px;
+            }
+
+            .filter-options {
+                gap: 8px;
+            }
+
+            .filter-options label {
+                font-size: 0.85rem;
+                padding: 6px 12px;
+                gap: 6px;
+            }
+
+            .filter-options input[type="checkbox"] {
+                transform: scale(1.0);
+            }
+
+            .filter-group:not(:last-child) {
+                padding-bottom: 12px;
+            }
+
+            .day {
+                min-height: 120px;
+            }
+
+            .badge {
+                font-size: 0.8rem;
             }
         }
 
@@ -627,33 +986,54 @@
 
             <!-- FILTRES -->
             <div class="filters" id="filters">
-                <label><input type="checkbox" class="f-team" value="18A" checked> 18A</label>
-                <label><input type="checkbox" class="f-team" value="17" checked> 17</label>
-                <label><input type="checkbox" class="f-team" value="18B" checked> 18B</label>
-                <span class="sep"></span>
-                <label><input type="checkbox" class="f-comp" value="Phase 1" checked> Phase 1</label>
-                <label><input type="checkbox" class="f-comp" value="Phase 2" checked> Phase 2</label>
-                <label><input type="checkbox" class="f-comp" value="Phase 3" checked> Phase 3</label>
-                <label><input type="checkbox" class="f-comp" value="Coupe" checked> Coupe</label>
-                <label><input type="checkbox" class="f-comp" value="Amical" checked> Amical</label>
-                <span class="sep"></span>
-                <label><input type="checkbox" class="f-lieu" value="DOM" checked> DOM</label>
-                <label><input type="checkbox" class="f-lieu" value="EXT" checked> EXT</label>
-                <span class="sep"></span>
-                <label><input type="checkbox" class="f-stat" value="upcoming" checked> À venir</label>
-                <label><input type="checkbox" class="f-stat" value="played" checked> Joués</label>
-                <span class="sep"></span>
-                <label title="Affiche les programmations dont la date est passée si aucun résultat saisi">
-                    <input type="checkbox" id="showOverdue"> Voir programmations passées sans résultat
-                </label>
+                <h2>Filtres</h2>
+                <div class="filter-group">
+                    <div class="filter-group-title">Équipes</div>
+                    <div class="filter-options">
+                        <label><input type="checkbox" class="f-team" value="18A" checked> 18A</label>
+                        <label><input type="checkbox" class="f-team" value="17" checked> 17</label>
+                        <label><input type="checkbox" class="f-team" value="18B" checked> 18B</label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <div class="filter-group-title">Compétitions</div>
+                    <div class="filter-options">
+                        <label><input type="checkbox" class="f-comp" value="Phase 1" checked> Phase 1</label>
+                        <label><input type="checkbox" class="f-comp" value="Phase 2" checked> Phase 2</label>
+                        <label><input type="checkbox" class="f-comp" value="Phase 3" checked> Phase 3</label>
+                        <label><input type="checkbox" class="f-comp" value="Coupe" checked> Coupe</label>
+                        <label><input type="checkbox" class="f-comp" value="Amical" checked> Amical</label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <div class="filter-group-title">Lieu</div>
+                    <div class="filter-options">
+                        <label><input type="checkbox" class="f-lieu" value="DOM" checked> Dom</label>
+                        <label><input type="checkbox" class="f-lieu" value="EXT" checked> Ext</label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <div class="filter-group-title">Statut</div>
+                    <div class="filter-options">
+                        <label><input type="checkbox" class="f-stat" value="upcoming" checked> À venir</label>
+                        <label><input type="checkbox" class="f-stat" value="played" checked> Joués</label>
+                        <label title="Affiche les programmations dont la date est passée si aucun résultat saisi">
+                            <input type="checkbox" id="showOverdue"> Prog. passées
+                        </label>
+                    </div>
+                </div>
             </div>
+            <br>
 
             <!-- NAV -->
             <div class="cal-nav">
                 <button class="btn" id="prev">◀</button>
                 <div class="month-title" id="monthTitle">—</div>
-                <div>
-                    <button class="btn" id="todayBtn">Aujourd’hui</button>
+                <div class="cal-nav-right">
+                    <button class="btn" id="todayBtn">Aujourd'hui</button>
                     <button class="btn" id="next">▶</button>
                 </div>
             </div>
@@ -713,7 +1093,6 @@
                     }
                 });
             }
-            loadQuickStats();
 
             // Fermer le menu mobile au clic sur un lien
             const mobileLinks = document.querySelectorAll('.mobile-nav-links a, .mobile-menu .login-btn');
@@ -738,20 +1117,20 @@
             });
         });
 
-
         // === Supabase ===
         const SUPABASE_URL = 'https://lgnwgbctaqaeawzjnuqh.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnbndnYmN0YXFhZWF3empudXFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MjYzNjUsImV4cCI6MjA2OTQwMjM2NX0.E0ug5jpRQVh55aq1ewToqol7h7aRPkg7YvwbKpQtVHo';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: false } });
 
-        // === état calendrier ===
+        // === État calendrier ===
         const state = {
             year: new Date().getFullYear(),
             month: new Date().getMonth(), // 0..11
             played: [],        // matches (joués)
             upcoming: [],      // programmations (à venir)
             filteredPlayed: [],
-            filteredUpcoming: []
+            filteredUpcoming: [],
+            columnActivity: [false, false, false, false, false, false, false] // Lun, Mar, Mer, Jeu, Ven, Sam, Dim
         };
 
         const monthTitle = document.getElementById('monthTitle');
@@ -761,11 +1140,25 @@
         const detailList = document.getElementById('detailList');
         const showOverdue = document.getElementById('showOverdue');
 
-        // === utilitaires ===
+        // === Utilitaires ===
         const fmtDate = (d) => new Date(d).toLocaleDateString('fr-FR');
         const fmtMonth = (y, m) => new Date(y, m, 1).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
         const ymd = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
         const todayYMD = (() => { const t = new Date(); t.setHours(0, 0, 0, 0); return t; })();
+
+        // YYYY-MM-DD en local (évite les décalages UTC)
+        function ymdLocal(d) {
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+
+        // Normalise la date renvoyée par Supabase (DATE -> "YYYY-MM-DD", TIMESTAMP -> "YYYY-MM-DDTHH...")
+        function normDbDate(s) {
+            return (s || '').slice(0, 10);
+        }
+
 
         function getChecked(selector) {
             const s = new Set();
@@ -790,15 +1183,78 @@
             return 'tag';
         }
 
-        // clé de correspondance pour relier programmation ↔ match joué
+        // Clé de correspondance pour relier programmation ↔ match joué
         const keyFor = (m) => `${m.date}|${(m.equipe || '').trim()}|${(m.adversaire || '').trim()}`;
 
-        // === chargement des données du mois
+        // === Fonction pour déterminer le type de compétition ===
+        function getCompetitionType(competition) {
+            if (!competition) return 'default';
+            const comp = competition.toLowerCase();
+            if (comp.includes('amical')) return 'amical';
+            if (comp.includes('phase') || comp.includes('championnat')) return 'championnat';
+            if (comp.includes('coupe')) return 'coupe';
+            return 'default';
+        }
+
+        // === Fonction pour analyser l'activité par jour de la semaine ===
+        function analyzeColumnActivity() {
+            // Réinitialiser l'activité des colonnes
+            state.columnActivity = [false, false, false, false, false, false, false];
+
+            const allEvents = [...state.filteredPlayed, ...state.filteredUpcoming];
+
+            allEvents.forEach(event => {
+                const date = new Date(event.date);
+                // Fix: correction du calcul du jour de la semaine
+                const dayOfWeek = (date.getDay() + 6) % 7; // Lundi=0, Mardi=1, ..., Dimanche=6
+                state.columnActivity[dayOfWeek] = true;
+            });
+        }
+
+        // === Fonction pour mettre à jour les largeurs de colonnes ===
+        function updateColumnWidths() {
+            const root = document.documentElement;
+            const isMobile = window.innerWidth <= 768;
+
+            if (!isMobile) {
+                // Sur desktop, garder toutes les colonnes égales
+                for (let i = 1; i <= 7; i++) {
+                    root.style.setProperty(`--col-width-${i}`, '1fr');
+                }
+                return;
+            }
+
+            // Sur mobile, ajuster selon l'activité
+            const activeColumns = state.columnActivity.filter(active => active).length;
+
+            if (activeColumns === 0) {
+                // Aucune activité, garder toutes égales
+                for (let i = 1; i <= 7; i++) {
+                    root.style.setProperty(`--col-width-${i}`, '1fr');
+                }
+                return;
+            }
+
+            // Réduire drastiquement les colonnes vides pour optimiser l'espace
+            for (let i = 0; i < 7; i++) {
+                const cssVar = `--col-width-${i + 1}`;
+                if (state.columnActivity[i]) {
+                    // Colonne active : taille normale
+                    root.style.setProperty(cssVar, '1fr');
+                } else {
+                    // Colonne inactive : très réduite
+                    root.style.setProperty(cssVar, '0.3fr');
+                }
+            }
+        }
+
+        // === Chargement des données du mois ===
         async function loadMonth(y, m) {
             const first = new Date(y, m, 1);
             const last = new Date(y, m + 1, 0);
-            const from = first.toISOString().slice(0, 10);
-            const to = last.toISOString().slice(0, 10);
+            const from = ymdLocal(first);
+            const to = ymdLocal(last);
+
 
             // 1) Matchs joués
             const q1 = supabase
@@ -809,7 +1265,7 @@
             // 2) Programmations (à venir)
             const q2 = supabase
                 .from('programmations')
-                .select('id, date, equipe, adversaire, lieu, competition, heure, terrain')
+                .select('id, date, equipe, adversaire, lieu, competition, heure')
                 .gte('date', from).lte('date', to);
 
             const [r1, r2] = await Promise.all([q1, q2]);
@@ -817,10 +1273,12 @@
             state.upcoming = (r2.error ? [] : (r2.data || []));
 
             applyFilters();
+            analyzeColumnActivity();
+            updateColumnWidths();
             renderCalendar();
         }
 
-        // === application des filtres + règles de non-duplication
+        // === Application des filtres + règles de non-duplication ===
         function applyFilters() {
             const f = filters();
             const passFilters = (m) =>
@@ -843,7 +1301,7 @@
                 // 1) si un 'match' existe → ne pas montrer la programmation
                 if (playedKeys.has(key)) return false;
 
-                // 2) si la date est passée → masquer, sauf si l’option overdue est cochée
+                // 2) si la date est passée → masquer, sauf si l'option overdue est cochée
                 const d = new Date(m.date); d.setHours(0, 0, 0, 0);
                 const isPast = d < todayYMD;
                 if (isPast && !f.overdue) return false;
@@ -853,7 +1311,7 @@
             if (!f.status.has('upcoming')) state.filteredUpcoming = [];
         }
 
-        // === rendu calendrier
+        // === Rendu calendrier ===
         function renderCalendar() {
             const y = state.year, m = state.month;
             monthTitle.textContent = fmtMonth(y, m).replace(/^\w/, c => c.toUpperCase());
@@ -882,25 +1340,36 @@
                     if (isToday) cell.classList.add('today');
                     cell.innerHTML = `<div class="dnum">${dayNum}</div>`;
 
-                    const ymdStr = date.toISOString().slice(0, 10);
+                    const ymdStr = ymdLocal(date);
 
-                    const upcomingToday = state.filteredUpcoming.filter(mm => mm.date === ymdStr);
-                    const playedToday = state.filteredPlayed.filter(mm => mm.date === ymdStr);
+                    const upcomingToday = state.filteredUpcoming.filter(mm => normDbDate(mm.date) === ymdStr);
+                    const playedToday = state.filteredPlayed.filter(mm => normDbDate(mm.date) === ymdStr);
 
-                    // D'abord programmés (à venir / à saisir)
+
+                    // S'il n'y a aucun événement, marquer comme vide
+                    if (upcomingToday.length === 0 && playedToday.length === 0) {
+                        cell.classList.add('empty');
+                    }
+
+                    // D'abord programmés (à venir / terminé)
                     upcomingToday.forEach(mm => {
                         const lieuTag = (String(mm.lieu || '').toUpperCase() === 'DOM') ? 'dom' : 'ext';
                         const badge = document.createElement('div');
                         const heure = mm.heure ? ` • ${mm.heure}` : '';
-                        // s'il est dans le passé (et checkbox "overdue" cochée), on note "À saisir"
-                        const d = new Date(mm.date); d.setHours(0, 0, 0, 0);
+                        // s'il est dans le passé (et checkbox "overdue" cochée), on note "terminé"
+                        const d = new Date(normDbDate(mm.date)); d.setHours(0, 0, 0, 0);
                         const overdue = d < todayYMD;
-                        badge.className = 'badge';
+                        const compType = getCompetitionType(mm.competition);
+                        badge.className = `badge ${compType}`;
                         badge.innerHTML = `
-              <span class="tag ${lieuTag}">${lieuTag.toUpperCase()}</span>
-              <strong>${mm.equipe}</strong> — <span style="color:#6b7280">vs</span> ${mm.adversaire}${heure}
-              <span class="tag todo">${overdue ? 'À saisir' : 'À venir'}</span>
-            `;
+                            <div id="match-cal" style="text-align: center; font-weight: 500; margin-bottom: 4px;">
+                                ${mm.equipe} vs ${mm.adversaire}
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.7rem;">
+                                <span class="tag ${lieuTag}">${lieuTag.toUpperCase()}</span>
+                                <span class="tag todo">${overdue ? 'Terminé' : 'À venir'}</span>
+                            </div>
+                        `;
                         cell.appendChild(badge);
                     });
 
@@ -910,12 +1379,17 @@
                         const resTag = byResultClass(mm.resultat) || 'tag';
                         const scoreText = `${mm.buts_gjpb ?? 0}-${mm.buts_adv ?? 0}`;
                         const badge = document.createElement('div');
-                        badge.className = 'badge';
+                        const compType = getCompetitionType(mm.competition);
+                        badge.className = `badge ${compType}`;
                         badge.innerHTML = `
-              <span class="tag ${lieuTag}">${lieuTag.toUpperCase()}</span>
-              <strong>${mm.equipe}</strong> ${scoreText} <span style="color:#6b7280">vs</span> ${mm.adversaire}
-              <span class="${resTag}" title="Résultat">${mm.resultat || ''}</span>
-            `;
+                            <div id="match-cal" style="text-align: center; font-weight: 500; margin-bottom: 4px;">
+                                ${mm.equipe} ${scoreText} ${mm.adversaire}
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.7rem;">
+                                <span class="tag ${lieuTag}">${lieuTag.toUpperCase()}</span>
+                                <span class="${resTag}" title="Résultat">${mm.resultat || ''}</span>
+                            </div>
+                        `;
                         cell.appendChild(badge);
                     });
 
@@ -933,11 +1407,32 @@
             detail.style.display = 'none';
         }
 
-        function showDayDetail(date, groups) {
+        async function fetchActionsForMatches(matchIds) {
+            if (!matchIds.length) return {};
+            const { data, error } = await supabase
+                .from('actions')
+                .select('match_id, joueur, type')
+                .in('match_id', matchIds);
+            if (error) { console.error('Erreur chargement actions:', error); return {}; }
+
+            // Regroupe par match_id -> { goals:[], assists:[] }
+            const map = {};
+            for (const a of data) {
+                if (!map[a.match_id]) map[a.match_id] = { goals: [], assists: [] };
+                if (a.type === 'Goal') map[a.match_id].goals.push(a.joueur);
+                if (a.type === 'Assist') map[a.match_id].assists.push(a.joueur);
+            }
+            return map;
+        }
+
+
+        async function showDayDetail(date, groups) {
             const { playedToday = [], upcomingToday = [] } = groups || {};
             detail.style.display = 'block';
             detailTitle.textContent = `Matchs du ${fmtDate(date)}`;
             detailList.innerHTML = '';
+
+            detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
             if (!playedToday.length && !upcomingToday.length) {
                 detailList.innerHTML = `<div class="sub">Aucun match.</div>`;
@@ -956,19 +1451,22 @@
                         ? `GJPB ${mm.equipe} vs ${mm.adversaire}`
                         : `${mm.adversaire} vs GJPB ${mm.equipe}`;
                     const heure = mm.heure ? ` • ${mm.heure}` : '';
-                    const d = new Date(mm.date); d.setHours(0, 0, 0, 0);
+                    const d = new Date(normDbDate(mm.date)); d.setHours(0, 0, 0, 0);
                     const overdue = d < todayYMD;
 
                     const row = document.createElement('div');
                     row.className = 'match-row';
                     row.innerHTML = `
-            <div class="teams">
-              <div style="font-weight:700">${left}</div>
-              <div style="color:#a54; font-weight:700">(${mm.competition || ''})${heure}</div>
-            </div>
-            <div class="score">—</div>
-            <div class="meta">${(mm.lieu || '').toUpperCase()} ${overdue ? '<span class="tag todo" style="margin-left:6px">À saisir</span>' : ''}</div>
-          `;
+                        <div class="teams">
+                            <div>${left}</div>
+                            <div style="color:#a54; font-weight:700">(${mm.competition || ''})${heure}</div>
+                        </div>
+                        <div class="score">—</div>
+                        <div class="meta">
+                            ${(mm.lieu || '').toUpperCase()}
+                            <span class="tag todo">${overdue ? 'Terminé' : 'À venir'}</span>
+                        </div>
+                    `;
                     detailList.appendChild(row);
                 });
             }
@@ -979,6 +1477,16 @@
                 sep.textContent = 'Joués';
                 detailList.appendChild(sep);
 
+                // 1) charge les actions de tous les matchs joués de ce jour
+                const matchIds = playedToday.map(mm => mm.id).filter(Boolean);
+                let actionsByMatch = {};
+                try {
+                    actionsByMatch = await fetchActionsForMatches(matchIds);
+                } catch (e) {
+                    console.warn('Actions non chargées :', e);
+                }
+
+                // 2) rendus
                 playedToday.forEach(mm => {
                     const dom = (String(mm.lieu || '').toUpperCase() === 'DOM');
                     const left = dom
@@ -991,19 +1499,32 @@
                     const row = document.createElement('div');
                     row.className = 'match-row';
                     row.innerHTML = `
-            <div class="teams">
-              <div style="font-weight:700">${left}</div>
-              <div style="color:#a54; font-weight:700">(${mm.competition || ''})</div>
-            </div>
-            <div class="score">${score}</div>
-            <div class="meta">${(mm.lieu || '').toUpperCase()}</div>
-          `;
+      <div class="teams">
+        <div>${left}</div>
+        <div style="color:#a54; font-weight:700">(${mm.competition || ''})</div>
+      </div>
+      <div class="score">${score}</div>
+      <div class="meta">${(mm.lieu || '').toUpperCase()}</div>
+    `;
                     detailList.appendChild(row);
+
+                    // 3) sous-lignes buteurs/passeurs
+                    const acts = actionsByMatch[mm.id] || { goals: [], assists: [] };
+                    const bp = document.createElement('div');
+                    bp.className = 'actions-sub';
+                    const buts = acts.goals.length ? acts.goals.join(', ') : '—';
+                    const pas = acts.assists.length ? acts.assists.join(', ') : '—';
+                    bp.innerHTML = `
+      <div class="ap-line"><strong>Buteurs :</strong> ${buts}</div>
+      <div class="ap-line"><strong>Passeurs :</strong> ${pas}</div>
+    `;
+                    detailList.appendChild(bp);
                 });
             }
+
         }
 
-        // === navigation
+        // === Navigation ===
         document.getElementById('prev').addEventListener('click', () => {
             if (state.month === 0) { state.month = 11; state.year--; } else { state.month--; }
             loadMonth(state.year, state.month);
@@ -1017,23 +1538,63 @@
             loadMonth(state.year, state.month);
         });
 
-        // === filtres
+        // === Filtres ===
         function bindFilters() {
             document.querySelectorAll('.f-team,.f-comp,.f-lieu,.f-stat,#showOverdue').forEach(cb => {
                 cb.addEventListener('change', () => {
+                    updateFilterStyles();
                     applyFilters();
+                    analyzeColumnActivity();
+                    updateColumnWidths();
                     renderCalendar();
                 });
             });
         }
 
-        // init
+        // === Mise à jour des styles des filtres ===
+        function updateFilterStyles() {
+            // Réinitialiser toutes les classes actives
+            document.querySelectorAll('.filter-options label').forEach(label => {
+                label.classList.remove('active-team', 'active-championnat', 'active-coupe', 'active-amical', 'active-lieu', 'active-status');
+            });
+
+            // Appliquer les styles pour les cases cochées
+            document.querySelectorAll('.f-team:checked').forEach(cb => {
+                cb.closest('label').classList.add('active-team');
+            });
+
+            document.querySelectorAll('.f-comp:checked').forEach(cb => {
+                const label = cb.closest('label');
+                const value = cb.value.toLowerCase();
+                if (value.includes('phase') || value.includes('championnat')) {
+                    label.classList.add('active-championnat');
+                } else if (value.includes('coupe')) {
+                    label.classList.add('active-coupe');
+                } else if (value.includes('amical')) {
+                    label.classList.add('active-amical');
+                }
+            });
+
+            document.querySelectorAll('.f-lieu:checked').forEach(cb => {
+                cb.closest('label').classList.add('active-lieu');
+            });
+
+            document.querySelectorAll('.f-stat:checked').forEach(cb => {
+                cb.closest('label').classList.add('active-status');
+            });
+        }
+
+        // === Gestion du redimensionnement de fenêtre ===
+        window.addEventListener('resize', () => {
+            updateColumnWidths();
+        });
+
+        // === Initialisation ===
         (async function init() {
             bindFilters();
+            updateFilterStyles(); // Initialiser les styles des filtres
             await loadMonth(state.year, state.month);
         })();
-
-
     </script>
 </body>
 
