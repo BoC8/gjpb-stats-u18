@@ -619,7 +619,11 @@
 
                     <div class="group">
                         <label for="adversaire">Adversaire</label>
-                        <input type="text" id="adversaire" placeholder="Adversaire" />
+                        <!-- APRÈS -->
+                        <select id="adversaire" required>
+                            <option value="" disabled selected>Choisir l’adversaire…</option>
+                        </select>
+
                     </div>
 
                     <div class="group">
@@ -811,10 +815,34 @@
                     if (upErr) throw upErr;
                     const { error: delErr } = await supabase.from('actions').delete().eq('match_id', matchId);
                     if (delErr) throw delErr;
+                    // Supprimer la programmation correspondante (même date + équipe + adversaire)
+                    try {
+                        await supabase
+                            .from('programmations')
+                            .delete()
+                            .eq('date', match.date)
+                            .eq('equipe', match.equipe)
+                            .eq('adversaire', match.adversaire);
+                    } catch (eDel) {
+                        console.warn('Suppression programmations ignorée :', eDel);
+                    }
+
                 } else {
                     const { data: inserted, error: insErr } = await supabase.from('matchs').insert(match).select().single();
                     if (insErr) throw insErr;
                     id = inserted.id;
+                    // Supprimer la programmation correspondante (même date + équipe + adversaire)
+                    try {
+                        await supabase
+                            .from('programmations')
+                            .delete()
+                            .eq('date', match.date)
+                            .eq('equipe', match.equipe)
+                            .eq('adversaire', match.adversaire);
+                    } catch (eDel) {
+                        console.warn('Suppression programmations ignorée :', eDel);
+                    }
+
                 }
 
                 if (actions.length) {
@@ -903,6 +931,48 @@
             chargerMatchs();
         }
 
+        async function chargerAdversairesDepuisProgrammations() {
+            const date = document.getElementById('date').value;        // YYYY-MM-DD
+            const equipe = document.getElementById('equipe').value;    // 18A / 17 / 18B
+            const sel = document.getElementById('adversaire');
+
+            // Réinitialise
+            sel.innerHTML = '<option value="" disabled selected>Choisir l’adversaire…</option>';
+
+            if (!date || !equipe) return; // On attend d’avoir les deux
+
+            const { data, error } = await supabase
+                .from('programmations')
+                .select('adversaire')
+                .eq('date', date)
+                .eq('equipe', equipe)
+                .order('adversaire', { ascending: true });
+
+            if (error) {
+                console.error('Erreur chargement adversaires:', error);
+                return;
+            }
+
+            const noms = [...new Set((data || []).map(r => r.adversaire).filter(Boolean))];
+            if (noms.length === 0) {
+                // Rien de programmé ce jour pour cette équipe
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.disabled = true;
+                opt.textContent = 'Aucun match programmé — vérifier la date/équipe';
+                sel.appendChild(opt);
+                return;
+            }
+
+            noms.forEach(n => {
+                const opt = document.createElement('option');
+                opt.value = n;
+                opt.textContent = n;
+                sel.appendChild(opt);
+            });
+        }
+
+
         document.addEventListener('DOMContentLoaded', async () => {
             // dyn. champs
             document.getElementById('nbButeurs').addEventListener('input', e => genererChamps('buteurs-container', 'buteur', e.target.value));
@@ -918,6 +988,11 @@
                 msg('');
             });
 
+            // Remplir adversaires en fonction de la date et l'équipe
+            document.getElementById('date').addEventListener('change', chargerAdversairesDepuisProgrammations);
+            document.getElementById('equipe').addEventListener('change', chargerAdversairesDepuisProgrammations);
+
+
             // délégation actions tableau
             document.getElementById('matchsTable').addEventListener('click', (ev) => {
                 const btn = ev.target.closest('button'); if (!btn) return;
@@ -929,7 +1004,9 @@
             // charge data
             await chargerJoueurs();
             await chargerMatchs();
+            await chargerAdversairesDepuisProgrammations();
         });
+
     </script>
 </body>
 
