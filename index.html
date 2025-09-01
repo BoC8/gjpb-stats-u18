@@ -794,6 +794,10 @@
                 gap: 1rem;
             }
 
+            .stats-grid {
+                font-size: 0.5rem;
+            }
+
             /* Optimisations spécifiques pour les résultats sur mobile */
             .result-item {
                 grid-template-columns: auto 1fr 60px 1fr;
@@ -1075,20 +1079,6 @@
             <h2 class="section-title">Explorer les données</h2>
 
             <div class="cards-grid">
-                <!-- Card Statistiques -->
-                <a href="stats.html" class="card" aria-label="Consulter les statistiques">
-                    <div class="card-badge">HOT 🔥</div>
-                    <svg class="card-icon" viewBox="0 0 100 100" aria-hidden="true">
-                        <circle cx="50" cy="50" r="45" fill="#dc3545" stroke="#333" stroke-width="2" />
-                        <circle cx="50" cy="50" r="35" fill="white" stroke="#333" stroke-width="1.5" />
-                        <circle cx="50" cy="50" r="25" fill="#dc3545" stroke="#333" stroke-width="1.5" />
-                        <circle cx="50" cy="50" r="15" fill="white" stroke="#333" stroke-width="1.5" />
-                        <circle cx="50" cy="50" r="8" fill="var(--color-gold)" stroke="#333" stroke-width="1" />
-                    </svg>
-                    <h3>Voir les classements individuels</h3>
-                    <p>Découvrez les classements des buteurs, passeurs décisifs et joueurs les plus décisifs.</p>
-                </a>
-
                 <!-- Card Calendrier -->
                 <a href="calendrier.html" class="card" aria-label="Consulter le calendrier des matchs">
                     <div class="card-badge">LIVE 📅</div>
@@ -1109,6 +1099,20 @@
                     </svg>
                     <h3>Voir le calendrier des matchs</h3>
                     <p>Consultez tous les matchs à venir, les horaires et les adversaires !</p>
+                </a>
+
+                <!-- Card Statistiques -->
+                <a href="stats.html" class="card" aria-label="Consulter les statistiques">
+                    <div class="card-badge">HOT 🔥</div>
+                    <svg class="card-icon" viewBox="0 0 100 100" aria-hidden="true">
+                        <circle cx="50" cy="50" r="45" fill="#dc3545" stroke="#333" stroke-width="2" />
+                        <circle cx="50" cy="50" r="35" fill="white" stroke="#333" stroke-width="1.5" />
+                        <circle cx="50" cy="50" r="25" fill="#dc3545" stroke="#333" stroke-width="1.5" />
+                        <circle cx="50" cy="50" r="15" fill="white" stroke="#333" stroke-width="1.5" />
+                        <circle cx="50" cy="50" r="8" fill="var(--color-gold)" stroke="#333" stroke-width="1" />
+                    </svg>
+                    <h3>Voir les classements individuels</h3>
+                    <p>Découvrez les classements des buteurs, passeurs décisifs et joueurs les plus décisifs.</p>
                 </a>
             </div>
         </section>
