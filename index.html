@@ -798,6 +798,22 @@
                 font-size: 0.5rem;
             }
 
+            .stat-number {
+                font-size: 1.5rem;
+            }
+
+            .stat-label {
+                font-size: 0.65rem;
+            }
+
+            .record-title {
+                font-size: 1.5rem;
+            }
+
+            #res-title {
+                font-size: 1.5rem;
+            }
+
             /* Optimisations spécifiques pour les résultats sur mobile */
             .result-item {
                 grid-template-columns: auto 1fr 60px 1fr;
@@ -1002,9 +1018,7 @@
                     <span class="hero-emoji">⚽</span>
                 </h1>
                 <p>
-                    Plongez dans l'univers des performances de nos jeunes U18. Découvrez leurs statistiques et celles de
-                    leurs équipes
-                    en temps réel tout au long de la saison !
+                    
                 </p>
 
                 <!-- Info saison -->
@@ -1067,7 +1081,7 @@
                 <text x="50" y="50" fill="white" font-size="8">-</text>
                 <text x="60" y="50" fill="var(--color-gold)" font-size="12" font-weight="bold">1</text>
             </svg>
-            <h3>Affichage des derniers résultats</h3>
+            <h3 id="res-title">Affichage des derniers résultats</h3>
             <div class="results-grid" id="latest-results">
                 <!-- Sera rempli par JavaScript -->
             </div>
@@ -1098,7 +1112,7 @@
                         <circle cx="65" cy="62" r="2" fill="#dc3545" />
                     </svg>
                     <h3>Voir le calendrier des matchs</h3>
-                    <p>Consultez tous les matchs à venir, les horaires et les adversaires !</p>
+                    <p>Consultez tous les matchs à venir, les horaires et les adversaires. Mais aussi les matchs joués et leurs scores !</p>
                 </a>
 
                 <!-- Card Statistiques -->
