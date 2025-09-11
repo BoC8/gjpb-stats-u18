@@ -10,12 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <!-- NEW: plugin pour afficher compteurs + pourcentages sur les camemberts -->
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 
     <style>
-        /* (styles existants inchangés)… */
         :root {
             --color-sky-blue: #6EC1FF;
             --color-light-blue: #9FD6FF;
@@ -41,11 +39,11 @@
             --gradient-18a: linear-gradient(135deg, var(--color-18a), #dd82bd);
         }
 
-        /* === RESET & BASE === */
+        /* RESET & BASE */
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            box-sizing: border-box
         }
 
         body {
@@ -54,22 +52,22 @@
             color: var(--color-text-dark);
             background: linear-gradient(135deg, var(--color-white) 0%, var(--color-light-blue) 100%);
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow-x: hidden
         }
 
         .container {
             max-width: var(--max-width);
             margin: 0 auto;
-            padding: 0 var(--padding-mobile);
+            padding: 0 var(--padding-mobile)
         }
 
-        /* === HEADER === */
+        /* HEADER */
         header {
             background: var(--color-white);
             box-shadow: var(--shadow);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 100
         }
 
         .header-content {
@@ -79,7 +77,7 @@
             height: 70px;
             max-width: var(--max-width);
             margin: 0 auto;
-            padding: 0 var(--padding-mobile);
+            padding: 0 var(--padding-mobile)
         }
 
         .logo {
@@ -89,72 +87,72 @@
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: .5rem
         }
 
         .logo img {
             width: 40px;
             height: 40px;
-            object-fit: contain;
+            object-fit: contain
         }
 
         .nav-desktop {
             display: none;
             justify-content: center;
             align-items: center;
-            gap: 70px;
+            gap: 70px
         }
 
         .login-desktop {
             justify-self: end;
-            display: none;
+            display: none
         }
 
         .nav-links {
             display: flex;
             gap: 50px;
             justify-content: center;
-            list-style: none;
+            list-style: none
         }
 
         .nav-links a {
             text-decoration: none;
             color: var(--color-text-dark);
             font-weight: 500;
-            padding: 0.5rem 1rem;
+            padding: .5rem 1rem;
             border-radius: 6px;
             transition: var(--transition);
-            position: relative;
+            position: relative
         }
 
         .nav-links a:hover,
         .nav-links a:focus {
             background: var(--color-light-blue);
             color: var(--color-navy);
-            outline: 2px solid var(--color-sky-blue);
+            outline: 2px solid var(--color-sky-blue)
         }
 
         .nav-links a.active {
             background: var(--color-18a);
-            color: var(--color-white);
+            color: var(--color-white)
         }
 
         .login-btn {
             justify-self: end;
             background: var(--color-sky-blue);
             color: var(--color-white);
-            padding: 0.75rem 1.5rem;
+            padding: .75rem 1.5rem;
             border-radius: var(--border-radius);
             text-decoration: none;
             font-weight: 500;
-            transition: var(--transition);
+            transition: var(--transition)
         }
 
         .login-btn:hover,
         .login-btn:focus {
             background: var(--color-navy);
             transform: translateY(-1px);
-            outline: 2px solid var(--color-gold);
+            outline: 2px solid var(--color-gold)
         }
 
         .mobile-menu-btn {
@@ -164,15 +162,15 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: var(--color-navy);
-            padding: 0.5rem;
+            padding: .5rem;
             border-radius: 6px;
-            transition: var(--transition);
+            transition: var(--transition)
         }
 
         .mobile-menu-btn:hover,
         .mobile-menu-btn:focus {
             background: var(--color-light-blue);
-            outline: 2px solid var(--color-sky-blue);
+            outline: 2px solid var(--color-sky-blue)
         }
 
         .mobile-menu {
@@ -184,92 +182,89 @@
             background: var(--color-white);
             box-shadow: var(--shadow);
             padding: 1rem;
-            text-align: center;
+            text-align: center
         }
 
         .mobile-menu.open {
             display: block;
-            animation: slideDown 0.3s ease;
+            animation: slideDown .3s ease
         }
 
         @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(10px)
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0)
             }
         }
 
         .mobile-nav-links {
             list-style: none;
-            margin-bottom: 1rem;
+            margin-bottom: 1rem
         }
 
         .mobile-nav-links li {
-            margin-bottom: 0.5rem;
+            margin-bottom: .5rem
         }
 
         .mobile-nav-links a {
             display: block;
-            padding: 0.75rem 1rem;
+            padding: .75rem 1rem;
             text-decoration: none;
             color: var(--color-text-dark);
             font-weight: 500;
             border-radius: 6px;
-            transition: var(--transition);
+            transition: var(--transition)
         }
 
         .mobile-nav-links a:hover,
         .mobile-nav-links a:focus {
             background: var(--color-light-blue);
-            color: var(--color-navy);
+            color: var(--color-navy)
         }
 
         .mobile-nav-links a.active {
             background: var(--color-18a);
-            color: var(--color-white);
+            color: var(--color-white)
         }
 
-        /* === EN-TÊTE ÉQUIPE === */
+        /* EN-TÊTE ÉQUIPE */
         .team-header {
             background: var(--gradient-18a);
             color: var(--color-white);
             padding: 2rem 0;
             text-align: center;
             position: relative;
-            overflow: hidden;
+            overflow: hidden
         }
 
         .team-header::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset: 0;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white" opacity="0.1"/><circle cx="80" cy="40" r="1.5" fill="white" opacity="0.1"/><circle cx="60" cy="80" r="1" fill="white" opacity="0.1"/></svg>');
-            animation: float 20s ease-in-out infinite;
+            animation: float 20s ease-in-out infinite
         }
 
         @keyframes float {
 
             0%,
             100% {
-                transform: translateY(0px);
+                transform: translateY(0)
             }
 
             50% {
-                transform: translateY(-10px);
+                transform: translateY(-10px)
             }
         }
 
         .team-info {
             position: relative;
-            z-index: 2;
+            z-index: 2
         }
 
         .team-logo {
@@ -281,46 +276,46 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, .3)
         }
 
         .team-logo img {
             width: 50px;
             height: 50px;
-            object-fit: contain;
+            object-fit: contain
         }
 
         .team-name {
             font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            margin-bottom: .5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, .3)
         }
 
         .team-subtitle {
             font-size: 1.2rem;
-            opacity: 0.9;
+            opacity: .9;
             margin-bottom: 2rem;
-            font-weight: 400;
+            font-weight: 400
         }
 
         .quick-actions {
             display: flex;
             gap: 1rem;
             justify-content: center;
-            flex-wrap: wrap;
+            flex-wrap: wrap
         }
 
         .quick-btn {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, .2);
             color: var(--color-white);
-            padding: 0.75rem 1.5rem;
+            padding: .75rem 1.5rem;
             border-radius: 12px;
             text-decoration: none;
             font-weight: 500;
             transition: var(--transition);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, .3);
+            backdrop-filter: blur(10px)
         }
 
         .quick-btn:hover,
@@ -328,17 +323,17 @@
             background: var(--color-white);
             color: var(--color-18a);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, .2)
         }
 
-        /* === FORME RÉCENTE === */
+        /* FORME RÉCENTE */
         .recent-form {
             background: var(--color-white);
             border-radius: var(--border-radius);
             padding: 1.5rem;
             margin: 2rem 0;
             box-shadow: var(--shadow);
-            border: 1px solid rgba(225, 29, 72, 0.1);
+            border: 1px solid rgba(225, 29, 72, .1)
         }
 
         .section-title {
@@ -348,14 +343,14 @@
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: .5rem
         }
 
         .form-sequence {
             display: flex;
-            gap: 0.5rem;
+            gap: .5rem;
             justify-content: center;
-            align-items: center;
+            align-items: center
         }
 
         .form-result {
@@ -368,31 +363,37 @@
             font-weight: 700;
             color: var(--color-white);
             font-size: 1.1rem;
-            transition: var(--transition);
+            transition: var(--transition)
         }
 
         .form-result.victory {
-            background: var(--color-success);
+            background: var(--color-success)
         }
 
         .form-result.draw {
-            background: var(--color-warning);
+            background: var(--color-warning)
         }
 
         .form-result.defeat {
-            background: var(--color-danger);
+            background: var(--color-danger)
         }
 
         .form-result:hover {
-            transform: scale(1.1);
+            transform: scale(1.1)
         }
 
-        /* === STATISTIQUES === */
+        .form-result.placeholder {
+            background: #cfd8dc;
+            color: #fff;
+            opacity: .9
+        }
+
+        /* STATS + CHARTS */
         .stats-section {
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 2rem;
-            margin: 2rem 0;
+            margin: 2rem 0
         }
 
         .stats-main {
@@ -400,43 +401,43 @@
             border-radius: var(--border-radius);
             padding: 1.5rem;
             box-shadow: var(--shadow);
-            border: 1px solid rgba(225, 29, 72, 0.1);
+            border: 1px solid rgba(225, 29, 72, .1)
         }
 
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1rem;
+            gap: 1rem
         }
 
         .stat-card {
-            background: linear-gradient(135deg, rgba(225, 29, 72, 0.05), rgba(190, 24, 93, 0.1));
+            background: linear-gradient(135deg, rgba(225, 29, 72, .05), rgba(190, 24, 93, .1));
             border-radius: 12px;
             padding: 1rem;
             text-align: center;
-            border: 1px solid rgba(225, 29, 72, 0.15);
-            transition: var(--transition);
+            border: 1px solid rgba(225, 29, 72, .15);
+            transition: var(--transition)
         }
 
         .stat-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(225, 29, 72, 0.2);
+            box-shadow: 0 8px 25px rgba(225, 29, 72, .2)
         }
 
         .stat-value {
             font-size: 1.8rem;
             font-weight: 700;
             color: var(--color-18a);
-            display: block;
+            display: block
         }
 
         .stat-label {
-            font-size: 0.85rem;
+            font-size: .85rem;
             color: var(--color-text-light);
             font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 0.25rem;
+            letter-spacing: .5px;
+            margin-top: .25rem
         }
 
         .chart-container {
@@ -444,10 +445,15 @@
             border-radius: var(--border-radius);
             padding: 1.5rem;
             box-shadow: var(--shadow);
-            border: 1px solid rgba(225, 29, 72, 0.1);
+            border: 1px solid rgba(225, 29, 72, .1)
         }
 
-        /* === PROCHAIN MATCH === */
+        .chart-wrapper {
+            position: relative;
+            height: 220px
+        }
+
+        /* PROCHAIN MATCH */
         .next-match {
             background: linear-gradient(135deg, var(--color-white), #f8fafc);
             border-radius: var(--border-radius);
@@ -456,7 +462,7 @@
             box-shadow: var(--shadow);
             border-left: 4px solid var(--color-18a);
             position: relative;
-            overflow: hidden;
+            overflow: hidden
         }
 
         .next-match::before {
@@ -466,78 +472,78 @@
             right: -10%;
             width: 100px;
             height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(225, 29, 72, 0.05), transparent);
-            transform: rotate(15deg);
+            background: linear-gradient(45deg, transparent, rgba(225, 29, 72, .05), transparent);
+            transform: rotate(15deg)
         }
 
         .next-match-content {
             position: relative;
-            z-index: 2;
+            z-index: 2
         }
 
         .match-teams {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 1rem 0;
+            margin: 1rem 0
         }
 
         .team-name-match {
             font-size: 1.2rem;
             font-weight: 600;
-            color: var(--color-navy);
+            color: var(--color-navy)
         }
 
         .team-gjpb {
-            color: var(--color-18a);
+            color: var(--color-18a)
         }
 
         .vs-separator {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--color-text-light);
+            color: var(--color-text-light)
         }
 
         .match-details {
             display: grid;
             grid-template-columns: repeat(3, minmax(120px, 1fr));
             gap: 1rem;
-            margin-top: 1rem;
+            margin-top: 1rem
         }
 
         .match-detail {
             text-align: center;
-            padding: 0.5rem;
-            background: rgba(225, 29, 72, 0.05);
-            border-radius: 8px;
+            padding: .5rem;
+            background: rgba(225, 29, 72, .05);
+            border-radius: 8px
         }
 
         .match-detail-label {
-            font-size: 0.8rem;
+            font-size: .8rem;
             color: var(--color-text-light);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: .5px
         }
 
         .match-detail-value {
             font-size: 1rem;
             font-weight: 600;
             color: var(--color-navy);
-            margin-top: 0.25rem;
+            margin-top: .25rem
         }
 
-        /* === DERNIERS RÉSULTATS === */
+        /* DERNIERS RÉSULTATS */
         .recent-results {
             background: var(--color-white);
             border-radius: var(--border-radius);
             padding: 1.5rem;
             margin: 2rem 0;
             box-shadow: var(--shadow);
-            border: 1px solid rgba(225, 29, 72, 0.1);
+            border: 1px solid rgba(225, 29, 72, .1)
         }
 
         .results-list {
-            list-style: none;
+            list-style: none
         }
 
         .result-item {
@@ -546,13 +552,13 @@
             align-items: center;
             gap: 12px;
             padding: 1rem;
-            margin: 0.5rem 0;
+            margin: .5rem 0;
             border-radius: 12px;
             background: linear-gradient(135deg, #fafbfc, #f8fafc);
-            border: 1px solid rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(0, 0, 0, .06);
             transition: var(--transition);
             cursor: pointer;
-            position: relative;
+            position: relative
         }
 
         .result-item::before {
@@ -563,226 +569,147 @@
             bottom: 0;
             width: 4px;
             background: #e5e7eb;
-            transition: var(--transition);
+            transition: var(--transition)
         }
 
         .result-item:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-hover);
+            box-shadow: var(--shadow-hover)
         }
 
         .result-item.victory::before {
-            background: var(--color-success);
+            background: var(--color-success)
         }
 
         .result-item.draw::before {
-            background: var(--color-warning);
+            background: var(--color-warning)
         }
 
         .result-item.defeat::before {
-            background: var(--color-danger);
+            background: var(--color-danger)
         }
 
         .result-teams {
             font-weight: 600;
             color: var(--color-navy);
-            text-align: center;
+            text-align: center
         }
 
         .result-score {
             font-weight: 800;
             font-size: 1.1rem;
-            text-align: center;
+            text-align: center
         }
 
         .score-chip {
-            padding: 0.4rem 0.8rem;
+            padding: .4rem .8rem;
             border-radius: 20px;
             color: var(--color-white);
-            font-weight: 700;
+            font-weight: 700
         }
 
         .score-chip.victory {
-            background: var(--color-success);
+            background: var(--color-success)
         }
 
         .score-chip.draw {
-            background: var(--color-warning);
+            background: var(--color-warning)
         }
 
         .score-chip.defeat {
-            background: var(--color-danger);
+            background: var(--color-danger)
         }
 
         .result-info {
             text-align: center;
             color: var(--color-text-light);
-            font-size: 0.9rem;
+            font-size: .9rem
         }
 
         .view-all-btn {
             background: var(--color-18a);
             color: var(--color-white);
-            padding: 0.75rem 2rem;
+            padding: .75rem 2rem;
             border-radius: 12px;
             text-decoration: none;
             font-weight: 500;
             transition: var(--transition);
             display: inline-block;
-            margin-top: 1rem;
+            margin-top: 1rem
         }
 
         .view-all-btn:hover,
         .view-all-btn:focus {
             background: #be185d;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(225, 29, 72, 0.3);
+            box-shadow: 0 8px 25px rgba(225, 29, 72, .3)
         }
 
-        /* === CLASSEMENTS INTERNES === */
-        .rankings-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .ranking-card {
-            background: var(--color-white);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(225, 29, 72, 0.1);
-        }
-
-        .ranking-list {
-            list-style: none;
-        }
-
-        .ranking-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem;
-            margin: 0.5rem 0;
-            border-radius: 8px;
-            background: linear-gradient(135deg, rgba(225, 29, 72, 0.02), rgba(225, 29, 72, 0.05));
-            transition: var(--transition);
-        }
-
-        .ranking-item:hover {
-            background: linear-gradient(135deg, rgba(225, 29, 72, 0.05), rgba(225, 29, 72, 0.1));
-            transform: translateX(5px);
-        }
-
-        .ranking-position {
-            background: var(--color-18a);
-            color: var(--color-white);
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            margin-right: 1rem;
-        }
-
-        .ranking-position.gold {
-            background: var(--color-gold);
-            color: var(--color-navy);
-        }
-
-        .ranking-position.silver {
-            background: #c0c0c0;
-            color: var(--color-navy);
-        }
-
-        .ranking-position.bronze {
-            background: #cd7f32;
-            color: var(--color-white);
-        }
-
-        .ranking-player {
-            flex: 1;
-            font-weight: 500;
-            color: var(--color-navy);
-        }
-
-        .ranking-count {
-            background: rgba(225, 29, 72, 0.1);
-            color: var(--color-18a);
-            padding: 0.25rem 0.5rem;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        /* === DÉTAILS MATCH EXPANDABLE === */
+        /* DÉTAILS MATCH (buteurs/passeurs) */
         .match-details-expand {
             display: none;
             background: linear-gradient(135deg, #f8fafc, #f1f5f9);
             border-radius: 8px;
-            margin: 0.5rem 0;
+            margin: .5rem 0;
             padding: 1rem;
             border-left: 3px solid var(--color-18a);
-            animation: expandDetails 0.3s ease;
+            animation: expandDetails .3s ease
         }
 
         .match-details-expand.show {
-            display: block;
+            display: block
         }
 
         @keyframes expandDetails {
             from {
                 opacity: 0;
                 max-height: 0;
-                padding: 0 1rem;
+                padding: 0 1rem
             }
 
             to {
                 opacity: 1;
                 max-height: 300px;
-                padding: 1rem;
+                padding: 1rem
             }
         }
 
         .details-content {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 0.8rem;
+            gap: .8rem
         }
 
         .details-section {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, .7);
             border-radius: 6px;
-            padding: 0.8rem;
-            border: 1px solid rgba(225, 29, 72, 0.1);
+            padding: .8rem;
+            border: 1px solid rgba(225, 29, 72, .1)
         }
 
         .details-title {
-            font-size: 0.85rem;
+            font-size: .85rem;
             font-weight: 600;
             color: var(--color-navy);
-            margin-bottom: 0.4rem;
+            margin-bottom: .4rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: .5px
         }
 
         .details-list {
-            list-style: none;
+            list-style: none
         }
 
         .details-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.2rem 0;
-            font-size: 0.85rem;
+            padding: .2rem 0;
+            font-size: .85rem
         }
 
         .details-item:not(:last-child) {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            border-bottom: 1px solid rgba(0, 0, 0, .04)
         }
 
         .details-player {
@@ -792,27 +719,188 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            margin-right: 0.5rem;
+            margin-right: .5rem
         }
 
         .details-count {
             background: var(--color-18a);
-            color: var(--color-white);
-            padding: 0.1rem 0.3rem;
+            color: #fff;
+            padding: .1rem .3rem;
             border-radius: 8px;
-            font-size: 0.7rem;
+            font-size: .7rem;
             font-weight: 600;
             min-width: 18px;
-            text-align: center;
+            text-align: center
         }
 
-        /* === FOOTER === */
+        /* CLASSEMENTS INDIVIDUELS 18A - Section améliorée */
+        .individual-rankings {
+            background: var(--color-white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(198, 89, 89, .15);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer
+        }
+
+        .individual-rankings::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 150px;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(198, 89, 89, .03), transparent);
+            transform: rotate(15deg);
+            transition: var(--transition)
+        }
+
+        .individual-rankings:hover::before {
+            right: -10%;
+            background: linear-gradient(45deg, transparent, rgba(198, 89, 89, .05), transparent)
+        }
+
+        .individual-rankings:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(198, 89, 89, .15);
+            border-color: rgba(198, 89, 89, .25)
+        }
+
+        .rankings-content {
+            position: relative;
+            z-index: 2
+        }
+
+        .rankings-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem
+        }
+
+        .rankings-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--color-18a);
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            margin: 0
+        }
+
+        .rankings-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--color-18a), #dd82bd);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+            font-weight: 700
+        }
+
+        .rankings-arrow {
+            background: linear-gradient(135deg, rgba(198, 89, 89, .1), rgba(221, 130, 189, .1));
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--color-18a);
+            transition: var(--transition);
+            border: 2px solid rgba(198, 89, 89, .2)
+        }
+
+        .individual-rankings:hover .rankings-arrow {
+            transform: translateX(3px);
+            background: linear-gradient(135deg, rgba(198, 89, 89, .15), rgba(221, 130, 189, .15));
+            border-color: rgba(198, 89, 89, .3)
+        }
+
+        .rankings-description {
+            color: var(--color-text-light);
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-top: .5rem;
+            font-weight: 400
+        }
+
+        .rankings-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem
+        }
+
+        .ranking-category {
+            background: linear-gradient(135deg, rgba(198, 89, 89, .04), rgba(221, 130, 189, .06));
+            border-radius: 12px;
+            padding: 1.2rem;
+            text-align: center;
+            border: 1px solid rgba(198, 89, 89, .12);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden
+        }
+
+        .ranking-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-18a), #dd82bd);
+            transform: scaleX(0);
+            transition: transform .3s ease
+        }
+
+        .individual-rankings:hover .ranking-category::before {
+            transform: scaleX(1)
+        }
+
+        .ranking-category:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(198, 89, 89, .12);
+            border-color: rgba(198, 89, 89, .2)
+        }
+
+        .category-icon {
+            font-size: 1.5rem;
+            margin-bottom: .5rem;
+            display: block
+        }
+
+        .category-name {
+            font-size: .9rem;
+            font-weight: 600;
+            color: var(--color-18a);
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            margin-bottom: .25rem
+        }
+
+        .category-subtitle {
+            font-size: .75rem;
+            color: var(--color-text-light);
+            font-weight: 400
+        }
+
+        /* FOOTER */
         .footer {
             background: var(--color-navy);
             color: var(--color-white);
             text-align: center;
             padding: 3rem 0;
-            margin-top: 3rem;
+            margin-top: 3rem
         }
 
         .footer::before {
@@ -822,7 +910,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: var(--gradient-primary);
+            background: var(--gradient-primary)
         }
 
         .footer a {
@@ -830,118 +918,114 @@
             text-decoration: none;
             font-weight: 500;
             transition: var(--transition);
-            padding: 0.25rem 0.5rem;
-            border-radius: 6px;
+            padding: .25rem .5rem;
+            border-radius: 6px
         }
 
         .footer a:hover,
         .footer a:focus {
             color: var(--color-gold);
-            background: rgba(255, 215, 0, 0.1);
-            transform: translateY(-2px);
+            background: rgba(255, 215, 0, .1);
+            transform: translateY(-2px)
         }
 
-        /* === RESPONSIVE === */
-        @media (max-width: 768px) {
+        /* RESPONSIVE */
+        @media (max-width:768px) {
             .team-name {
-                font-size: 2rem;
+                font-size: 2rem
             }
 
             .stats-section {
                 grid-template-columns: 1fr;
-                gap: 1rem;
+                gap: 1rem
             }
 
             .stats-grid {
                 grid-template-columns: repeat(3, 1fr);
-                gap: 0.5rem;
+                gap: .5rem
             }
 
-            .match-detail-label, .match-detail-value {
-                font-size: 0.6rem;
+            .match-detail-label,
+            .match-detail-value {
+                font-size: .6rem
             }
 
             .match-details {
-                gap: 0.5rem;
-            }
-
-            .rankings-section {
-                grid-template-columns: 1fr;
+                gap: .5rem
             }
 
             .quick-actions {
                 flex-direction: column;
-                align-items: center;
+                align-items: center
             }
 
             .quick-btn {
                 width: 200px;
-                text-align: center;
+                text-align: center
             }
 
             .match-teams {
                 flex-direction: column;
-                gap: 0.5rem;
-                text-align: center;
+                gap: .5rem;
+                text-align: center
             }
 
             .vs-separator {
-                font-size: 1.2rem;
+                font-size: 1.2rem
             }
 
             .result-item {
                 grid-template-columns: 1fr;
                 text-align: center;
-                gap: 8px;
+                gap: 8px
+            }
+
+            .chart-wrapper {
+                height: 200px
+            }
+
+            .rankings-header {
+                flex-direction: column;
+                text-align: center;
+                gap: .5rem
+            }
+
+            .rankings-preview {
+                grid-template-columns: 1fr;
+                gap: .75rem
+            }
+
+            .individual-rankings {
+                padding: 1.5rem
             }
         }
 
-        @media (min-width: 769px) {
+        @media (min-width:769px) {
             .container {
-                padding: 0 var(--padding-desktop);
+                padding: 0 var(--padding-desktop)
             }
 
             .header-content {
-                padding: 0 var(--padding-desktop);
+                padding: 0 var(--padding-desktop)
             }
 
             .nav-desktop {
-                display: flex;
+                display: flex
             }
 
             .login-desktop {
-                display: inline-flex;
+                display: inline-flex
             }
 
             .mobile-menu-btn {
-                display: none;
-            }
-        }
-
-        /* NEW: pastilles placeholder grisées pour la forme récente */
-        .form-result.placeholder {
-            background: #cfd8dc;
-            color: #fff;
-            opacity: .9;
-        }
-
-        /* Conteneurs charts : déjà présents, on réutilise .chart-container/.chart-wrapper */
-        .chart-wrapper {
-            position: relative;
-            height: 220px;
-        }
-
-        /* Responsive (inchangé + léger ajustement) */
-        @media (max-width:768px) {
-            .chart-wrapper {
-                height: 200px;
+                display: none
             }
         }
     </style>
 </head>
 
 <body>
-    <!-- Header identique -->
+    <!-- Header -->
     <header class="header">
         <div class="header-content">
             <a href="index.html" class="logo"><img src="logo-gjpb.png" alt="Logo GJPB"></a>
@@ -982,13 +1066,13 @@
         </section>
 
         <div class="container">
-            <!-- 1) Forme récente -->
+            <!-- Forme récente -->
             <section class="recent-form">
                 <h2 class="section-title">🏆 Forme récente</h2>
                 <div class="form-sequence" id="recent-form"></div>
             </section>
 
-            <!-- 2 & 3 & 4) Statistiques + 2 camemberts -->
+            <!-- Statistiques + Charts -->
             <section class="stats-section">
                 <div class="stats-main">
                     <h2 class="section-title">📊 Statistiques de la saison</h2>
@@ -1004,7 +1088,7 @@
                 </div>
             </section>
 
-            <!-- 5) Prochain match -->
+            <!-- Prochain match -->
             <section class="next-match" id="next-match">
                 <div class="next-match-content">
                     <h2 class="section-title">⏰ Prochain match</h2>
@@ -1014,30 +1098,34 @@
 
             <!-- Derniers résultats -->
             <section class="recent-results">
-                <h2 class="section-title">Derniers résultats</h2>
+                <h2 class="section-title">🏈 Derniers résultats</h2>
                 <ul class="results-list" id="recent-results"></ul>
                 <div style="text-align:center;"><a href="resultats.html" class="view-all-btn">Voir tous les
                         résultats</a></div>
             </section>
 
-            <!-- Classements internes (inchangé) -->
-            <section class="rankings-section" id="classements">
-                <a href="stats.html" style="text-decoration: none; text-align: center;"><div class="ranking-card">
-                    <h2 class="section-title">⚽🎯🌟 <br>Voir les classements des stats indivduels</h2>
-                    <ul class="ranking-list" id="goalscorers-ranking"></ul>
-                </div></a>
-                
-                <!-- <a href="stats.html"></a>
-                <div class="ranking-card">
-                    <h2 class="section-title"> Meilleurs passeurs</h2>
-                    <ul class="ranking-list" id="assists-ranking"></ul>
-                </div>
-                <a href="stats.html"></a>
-                <div class="ranking-card">
-                    <h2 class="section-title"> Total (Buts + Passes)</h2>
-                    <ul class="ranking-list" id="total-ranking"></ul>
-                </div> -->
-            </section>
+            <!-- Section Classements individuels 18A améliorée -->
+            <a href="stats.html" style="text-decoration: none;">
+                <section class="individual-rankings">
+                    <div class="rankings-content">
+                        <div class="rankings-header">
+                            <div>
+                                <h2 class="rankings-title">
+                                    <span class="rankings-icon">🌟</span>
+                                    Classements individuels 18A
+                                </h2>
+                                <p class="rankings-description">
+                                    Découvrez le classement des buteurs, passeurs décisifs et joueurs les plus décisifs
+                                    de l'équipe.
+                                </p>
+                            </div>
+                            <div class="rankings-arrow">→</div>
+                        </div>
+
+                       
+                    </div>
+                </section>
+            </a>
         </div>
     </main>
 
@@ -1050,15 +1138,15 @@
     </footer>
 
     <script>
-        // === SUPABASE ===
+        // SUPABASE
         const SUPABASE_URL = 'https://lgnwgbctaqaeawzjnuqh.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnbndnYmN0YXFhZWF3empudXFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MjYzNjUsImV4cCI6MjA2OTQwMjM2NX0.E0ug5jpRQVh55aq1ewToqol7h7aRPkg7YvwbKpQtVHo';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: false, autoRefreshToken: false } });
 
         const TEAM_CODE = '18A';
-        let teamData = { matches: [], actions: [], nextMatch: null };
+        let teamData = { matches: [], nextMatch: null };
 
-        // Menu mobile (inchangé)
+        // Menu mobile
         document.addEventListener('DOMContentLoaded', () => {
             const menuBtn = document.querySelector('.mobile-menu-btn');
             const mobileMenu = document.querySelector('.mobile-menu');
@@ -1082,62 +1170,47 @@
         });
 
         // Utils
-        function formatDate(dstr) { return new Date(dstr.slice(0, 10)).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }); }
-        function getResultClass(r) {
-            if (!r) return '';
-            const x = r.toLowerCase();
-            if (x === 'victoire' || x === 'v') return 'victory';
-            if (x === 'nul' || x === 'n') return 'draw';
-            if (x === 'defaite' || x === 'défaite' || x === 'd') return 'defeat';
-            return '';
-        }
-        function getResultLetter(r) { const c = getResultClass(r); return c === 'victory' ? 'V' : c === 'draw' ? 'N' : c === 'defeat' ? 'D' : '?'; }
-        const isValidTime = (s) => {
-            if (typeof s !== 'string') return false;
-            const m = s.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
-            if (!m) return false;
-            const hh = Number(m[1]), mm = Number(m[2]), ss = m[3] ? Number(m[3]) : 0;
-            return hh >= 0 && hh < 24 && mm >= 0 && mm < 60 && ss >= 0 && ss < 60;
-        };
-
-        const formatDbTime = (s) => {
-            if (!isValidTime(s)) return null;
-            const [hh, mm] = s.split(':');
-            return `${hh.padStart(2, '0')}:${mm.padStart(2, '0')}`;
-        };
+        function formatDate(dstr) { return new Date(dstr.slice(0, 10)).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }) }
+        function getResultClass(r) { if (!r) return ''; const x = r.toLowerCase(); if (x === 'victoire' || x === 'v') return 'victory'; if (x === 'nul' || x === 'n') return 'draw'; if (x === 'defaite' || x === 'défaite' || x === 'd') return 'defeat'; return '' }
+        function getResultLetter(r) { const c = getResultClass(r); return c === 'victory' ? 'V' : c === 'draw' ? 'N' : c === 'defeat' ? 'D' : '?' }
+        const isValidTime = (s) => { if (typeof s !== 'string') return false; const m = s.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/); if (!m) return false; const hh = +m[1], mm = +m[2], ss = m[3] ? +m[3] : 0; return hh >= 0 && hh < 24 && mm >= 0 && mm < 60 && ss >= 0 && ss < 60; };
+        const formatDbTime = (s) => { if (!isValidTime(s)) return null; const [hh, mm] = s.split(':'); return `${hh.padStart(2, '0')}:${mm.padStart(2, '0')}`; };
 
         // Load
         async function loadTeamData() {
-            await Promise.all([loadMatches(), loadActions(), loadNextMatch()]);
+            await Promise.all([loadMatches(), loadNextMatch()]);
             renderRecentForm();
             renderStats();
             renderRecentResults();
-            renderRankings();
             renderResultsChart();
             renderGoalsChart();
         }
         async function loadMatches() {
-            const { data, error } = await supabase.from('matchs').select('*').eq('equipe', TEAM_CODE).not('resultat', 'is', null).order('date', { ascending: false });
+            const { data, error } = await supabase
+                .from('matchs')
+                .select('*')
+                .eq('equipe', TEAM_CODE)
+                .not('resultat', 'is', null)
+                .order('date', { ascending: false });
             if (error) console.error(error);
             teamData.matches = data || [];
-        }
-        async function loadActions() {
-            if (!teamData.matches.length) return;
-            const ids = teamData.matches.map(m => m.id);
-            const { data, error } = await supabase.from('actions').select('*').in('match_id', ids);
-            if (error) console.error(error);
-            teamData.actions = data || [];
         }
         async function loadNextMatch() {
             const today = new Date(); today.setHours(0, 0, 0, 0);
             const ymd = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-            const { data, error } = await supabase.from('programmations').select('*').eq('equipe', TEAM_CODE).gte('date', ymd).order('date', { ascending: true }).limit(1);
+            const { data, error } = await supabase
+                .from('programmations')
+                .select('*')
+                .eq('equipe', TEAM_CODE)
+                .gte('date', ymd)
+                .order('date', { ascending: true })
+                .limit(1);
             if (error) console.error(error);
             teamData.nextMatch = data?.[0] || null;
             renderNextMatch();
         }
 
-        // 1) Forme récente => 5 pastilles (complète avec “?” gris)
+        // Forme récente (5 pastilles)
         function renderRecentForm() {
             const box = document.getElementById('recent-form');
             const m = teamData.matches.slice(0, 5);
@@ -1146,14 +1219,11 @@
                 const letter = getResultLetter(match.resultat);
                 return `<div class="form-result ${cls}" title="${match.adversaire} - ${formatDate(match.date)}">${letter}</div>`;
             });
-            // compléments si <5
-            for (let i = nodes.length; i < 5; i++) {
-                nodes.push(`<div class="form-result placeholder" title="—">?</div>`);
-            }
+            for (let i = nodes.length; i < 5; i++) { nodes.push(`<div class="form-result placeholder" title="—">?</div>`); }
             box.innerHTML = nodes.join('');
         }
 
-        // 2) Stats (Matchs joués, Goal Average, Clean sheets)
+        // Stats (Matchs joués, Goal Average, Clean sheets)
         function calculateTeamStats() {
             const matches = teamData.matches;
             let vic = 0, nul = 0, def = 0, buts = 0, enc = 0, clean = 0;
@@ -1179,43 +1249,28 @@
           <span class="stat-label">Goal Average</span>
         </div>
         <div class="stat-card">
-          <span class="stat-value">${s.clean ?? s.cleanSheets ?? 0}</span>
+          <span class="stat-value">${s.clean ?? 0}</span>
           <span class="stat-label">Clean sheets</span>
         </div>
       `;
         }
 
-        // 3) Camembert résultats (vert/orange/rouge) avec compteurs + %
+        // Doughnut Résultats
         function renderResultsChart() {
             const s = calculateTeamStats();
-            const total = Math.max(1, s.played); // évite /0
             const ctx = document.getElementById('resultsChart').getContext('2d');
-            // détruire ancien chart si re-render
-            if (window._resultsChart) { window._resultsChart.destroy(); }
-
+            if (window._resultsChart) window._resultsChart.destroy();
             window._resultsChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: ['Victoires', 'Nuls', 'Défaites'],
-                    datasets: [{
-                        data: [s.vic, s.nul, s.def],
-                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
-                        borderColor: '#fff',
-                        borderWidth: 2
-                    }]
+                    datasets: [{ data: [s.vic, s.nul, s.def], backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], borderColor: '#fff', borderWidth: 2 }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     plugins: {
                         legend: { position: 'bottom', labels: { usePointStyle: true, padding: 12 } },
-                        datalabels: {
-                            color: '#111', font: { weight: '700' },
-                            formatter: (value, ctx) => {
-                                const sum = ctx.dataset.data.reduce((a, b) => a + b, 0) || 1;
-                                const pct = Math.round((value / sum) * 100);
-                                return value ? `${value}` : '';
-                            }
-                        },
+                        datalabels: { color: '#111', font: { weight: '700' }, formatter: (v, ctx) => v ? `${v}` : '' },
                         tooltip: { enabled: true }
                     },
                     cutout: '60%'
@@ -1224,37 +1279,25 @@
             });
         }
 
-        // 4) Camembert buts marqués vs encaissés avec moyenne/match
+        // Doughnut Buts marqués vs encaissés
         function renderGoalsChart() {
             const s = calculateTeamStats();
             const played = Math.max(1, s.played);
             const moyMarques = (s.buts / played).toFixed(1);
             const moyEncaisses = (s.enc / played).toFixed(1);
-
             const ctx = document.getElementById('goalsChart').getContext('2d');
-            if (window._goalsChart) { window._goalsChart.destroy(); }
-
+            if (window._goalsChart) window._goalsChart.destroy();
             window._goalsChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: ['Marqués', 'Encaissés'],
-                    datasets: [{
-                        data: [s.buts, s.enc],
-                        backgroundColor: ['#3b82f6', '#9ca3af'], // bleu pour marqués, gris pour encaissés
-                        borderColor: '#fff', borderWidth: 2
-                    }]
+                    datasets: [{ data: [s.buts, s.enc], backgroundColor: ['#3b82f6', '#9ca3af'], borderColor: '#fff', borderWidth: 2 }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     plugins: {
                         legend: { position: 'bottom', labels: { usePointStyle: true, padding: 12 } },
-                        datalabels: {
-                            color: '#111', font: { weight: '700' },
-                            formatter: (value, ctx) => {
-                                const label = ctx.dataIndex === 0 ? `${moyMarques}/m` : `${moyEncaisses}/m`;
-                                return value ? `${value}` : '';
-                            }
-                        }
+                        datalabels: { color: '#111', font: { weight: '700' }, formatter: (v, ctx) => v ? `${v}` : '' }
                     },
                     cutout: '60%'
                 },
@@ -1262,14 +1305,14 @@
             });
         }
 
-        // 5) Prochain match (date + heure si valide, sinon “Heure à confirmer”)
+        // Prochain match
         function renderNextMatch() {
             const c = document.getElementById('next-match-content');
             if (!teamData.nextMatch) { c.innerHTML = '<p style="text-align:center;color:var(--color-text-light);">Aucun match programmé prochainement.</p>'; return; }
             const m = teamData.nextMatch;
             const lieu = (m.lieu || '').toLowerCase(); const isHome = (lieu === 'dom' || lieu === 'domicile');
             const jour = new Date((m.date || '').slice(0, 10)).toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long' });
-            const hhmm = formatDbTime(m.heure);
+            const hhmm = (function (s) { if (!isValidTime(s)) return null; const [hh, mm] = s.split(':'); return `${hh.padStart(2, '0')}:${mm.padStart(2, '0')}`; })(m.heure);
             const heure = hhmm ? hhmm : 'Heure à confirmer';
 
             c.innerHTML = `
@@ -1284,7 +1327,6 @@
             <div class="match-detail-label">Date et Heure</div>
             <div class="match-detail-value">${jour} à ${heure}</div>
           </div>
-        
           <div class="match-detail">
             <div class="match-detail-label">Lieu</div>
             <div class="match-detail-value">${isHome ? '🏠 Domicile' : '✈️ Extérieur'}</div>
@@ -1293,11 +1335,43 @@
             <div class="match-detail-label">Compétition</div>
             <div class="match-detail-value">${m.competition || 'Championnat'}</div>
           </div>
-        </div>
-      `;
+        </div>`;
         }
 
-        // Derniers résultats (inchangé)
+        // Détails match (buteurs/passeurs)
+        async function toggleMatchDetails(el) {
+            const id = el.dataset.matchId;
+            const existing = el.nextElementSibling;
+            if (existing?.classList?.contains('match-details-expand')) { existing.remove(); return; }
+            document.querySelectorAll('.match-details-expand').forEach(d => d.remove());
+            const actions = await fetchActionsForMatch(id);
+            const details = createMatchDetailsElement(actions);
+            el.insertAdjacentElement('afterend', details);
+            setTimeout(() => details.classList.add('show'), 10);
+        }
+        async function fetchActionsForMatch(id) {
+            const { data, error } = await supabase.from('actions').select('joueur,type').eq('match_id', id);
+            if (error) { console.error(error); return { goals: [], assists: [] }; }
+            const goals = new Map(), assists = new Map();
+            (data || []).forEach(a => {
+                if (a.type === 'Goal') goals.set(a.joueur, (goals.get(a.joueur) || 0) + 1);
+                if (a.type === 'Assist') assists.set(a.joueur, (assists.get(a.joueur) || 0) + 1);
+            });
+            return {
+                goals: [...goals.entries()].map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name)),
+                assists: [...assists.entries()].map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+            };
+        }
+        function createMatchDetailsElement(actions) {
+            const div = document.createElement('div'); div.className = 'match-details-expand';
+            let html = '<div class="details-content">', has = false;
+            if (actions.goals.length) { has = true; html += `<div class="details-section"><h4 class="details-title">⚽ Buteurs</h4><ul class="details-list">${actions.goals.map(p => `<li class="details-item"><span class="details-player">${p.name}</span><span class="details-count">${p.count}</span></li>`).join('')}</ul></div>`; }
+            if (actions.assists.length) { has = true; html += `<div class="details-section"><h4 class="details-title">🎯 Passeurs</h4><ul class="details-list">${actions.assists.map(p => `<li class="details-item"><span class="details-player">${p.name}</span><span class="details-count">${p.count}</span></li>`).join('')}</ul></div>`; }
+            html += '</div>'; if (!has) html = '<div style="text-align:center;color:var(--color-text-light);font-style:italic;">Aucune statistique disponible pour ce match.</div>';
+            div.innerHTML = html; return div;
+        }
+
+        // Derniers résultats
         function renderRecentResults() {
             const container = document.getElementById('recent-results');
             const recent = teamData.matches.slice(0, 3);
@@ -1317,67 +1391,6 @@
             }).join('');
             container.querySelectorAll('.result-item').forEach(it => it.addEventListener('click', () => toggleMatchDetails(it)));
         }
-
-        // // (Détails match avec buteurs/passeurs — inchangé chez toi)
-        // async function toggleMatchDetails(el) {
-        //     const id = el.dataset.matchId;
-        //     const existing = el.nextElementSibling;
-        //     if (existing?.classList?.contains('match-details-expand')) { existing.remove(); return; }
-        //     document.querySelectorAll('.match-details-expand').forEach(d => d.remove());
-        //     const actions = await fetchActionsForMatch(id);
-        //     const details = createMatchDetailsElement(actions);
-        //     el.insertAdjacentElement('afterend', details);
-        //     setTimeout(() => details.classList.add('show'), 10);
-        // }
-        // async function fetchActionsForMatch(id) {
-        //     const { data, error } = await supabase.from('actions').select('joueur,type').eq('match_id', id);
-        //     if (error) { console.error(error); return { goals: [], assists: [] }; }
-        //     const goals = new Map(), assists = new Map();
-        //     (data || []).forEach(a => {
-        //         if (a.type === 'Goal') goals.set(a.joueur, (goals.get(a.joueur) || 0) + 1);
-        //         if (a.type === 'Assist') assists.set(a.joueur, (assists.get(a.joueur) || 0) + 1);
-        //     });
-        //     return {
-        //         goals: [...goals.entries()].map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name)),
-        //         assists: [...assists.entries()].map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
-        //     };
-        // }
-        // function createMatchDetailsElement(actions) {
-        //     const div = document.createElement('div'); div.className = 'match-details-expand';
-        //     let html = '<div class="details-content">', has = false;
-        //     if (actions.goals.length) { has = true; html += `<div class="details-section"><h4 class="details-title">⚽ Buteurs</h4><ul class="details-list">${actions.goals.map(p => `<li class="details-item"><span class="details-player">${p.name}</span><span class="details-count">${p.count}</span></li>`).join('')}</ul></div>`; }
-        //     if (actions.assists.length) { has = true; html += `<div class="details-section"><h4 class="details-title">🎯 Passeurs</h4><ul class="details-list">${actions.assists.map(p => `<li class="details-item"><span class="details-player">${p.name}</span><span class="details-count">${p.count}</span></li>`).join('')}</ul></div>`; }
-        //     html += '</div>'; if (!has) html = '<div style="text-align:center;color:var(--color-text-light);font-style:italic;">Aucune statistique disponible pour ce match.</div>';
-        //     div.innerHTML = html; return div;
-        // }
-
-        // // Classements (inchangé)
-        // function renderRankings() {
-        //     const ranks = calculateRankings();
-        //     renderRankingList('goalscorers-ranking', ranks.goals);
-        //     renderRankingList('assists-ranking', ranks.assists);
-        //     renderRankingList('total-ranking', ranks.total);
-        // }
-        // function calculateRankings() {
-        //     const goals = new Map(), assists = new Map();
-        //     teamData.actions.forEach(a => {
-        //         if (a.type === 'Goal') goals.set(a.joueur, (goals.get(a.joueur) || 0) + 1);
-        //         if (a.type === 'Assist') assists.set(a.joueur, (assists.get(a.joueur) || 0) + 1);
-        //     });
-        //     const toArr = map => [...map.entries()].map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
-        //     const G = toArr(goals), A = toArr(assists), totalMap = new Map(goals);
-        //     A.forEach(({ name, count }) => totalMap.set(name, (totalMap.get(name) || 0) + count));
-        //     const T = [...totalMap.entries()].map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
-        //     return { goals: G, assists: A, total: T };
-        // }
-        // function renderRankingList(id, arr) {
-        //     const c = document.getElementById(id);
-        //     if (!arr.length) { c.innerHTML = '<li style="text-align:center;color:var(--color-text-light);padding:1rem;">Aucune donnée disponible</li>'; return; }
-        //     c.innerHTML = arr.slice(0, 10).map((p, i) => {
-        //         const pos = i + 1; const klass = pos === 1 ? 'gold' : pos === 2 ? 'silver' : pos === 3 ? 'bronze' : '';
-        //         return `<li class="ranking-item"><div class="ranking-position ${klass}">${pos}</div><div class="ranking-player">${p.name}</div><div class="ranking-count">${p.count}</div></li>`;
-        //     }).join('');
-        // }
     </script>
 </body>
 
