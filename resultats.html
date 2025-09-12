@@ -262,6 +262,94 @@
             font-weight: 400
         }
 
+        /* ====== FILTRES AMÉLIORÉS ====== */
+        .filters-container {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 16px;
+            margin: 16px 0;
+            border: 1px solid rgba(0, 0, 0, .06);
+        }
+
+        .filters-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: var(--color-navy);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--color-text-dark);
+            margin-bottom: 4px;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .filter-chip {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .filter-chip:hover {
+            background: #e2e8f0;
+        }
+
+        .filter-chip.active {
+            background: var(--color-sky-blue);
+            color: white;
+            border-color: var(--color-sky-blue);
+        }
+
+        .filter-chip input[type="checkbox"] {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .filters-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .filter-options {
+                gap: 4px;
+            }
+
+            .filter-chip {
+                font-size: 0.8rem;
+                padding: 3px 6px;
+            }
+        }
+
         /* === LISTE DES RÉSULTATS === */
         .results-wrapper {
             background: var(--color-white);
@@ -893,7 +981,11 @@
                 font-size: 0.7rem;
             }
 
-            .details-player, .details-count, .details-title, .details-notes, .details-tag {
+            .details-player,
+            .details-count,
+            .details-title,
+            .details-notes,
+            .details-tag {
                 font-size: 0.5rem;
             }
         }
@@ -965,7 +1057,33 @@
             </div>
         </section>
 
-     
+        <!-- ====== FILTRES AMÉLIORÉS ====== -->
+        <div class="filters-container">
+            <div class="filters-header">
+                🔍 Filtres
+            </div>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <div class="filter-group-title">Équipes</div>
+                    <div class="filter-options">
+                        <label class="filter-chip active">
+                            <input type="checkbox" class="team-filter" value="18A" checked>
+                            18A
+                        </label>
+                        <label class="filter-chip active">
+                            <input type="checkbox" class="team-filter" value="17" checked>
+                            17
+                        </label>
+                        <label class="filter-chip active">
+                            <input type="checkbox" class="team-filter" value="18B" checked>
+                            18B
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
         <section class="results-wrapper">
             <div id="results-list" aria-live="polite"></div>
@@ -1018,11 +1136,21 @@
                 }
             }));
 
+
             // Gestion des détails expandables
             setupExpandableDetails();
 
             // Charger tous les résultats
+            applyTeamFromURL();
             loadAllResults();
+
+            // rendre aussi le clic direct sur la checkbox réactif
+            document.querySelectorAll('.filter-chip input[type="checkbox"]').forEach(input => {
+                input.addEventListener('change', () => {
+                    input.closest('.filter-chip')?.classList.toggle('active', input.checked);
+                    renderResults(); // re-filtre immédiatement
+                });
+            });
         });
 
         // === DÉTAILS EXPANDABLES ===
@@ -1091,6 +1219,25 @@
 
             // animation
             setTimeout(() => detailsElement.classList.add('show'), 10);
+        }
+
+        function applyTeamFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const t = (params.get('team') || '').toUpperCase(); // "18A" | "17" | "18B"
+            if (!t) return; // sans param, on garde tout coché
+
+            // Décoche tout, ne coche que t
+            document.querySelectorAll('.team-filter').forEach(input => {
+                const isWanted = input.value.toUpperCase() === t;
+                input.checked = isWanted;
+                input.closest('.filter-chip')?.classList.toggle('active', isWanted);
+            });
+        }
+
+        function selectedTeams() {
+            const set = new Set();
+            document.querySelectorAll('.team-filter:checked').forEach(cb => set.add(cb.value));
+            return set;
         }
 
 
@@ -1297,12 +1444,26 @@
             }
 
             allMatches = data || [];
+            renderResults(); // <-- filtre + rendu
+        }
 
-            // Groupage par mois
+        function renderResults() {
+            const container = document.getElementById('results-list');
+            container.innerHTML = '';
+
+            // 1) applique le filtre ÉQUIPE
+            const teams = selectedTeams();
+            const filtered = allMatches.filter(m => teams.has(String(m.equipe)));
+
+            if (!filtered.length) {
+                container.innerHTML = `<p style="text-align:center;color:#6b7280">Aucun résultat pour ces filtres.</p>`;
+                return;
+            }
+
+            // 2) groupage par mois (en conservant l’ordre desc déjà trié)
             const groups = [];
             let currentKey = null, currentList = null;
-
-            for (const m of allMatches) {
+            for (const m of filtered) {
                 const key = monthKey(m.date);
                 if (key !== currentKey) {
                     currentKey = key;
@@ -1312,16 +1473,13 @@
                 currentList.push(m);
             }
 
-            // Rendu
-            container.innerHTML = '';
+            // 3) rendu
             for (const g of groups) {
-                // Séparateur de mois
                 const sep = document.createElement('div');
                 sep.className = 'month-sep';
                 sep.innerHTML = `<div class="label">${g.key}</div>`;
                 container.appendChild(sep);
 
-                // Lignes
                 g.items.forEach(match => {
                     const resultClass = getResultClass(match.resultat);
                     const view = formatScoreLine(match);
@@ -1329,33 +1487,27 @@
                     const row = document.createElement('div');
                     row.className = `result-item ${resultClass}`;
                     row.innerHTML = `
-                        <div class="result-date">${view.date}</div>
-                        <div class="result-teams">${view.left}</div>
-                        <div class="result-score">${view.score}</div>
-                        <div class="result-teams">${view.right}</div>
-                    `;
+        <div class="result-date">${view.date}</div>
+        <div class="result-teams">${view.left}</div>
+        <div class="result-score">${view.score}</div>
+        <div class="result-teams">${view.right}</div>
+      `;
 
                     row.addEventListener('click', () => toggleMatchDetails(row, match));
                     row.style.cursor = 'pointer';
                     row.setAttribute('tabindex', '0');
                     row.setAttribute('role', 'button');
                     row.setAttribute('aria-label', `Voir les détails du match ${extractTeamName(view.left)} vs ${extractTeamName(view.right)}`);
+      row.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleMatchDetails(row, match); }
+      });
 
-                    row.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            toggleMatchDetails(row, match);
-                        }
-                    });
+      container.appendChild(row);
+    });
+  }
+}
 
-                    container.appendChild(row);
-                });
-            }
 
-            if (!allMatches.length) {
-                container.innerHTML = `<p style="text-align:center;color:#6b7280">Aucun résultat pour le moment.</p>`;
-            }
-        }
     </script>
 </body>
 
