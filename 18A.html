@@ -506,7 +506,7 @@
 
         .match-details {
             display: grid;
-            grid-template-columns: repeat(3, minmax(120px, 1fr));
+            grid-template-columns: repeat(2, minmax(120px, 1fr));
             gap: 1rem;
             margin-top: 1rem
         }
@@ -1058,8 +1058,8 @@
                     <h1 class="team-name">GJPB U18A</h1>
                     <p class="team-subtitle"></p>
                     <div class="quick-actions">
-                        <a href="calendrier.html" class="quick-btn">Calendrier</a>
-                        <a href="resultats.html" class="quick-btn">Résultats</a>
+                        <a href="calendrier.html?team=18A" class="quick-btn">Calendrier</a>
+                        <a href="resultats.html?team=18A" class="quick-btn">Résultats</a>
                     </div>
                 </div>
             </div>
@@ -1098,14 +1098,35 @@
 
             <!-- Derniers résultats -->
             <section class="recent-results">
-                <h2 class="section-title">🏈 Derniers résultats</h2>
+                <h2 class="section-title">⚽ Derniers résultats</h2>
                 <ul class="results-list" id="recent-results"></ul>
-                <div style="text-align:center;"><a href="resultats.html" class="view-all-btn">Voir tous les
+                <div style="text-align:center;"><a href="resultats.html?team=18A" class="view-all-btn">Voir tous les
                         résultats</a></div>
             </section>
 
+            <!-- Section Classements Phase 1 -->
+            <a href="https://foot44.fff.fr/competitions?tab=ranking&id=436126&phase=1&poule=3&type=ch" style="text-decoration: none;">
+                <section class="individual-rankings">
+                    <div class="rankings-content">
+                        <div class="rankings-header">
+                            <div>
+                                <h2 class="rankings-title">
+                                    <span class="rankings-icon">📈</span>
+                                    Classement Phase 1
+                                </h2>
+                                <p class="rankings-description">
+                                    Découvrez le classement en direct de la phase 1 sur foot44.
+                                </p>
+                            </div>
+                            <div class="rankings-arrow">→</div>
+                        </div>
+                    </div>
+                </section>
+            </a>
+
+
             <!-- Section Classements individuels 18A améliorée -->
-            <a href="stats.html" style="text-decoration: none;">
+            <a href="stats.html?team=18A" style="text-decoration: none;">
                 <section class="individual-rankings">
                     <div class="rankings-content">
                         <div class="rankings-header">
@@ -1121,8 +1142,6 @@
                             </div>
                             <div class="rankings-arrow">→</div>
                         </div>
-
-                       
                     </div>
                 </section>
             </a>
@@ -1324,17 +1343,14 @@
         </div>
         <div class="match-details">
           <div class="match-detail">
-            <div class="match-detail-label">Date et Heure</div>
+            <div class="match-detail-label">Date & Heure</div>
             <div class="match-detail-value">${jour} à ${heure}</div>
           </div>
           <div class="match-detail">
-            <div class="match-detail-label">Lieu</div>
-            <div class="match-detail-value">${isHome ? '🏠 Domicile' : '✈️ Extérieur'}</div>
+            <div class="match-detail-label">Compétition & Lieu</div>
+            <div class="match-detail-value">${m.competition || 'Championnat'} - ${isHome ? '🏠 Domicile' : '✈️ Extérieur'}</div>
           </div>
-          <div class="match-detail">
-            <div class="match-detail-label">Compétition</div>
-            <div class="match-detail-value">${m.competition || 'Championnat'}</div>
-          </div>
+          
         </div>`;
         }
 
