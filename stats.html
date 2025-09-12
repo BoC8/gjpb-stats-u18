@@ -314,11 +314,11 @@
                 grid-template-columns: 1fr;
                 gap: 12px;
             }
-            
+
             .filter-options {
                 gap: 4px;
             }
-            
+
             .filter-chip {
                 font-size: 0.8rem;
                 padding: 3px 6px;
@@ -371,6 +371,7 @@
         }
 
         @media (max-width: 899px) {
+
             th,
             td {
                 font-size: 0.9rem;
@@ -626,7 +627,8 @@
                     <li><a href="18B.html" aria-label="Équipe 18 ans B">18B</a></li>
                 </ul>
             </nav>
-            <a href="login.html" class="login-btn login-desktop" aria-label="Se connecter à votre compte">Se connecter</a>
+            <a href="login.html" class="login-btn login-desktop" aria-label="Se connecter à votre compte">Se
+                connecter</a>
 
             <!-- Bouton menu mobile -->
             <button class="mobile-menu-btn" aria-label="Ouvrir le menu de navigation" aria-expanded="false"
@@ -647,8 +649,8 @@
     </header>
 
     <main>
-        <h1 class="page-title" style="text-align: center;">Classements</h1>
-        <p class="sub" style="text-align: center;">Buteurs, passeurs et total (toutes équipes confondues).</p>
+        <h1 class="page-title" style="text-align: center;">Classements individuels</h1>
+        <!-- <p class="sub" style="text-align: center;">Buteurs, passeurs et total (toutes équipes confondues).</p> -->
 
         <!-- ====== FILTRES AMÉLIORÉS ====== -->
         <div class="filters-container">
@@ -681,10 +683,25 @@
                         </label>
                     </div>
                 </div>
-                
+
                 <div class="filter-group">
-                    <div class="filter-group-title">Lieu</div>
+                    <div class="filter-group-title">Équipes & Lieu</div>
                     <div class="filter-options">
+                        <label class="filter-chip active">
+                            <input type="checkbox" class="team-filter" value="18A" checked>
+                            18A
+                        </label>
+                        <label class="filter-chip active">
+                            <input type="checkbox" class="team-filter" value="17" checked>
+                            17
+                        </label>
+                        <label class="filter-chip active">
+                            <input type="checkbox" class="team-filter" value="18B" checked>
+                            18B
+                        </label>
+                        <h1></h1>
+                        <h1></h1>
+                        <h1></h1>
                         <label class="filter-chip active">
                             <input type="checkbox" class="lieu-filter" value="DOM" checked>
                             🏠 Domicile
@@ -852,13 +869,13 @@
         });
 
         // ====== GESTION DES FILTRES CHIPS
-        (function() {
+        (function () {
             document.querySelectorAll('.filter-chip').forEach(chip => {
-                chip.addEventListener('click', function() {
+                chip.addEventListener('click', function () {
                     const checkbox = this.querySelector('input[type="checkbox"]');
                     checkbox.checked = !checkbox.checked;
                     this.classList.toggle('active', checkbox.checked);
-                    
+
                     // Déclencher le rechargement des données
                     reloadAll();
                 });
@@ -874,14 +891,14 @@
         function renderWithRanking(rows, tbodyId, key, getExtraCols) {
             const tbody = document.getElementById(tbodyId);
             tbody.innerHTML = '';
-            
+
             if (rows.length === 0) return;
-            
+
             // Grouper les joueurs par score
             const groups = [];
             let currentGroup = [];
             let currentScore = null;
-            
+
             rows.forEach(player => {
                 if (currentScore === null || player[key] === currentScore) {
                     currentGroup.push(player);
@@ -892,18 +909,18 @@
                     currentScore = player[key];
                 }
             });
-            
+
             if (currentGroup.length > 0) {
                 groups.push(currentGroup);
             }
-            
+
             // Attribution des médailles par groupe
             let currentRank = 1;
-            
+
             groups.forEach((group, groupIndex) => {
                 let badgeClass;
                 let displayRank;
-                
+
                 if (groupIndex === 0) {
                     // Premier groupe = Or
                     badgeClass = 'rank-gold';
@@ -921,16 +938,16 @@
                     badgeClass = 'rank-other';
                     displayRank = currentRank;
                 }
-                
+
                 group.forEach((player, playerIndex) => {
                     const tr = document.createElement('tr');
-                    
+
                     // Pour les groupes après le podium : afficher "—" pour les ex-aequo sauf le premier du groupe
                     let finalDisplayRank = displayRank;
                     if (groupIndex >= 3 && playerIndex > 0) {
                         finalDisplayRank = '—';
                     }
-                    
+
                     tr.innerHTML = `
                         <td><span class="rank-badge ${badgeClass}">${finalDisplayRank}</span></td>
                         <td><strong>${player.joueur}</strong></td>
@@ -938,7 +955,7 @@
                     `;
                     tbody.appendChild(tr);
                 });
-                
+
                 currentRank += group.length;
             });
         }
@@ -955,17 +972,18 @@
 
         // init + écoute des filtres
         document.addEventListener('DOMContentLoaded', async () => {
+            applyTeamFromURL();
             await reloadAll();
         });
 
         // --- Cache des matchs (id -> competition) ---
-        let MATCHES_MAP = null; // Map<id, { competition, lieu }>
+        let MATCHES_MAP = null; // Map<id, { competition, lieu, équipe }>
 
         async function ensureMatchesLoaded() {
             if (MATCHES_MAP) return;
-            const { data, error } = await supabase.from('matchs').select('id, competition, lieu');
+            const { data, error } = await supabase.from('matchs').select('id, competition, lieu, equipe');
             if (error) { console.error('Erreur matchs:', error); MATCHES_MAP = new Map(); return; }
-            MATCHES_MAP = new Map((data || []).map(m => [m.id, { competition: m.competition, lieu: m.lieu }]));
+            MATCHES_MAP = new Map((data || []).map(m => [m.id, { competition: m.competition, lieu: m.lieu, equipe: m.equipe }]));
         }
 
         // Compétitions cochées -> Set<string>
@@ -982,16 +1000,45 @@
             return set;
         }
 
+        // Lecture du paramètre d'URL ?team=18A|17|18B pour pré-sélectionner
+        function applyTeamFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const teamParam = (params.get('team') || '').toUpperCase();
+            if (!teamParam) return;
+
+            // Décoche TOUTES les équipes d'abord
+            document.querySelectorAll('.team-filter').forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.parentElement.classList.remove('active');
+            });
+
+            // Puis coche uniquement celle passée en URL
+            document.querySelectorAll('.team-filter').forEach(checkbox => {
+                if (checkbox.value.toUpperCase() === teamParam) {
+                    checkbox.checked = true;
+                    checkbox.parentElement.classList.add('active');
+                }
+            });
+        }
+
+        // Équipes cochées -> Set<string> (18A / 17 / 18B)
+        function selectedTeams() {
+            const set = new Set();
+            document.querySelectorAll('.team-filter:checked').forEach(cb => set.add(cb.value));
+            return set;
+        }
+
         // Ids de matchs autorisés selon compétitions ET lieux
         function allowedMatchIds() {
             const comps = selectedCompetitions();
             const locs = selectedLocations();
+            const teams = selectedTeams();
             const allowed = new Set();
 
             for (const [id, meta] of (MATCHES_MAP || new Map())) {
                 // Normalise le lieu (DOM/EXT)
                 const L = String(meta.lieu || '').toUpperCase();
-                if (comps.has(meta.competition) && locs.has(L)) {
+                if (comps.has(meta.competition) && locs.has(L) && teams.has(String(meta.equipe))) {
                     allowed.add(id);
                 }
             }
