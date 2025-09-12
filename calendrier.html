@@ -1159,6 +1159,21 @@
             return (s || '').slice(0, 10);
         }
 
+        // Pré-coche l’équipe passée en URL via ?team=18A|17|18B
+        function applyTeamFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const t = (params.get('team') || '').toUpperCase(); // "18A" | "17" | "18B"
+            if (!t) return;
+
+            // Décoche toutes les équipes, ne coche que t
+            document.querySelectorAll('.f-team').forEach(input => {
+                const wanted = input.value.toUpperCase() === t;
+                input.checked = wanted;
+                // Classes visuelles gérées par updateFilterStyles() juste après
+            });
+        }
+
+
 
         function getChecked(selector) {
             const s = new Set();
@@ -1592,6 +1607,7 @@
         // === Initialisation ===
         (async function init() {
             bindFilters();
+            applyTeamFromURL();
             updateFilterStyles(); // Initialiser les styles des filtres
             await loadMonth(state.year, state.month);
         })();
