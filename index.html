@@ -1317,7 +1317,7 @@
         function formatTeamName(teamName, isGjpb = false) {
             const baseClass = isGjpb ? 'team-gjpb' : 'team-adversaire';
 
-            if (teamName.length > 10) {
+            if (teamName.length > 20) {
                 // Chercher un espace pour couper intelligemment
                 const spaceIndex = teamName.indexOf(' ', 5);
                 if (spaceIndex !== -1 && spaceIndex <= 12) {
