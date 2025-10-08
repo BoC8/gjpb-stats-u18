@@ -407,6 +407,41 @@
             box-shadow: var(--shadow);
         }
 
+        /* Styles pour les filtres de compétition */
+        .competition-filters {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .comp-filter-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            border: 2px solid var(--color-sky-blue);
+            background: white;
+            color: var(--color-navy);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-family);
+        }
+
+        .comp-filter-btn:hover {
+            background: var(--color-light-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .comp-filter-btn.active {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: var(--color-navy);
+            box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);
+        }
+
         .record-title {
             text-align: center;
             font-size: 2rem;
@@ -881,6 +916,15 @@
             .divisions {
                 font-size: 1rem;
             }
+
+            .competition-filters {
+                gap: 0.5rem;
+            }
+
+            .comp-filter-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.60rem;
+            }
         }
 
         @media (min-width: 769px) {
@@ -1019,7 +1063,7 @@
                     <span class="hero-emoji">⚽</span>
                 </h1>
                 <p>
-                    
+
                 </p>
 
                 <!-- Info saison -->
@@ -1053,8 +1097,16 @@
             </div>
         </section>
 
-        <!-- Section bilan -->
+        <!-- Section bilan avec filtres -->
         <section class="record-section">
+            <!-- Filtres de compétition -->
+            <div class="competition-filters">
+                <button class="comp-filter-btn active" data-filter="tous">Tous les matchs</button>
+                <button class="comp-filter-btn" data-filter="championnat">Championnat</button>
+                <button class="comp-filter-btn" data-filter="coupe">Coupe</button>
+                <button class="comp-filter-btn" data-filter="amical">Amicaux</button>
+            </div>
+
             <h2 class="record-title">Bilan de la saison</h2>
             <div class="record-grid">
                 <div class="record-item victories">
@@ -1113,7 +1165,8 @@
                         <circle cx="65" cy="62" r="2" fill="#dc3545" />
                     </svg>
                     <h3>Voir le calendrier des matchs</h3>
-                    <p>Consultez tous les matchs à venir, les horaires et les adversaires. Mais aussi les matchs joués et leurs scores !</p>
+                    <p>Consultez tous les matchs à venir, les horaires et les adversaires. Mais aussi les matchs joués
+                        et leurs scores !</p>
                 </a>
 
                 <!-- Card Statistiques -->
@@ -1152,6 +1205,9 @@
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
             auth: { persistSession: false, autoRefreshToken: false }
         });
+
+        // Variable globale pour stocker le filtre actif
+        let activeCompetitionFilter = 'tous';
 
         // === MENU MOBILE ===
         document.addEventListener('DOMContentLoaded', function () {
@@ -1196,9 +1252,52 @@
                 }
             });
 
+            // Gestion des filtres de compétition
+            const filterButtons = document.querySelectorAll('.comp-filter-btn');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    // Retirer la classe active de tous les boutons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+
+                    // Ajouter la classe active au bouton cliqué
+                    this.classList.add('active');
+
+                    // Mettre à jour le filtre actif
+                    activeCompetitionFilter = this.dataset.filter;
+
+                    // Recharger les statistiques avec le nouveau filtre
+                    loadRecordStats();
+                });
+            });
+
             // Charger les données
             loadAllData();
         });
+
+        // Fonction pour déterminer si un match correspond au filtre
+        function matchesCompetitionFilter(competition) {
+            if (activeCompetitionFilter === 'tous') {
+                return true;
+            }
+
+            const comp = (competition || '').toLowerCase();
+
+            if (activeCompetitionFilter === 'championnat') {
+                // Inclut Phase 1, Phase 2, Phase 3
+                return comp.includes('phase');
+            }
+
+            if (activeCompetitionFilter === 'coupe') {
+                return comp.includes('coupe');
+            }
+
+            if (activeCompetitionFilter === 'amical') {
+                return comp.includes('amical');
+            }
+
+            return false;
+        }
 
         // === ANIMATION DES COMPTEURS ===
         function animateCounter(element, finalValue, duration = 2000) {
@@ -1256,7 +1355,7 @@
         async function loadRecordStats() {
             const { data: matchsData, error } = await supabase
                 .from('matchs')
-                .select('resultat');
+                .select('resultat, competition');
 
             if (error || !matchsData) {
                 console.error('Erreur lors du chargement du bilan:', error);
@@ -1266,6 +1365,11 @@
             let victories = 0, draws = 0, defeats = 0;
 
             matchsData.forEach(match => {
+                // Vérifier si le match correspond au filtre
+                if (!matchesCompetitionFilter(match.competition)) {
+                    return;
+                }
+
                 switch (match.resultat?.toLowerCase()) {
                     case 'victoire':
                     case 'v':
@@ -1283,9 +1387,10 @@
                 }
             });
 
-            document.getElementById('victories').textContent = victories;
-            document.getElementById('draws').textContent = draws;
-            document.getElementById('defeats').textContent = defeats;
+            // Animer les compteurs
+            animateCounter(document.getElementById('victories'), victories, 1000);
+            animateCounter(document.getElementById('draws'), draws, 1000);
+            animateCounter(document.getElementById('defeats'), defeats, 1000);
         }
 
         function formatScoreLine(match) {
