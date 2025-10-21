@@ -285,7 +285,7 @@
 
             /* marge intérieure autour des cards (évite que ça colle aux bords) */
             .container {
-                padding: 0 14px;
+                padding: 0 1px;
             }
 
             .admin-page {
@@ -552,6 +552,23 @@
             th,
             td {
                 padding: 8px
+            }
+        }
+
+        /* Dézoom visuel du contenu admin sur mobile (sans toucher au header) */
+        @media (max-width: 768px) {
+            /* Méthode principale (Chrome/Edge/Android) */
+            .admin-page { zoom: 0.7; }
+        }
+        /* Fallback si 'zoom' n'est pas supporté (Safari/iOS) */
+        @supports not (zoom: 0.7) {
+            @media (max-width: 768px) {
+                .admin-page {
+                    transform: scale(0.7);
+                    transform-origin: top center;
+                    /* Compense la réduction pour garder l'alignement et éviter le clipping */
+                    width: calc(100% / 0.7);
+                }
             }
         }
     </style>
