@@ -558,19 +558,45 @@
         /* Dézoom visuel du contenu admin sur mobile (sans toucher au header) */
         @media (max-width: 768px) {
             /* Méthode principale (Chrome/Edge/Android) */
-            .admin-page { zoom: 0.4; }
+            .admin-page { zoom: 0.7; }
         }
         /* Fallback si 'zoom' n'est pas supporté (Safari/iOS) */
-        @supports not (zoom: 0.4) {
+        @supports not (zoom: 0.7) {
             @media (max-width: 768px) {
                 .admin-page {
-                    transform: scale(0.4);
+                    transform: scale(0.7);
                     transform-origin: top center;
                     /* Compense la réduction pour garder l'alignement et éviter le clipping */
-                    width: calc(100% / 0.4);
+                    width: calc(100% / 0.7);
                 }
             }
         }
+
+        /* Tabs for admin sections */
+        .admin-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 8px 0 12px;
+        }
+
+        .tab-btn {
+            border: 1px solid #e5e7eb;
+            background: #fff;
+            color: var(--color-navy);
+            border-radius: 999px;
+            padding: .5rem .9rem;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            background: var(--color-sky-blue);
+            color: #fff;
+            border-color: var(--color-sky-blue);
+        }
+
+        .tab-section { display: none; }
+        .tab-section.active { display: block; }
     </style>
 </head>
 
@@ -618,6 +644,14 @@
                 <h1>Admin — Ajouter / Modifier un match</h1>
             </div>
 
+            <!-- Tabs: sections admin -->
+            <div class="admin-tabs" role="tablist" aria-label="Sections admin">
+                <button class="tab-btn active" data-tab="matchs" role="tab" aria-selected="true">Matchs</button>
+                <button class="tab-btn" data-tab="programmations" role="tab" aria-selected="false">Programmation</button>
+                <button class="tab-btn" data-tab="joueurs" role="tab" aria-selected="false">Joueurs</button>
+            </div>
+
+            <section id="tab-matchs" class="tab-section active">
             <form id="form" class="admin-form" data-match-id="">
                 <div class="row">
                     <div class="group">
@@ -725,6 +759,107 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Programmations tab -->
+            <section id="tab-programmations" class="tab-section">
+                <form id="progForm" class="admin-form" data-prog-id="">
+                    <div class="row">
+                        <div class="group">
+                            <label for="prog_date">Date</label>
+                            <input type="date" id="prog_date" />
+                        </div>
+                        <div class="group">
+                            <label for="prog_equipe">Equipe</label>
+                            <select id="prog_equipe">
+                                <option value="18A">18A</option>
+                                <option value="17">17</option>
+                                <option value="18B">18B</option>
+                            </select>
+                        </div>
+                        <div class="group">
+                            <label for="prog_adversaire">Adversaire</label>
+                            <input type="text" id="prog_adversaire" placeholder="Nom de l'adversaire" />
+                        </div>
+                        <div class="group">
+                            <label for="prog_lieu">Lieu</label>
+                            <select id="prog_lieu">
+                                <option value="DOM">DOM</option>
+                                <option value="EXT">EXT</option>
+                            </select>
+                        </div>
+                        <div class="group">
+                            <label for="prog_competition">Competition</label>
+                            <select id="prog_competition">
+                                <option value="Phase 1">Phase 1</option>
+                                <option value="Phase 2">Phase 2</option>
+                                <option value="Phase 3">Phase 3</option>
+                                <option value="Amical">Amical</option>
+                                <option value="Coupe">Coupe</option>
+                            </select>
+                        </div>
+                        <div class="group">
+                            <label for="prog_heure">Heure</label>
+                            <input type="time" id="prog_heure" />
+                        </div>
+                    </div>
+                    <div class="actions-bar">
+                        <button id="progSaveBtn" type="button" class="btn btn-primary">Enregistrer</button>
+                        <button id="progResetBtn" type="button" class="btn btn-secondary" style="margin-left:8px">Reinitialiser</button>
+                        <div id="progMsg"></div>
+                    </div>
+                </form>
+
+                <div class="card">
+                    <h2 style="margin-bottom:.5rem">Programmations</h2>
+                    <div class="table-wrap">
+                        <table id="progsTable">
+                            <thead>
+                                <tr>
+                                    <th>Actions</th>
+                                    <th>Date</th>
+                                    <th>Equipe</th>
+                                    <th>Adversaire</th>
+                                    <th>Lieu</th>
+                                    <th>Competition</th>
+                                    <th>Heure</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Joueurs tab -->
+            <section id="tab-joueurs" class="tab-section">
+                <form id="playerForm" class="admin-form">
+                    <div class="row">
+                        <div class="group" style="grid-column: 1 / -1;">
+                            <label for="playerName">Nom du joueur</label>
+                            <input type="text" id="playerName" placeholder="Ex: Jean Dupont" />
+                        </div>
+                    </div>
+                    <div class="actions-bar">
+                        <button id="playerAddBtn" type="button" class="btn btn-primary">Ajouter</button>
+                        <div id="playerMsg"></div>
+                    </div>
+                </form>
+
+                <div class="card">
+                    <h2 style="margin-bottom:.5rem">Joueurs</h2>
+                    <div class="table-wrap">
+                        <table id="playersTable">
+                            <thead>
+                                <tr>
+                                    <th>Actions</th>
+                                    <th>Nom</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
 
         </section>
     </main>
@@ -874,6 +1009,7 @@
                 $('#buteurs-container').innerHTML = '';
                 $('#passeurs-container').innerHTML = '';
                 await chargerMatchs();
+                try { await chargerProgrammations(); } catch (e) {}
             } catch (e) {
                 console.error(e);
                 msg('Erreur enregistrement : ' + (e.message || e), true);
@@ -906,6 +1042,137 @@
         `;
                 tbody.appendChild(tr);
             });
+        }
+
+        // ====== Tabs handling ======
+        function switchTab(name) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                const active = btn.dataset.tab === name;
+                btn.classList.toggle('active', active);
+                btn.setAttribute('aria-selected', String(active));
+            });
+            document.querySelectorAll('.tab-section').forEach(sec => {
+                const active = sec.id === `tab-${name}`;
+                sec.classList.toggle('active', active);
+            });
+        }
+
+        // ====== Programmations CRUD ======
+        async function chargerProgrammations() {
+            const tbody = document.querySelector('#progsTable tbody');
+            if (!tbody) return;
+            const { data, error } = await supabase.from('programmations').select('*').order('date', { ascending: false });
+            tbody.innerHTML = '';
+            if (error) { console.error(error); return; }
+            (data || []).forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+          <td class="actions">
+            <button data-id="${p.id}" class="edit-prog">Edit</button>
+            <button data-id="${p.id}" class="del-prog">Del</button>
+          </td>
+          <td>${p.date || ''}</td>
+          <td>${p.equipe || ''}</td>
+          <td>${p.adversaire || ''}</td>
+          <td>${p.lieu || ''}</td>
+          <td>${p.competition || ''}</td>
+          <td>${p.heure || ''}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function enregistrerProgrammation() {
+            const form = document.getElementById('progForm'); if (!form) return;
+            const id = form.dataset.progId || null;
+            const p = {
+                date: document.getElementById('prog_date').value,
+                equipe: document.getElementById('prog_equipe').value,
+                adversaire: document.getElementById('prog_adversaire').value,
+                lieu: document.getElementById('prog_lieu').value,
+                competition: document.getElementById('prog_competition').value,
+                heure: document.getElementById('prog_heure').value
+            };
+            const msgEl = document.getElementById('progMsg');
+            if (!p.date || !p.equipe || !p.adversaire) { if (msgEl) msgEl.textContent = 'Date, equipe et adversaire requis'; return; }
+            try {
+                if (id) {
+                    const { error } = await supabase.from('programmations').update(p).eq('id', id);
+                    if (error) throw error;
+                } else {
+                    const { error } = await supabase.from('programmations').insert(p);
+                    if (error) throw error;
+                }
+                if (msgEl) msgEl.textContent = 'Programmation enregistree';
+                form.dataset.progId = '';
+                form.reset();
+                await chargerProgrammations();
+            } catch (e) {
+                console.error(e);
+                if (msgEl) msgEl.textContent = 'Erreur enregistrement';
+            }
+        }
+
+        async function chargerProgrammationDansForm(id) {
+            const { data, error } = await supabase.from('programmations').select('*').eq('id', id).single();
+            if (error) { console.error(error); return; }
+            const form = document.getElementById('progForm'); if (!form) return;
+            form.dataset.progId = data.id;
+            document.getElementById('prog_date').value = data.date || '';
+            document.getElementById('prog_equipe').value = data.equipe || '18A';
+            document.getElementById('prog_adversaire').value = data.adversaire || '';
+            document.getElementById('prog_lieu').value = data.lieu || 'DOM';
+            document.getElementById('prog_competition').value = data.competition || 'Phase 1';
+            document.getElementById('prog_heure').value = data.heure || '';
+        }
+
+        async function supprimerProgrammation(id) {
+            if (!confirm('Supprimer cette programmation ?')) return;
+            const { error } = await supabase.from('programmations').delete().eq('id', id);
+            if (error) { console.error(error); return; }
+            await chargerProgrammations();
+        }
+
+        // ====== Joueurs CRUD ======
+        async function chargerJoueursListe() {
+            const tbody = document.querySelector('#playersTable tbody');
+            if (!tbody) return;
+            const { data, error } = await supabase.from('joueurs').select('id, nom').order('nom', { ascending: true });
+            tbody.innerHTML = '';
+            if (error) { console.error(error); return; }
+            (data || []).forEach(j => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+          <td class="actions">
+            <button data-id="${j.id}" class="del-player">Del</button>
+          </td>
+          <td>${j.nom}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function enregistrerJoueur() {
+            const name = (document.getElementById('playerName')?.value || '').trim();
+            const msgEl = document.getElementById('playerMsg');
+            if (!name) { if (msgEl) msgEl.textContent = 'Nom requis'; return; }
+            try {
+                const { error } = await supabase.from('joueurs').insert({ nom: name });
+                if (error) throw error;
+                if (msgEl) msgEl.textContent = 'Joueur ajoute';
+                document.getElementById('playerName').value = '';
+                await chargerJoueursListe();
+                try { await chargerJoueurs(); } catch (e) {}
+            } catch (e) {
+                console.error(e);
+                if (msgEl) msgEl.textContent = 'Erreur ajout joueur';
+            }
+        }
+
+        async function supprimerJoueur(id) {
+            if (!confirm('Supprimer ce joueur ?')) return;
+            const { error } = await supabase.from('joueurs').delete().eq('id', id);
+            if (error) { console.error(error); return; }
+            await chargerJoueursListe();
+            try { await chargerJoueurs(); } catch (e) {}
         }
 
         async function chargerMatchDansForm(id) {
@@ -1018,10 +1285,24 @@
                 if (btn.classList.contains('del')) supprimerMatch(id);
             });
 
+            // Tabs events
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+            // Programmations events
+            const progSave = document.getElementById('progSaveBtn'); if (progSave) progSave.addEventListener('click', enregistrerProgrammation);
+            const progReset = document.getElementById('progResetBtn'); if (progReset) progReset.addEventListener('click', () => { const f = document.getElementById('progForm'); f.reset(); f.dataset.progId=''; const el=document.getElementById('progMsg'); if(el) el.textContent=''; });
+            const progsTable = document.getElementById('progsTable'); if (progsTable) progsTable.addEventListener('click', ev => { const b = ev.target.closest('button'); if (!b) return; const id = b.dataset.id; if (b.classList.contains('edit-prog')) chargerProgrammationDansForm(id); if (b.classList.contains('del-prog')) supprimerProgrammation(id); });
+
+            // Joueurs events
+            const addPlayerBtn = document.getElementById('playerAddBtn'); if (addPlayerBtn) addPlayerBtn.addEventListener('click', enregistrerJoueur);
+            const playersTable = document.getElementById('playersTable'); if (playersTable) playersTable.addEventListener('click', ev => { const b = ev.target.closest('button'); if (!b) return; const id = b.dataset.id; if (b.classList.contains('del-player')) supprimerJoueur(id); });
+
             // charge data
             await chargerJoueurs();
             await chargerMatchs();
             await chargerAdversairesDepuisProgrammations();
+            await chargerProgrammations();
+            await chargerJoueursListe();
         });
 
     </script>
