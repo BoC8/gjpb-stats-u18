@@ -558,16 +558,16 @@
         /* Dézoom visuel du contenu admin sur mobile (sans toucher au header) */
         @media (max-width: 768px) {
             /* Méthode principale (Chrome/Edge/Android) */
-            .admin-page { zoom: 0.7; }
+            .admin-page { zoom: 0.4; }
         }
         /* Fallback si 'zoom' n'est pas supporté (Safari/iOS) */
-        @supports not (zoom: 0.7) {
+        @supports not (zoom: 0.4) {
             @media (max-width: 768px) {
                 .admin-page {
-                    transform: scale(0.7);
+                    transform: scale(0.4);
                     transform-origin: top center;
                     /* Compense la réduction pour garder l'alignement et éviter le clipping */
-                    width: calc(100% / 0.7);
+                    width: calc(100% / 0.4);
                 }
             }
         }
