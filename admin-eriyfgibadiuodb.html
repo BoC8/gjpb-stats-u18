@@ -268,146 +268,315 @@
             outline: none
         }
 
-        /* Responsive (de base.html) */
+        /* ============================= */
+        /*   VERSION MOBILE (≤768px)     */
+        /* ============================= */
         @media (max-width: 768px) {
 
-            .admin-header,
-            .admin-form,
-            .card {
-                width: 100%;
-                /* occupe toute la largeur */
-                max-width: 700px;
-                /* pas de largeur max qui bloque */
-                box-sizing: border-box;
-                margin: 0 0 15px 0;
-                /* un petit espace entre les blocs */
-            }
-
-            /* marge intérieure autour des cards (évite que ça colle aux bords) */
-            .container {
-                padding: 0 12px;
-            }
-
-            .admin-page {
-                max-width: 100%;
-                width: 100%;
-                margin: 12px auto;
-            }
-
-            .tab-section {
-                max-width: 100%;
-                width: 100%;
-                padding: 12px;
-            }
-
-            .admin-form .row {
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-
-            .group label {
-                font-size: .95rem;
-            }
-
-            .group input,
-            .group select {
-                padding: 12px;
-                font-size: 16px;
-                /* évite le zoom iOS */
-            }
-
-            /* selects buteurs/passeurs */
-            #buteurs-container select,
-            #passeurs-container select {
-                padding: 12px;
-                font-size: 16px;
-                margin: 6px 0;
-            }
-
-            /* boutons faciles à taper */
-            .actions-bar {
-                gap: 8px;
-            }
-
-            .actions-bar .btn {
-                width: 30%;
-                padding: .9rem 1.1rem;
-            }
-
-            .table-wrap {
+            /* === Structure générale === */
+            html,
+            body {
                 width: 100%;
                 max-width: 100%;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
+                overflow-x: hidden;
+                /* empêche tout débordement horizontal */
+                margin: 0;
+                padding: 0;
             }
 
+            .container,
             .admin-page,
             .tab-section,
             .card,
             form.admin-form {
+                width: 100%;
                 max-width: 100%;
-                overflow-x: clip;
-                /* évite un élargissement “fantôme” sur iOS */
+                margin: 0;
+                padding: 12px;
+                box-sizing: border-box;
             }
 
+            /* === Grille du formulaire === */
+            .admin-form .row {
+                display: grid;
+                grid-template-columns: 1fr;
+                /* une seule colonne */
+                gap: 10px;
+            }
+
+            .group {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            label {
+                font-weight: 600;
+                font-size: 14px;
+            }
+
+            .group input,
+            .group select,
+            .group textarea {
+                width: 100%;
+                font-size: 16px;
+                /* évite le zoom automatique iOS */
+                padding: 8px 10px;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+            }
+
+            /* === Boutons === */
+            .btn {
+                font-size: 15px;
+                padding: 10px;
+                border-radius: 6px;
+                width: 100%;
+                /* boutons pleine largeur */
+            }
+
+            .actions-bar {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            /* === Tableaux === */
+            .table-wrap {
+                width: 100%;
+                max-width: 100%;
+                overflow-x: auto;
+                /* permet le scroll horizontal local */
+                -webkit-overflow-scrolling: touch;
+                border-radius: 8px;
+            }
 
             table {
-                min-width: 640px;
                 width: 100%;
+                min-width: 0;
+                /* clé : ne jamais forcer plus large que l’écran */
+                border-collapse: collapse;
                 font-size: 13px;
             }
 
-            /* largeur min scrollable */
             th,
             td {
-                padding: 9px;
                 white-space: nowrap;
+                padding: 8px 10px;
+                border-bottom: 1px solid #ddd;
             }
 
-            /* si tu veux gagner de la place sur mobile : cache quelques colonnes */
-            /* (décommente si nécessaire) */
-            /*
-  #matchsTable th:nth-child(6),  #matchsTable td:nth-child(6)  { display: none; }  // Compétition
-  #matchsTable th:nth-child(8),  #matchsTable td:nth-child(8)  { display: none; }  // Résultat
-  */
+            th {
+                background: #f7f7f7;
+                font-weight: 600;
+            }
+
+            /* === Titres et alignements === */
+            .admin-header h1 {
+                font-size: 18px;
+                text-align: center;
+            }
+
+            .admin-tabs {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 6px;
+                margin-bottom: 10px;
+            }
+
+            .tab-btn {
+                flex: 1;
+                text-align: center;
+                padding: 8px;
+                font-size: 14px;
+                border-radius: 6px;
+                background: #f3f3f3;
+                border: none;
+            }
+
+            .tab-btn.active {
+                background: #0078d7;
+                color: #fff;
+            }
+
+            /* === Messages / états === */
+            #msg,
+            #progMsg,
+            #playerMsg {
+                font-size: 13px;
+                text-align: center;
+                color: #0078d7;
+                margin-top: 6px;
+            }
         }
 
-        html {
-            scrollbar-gutter: stable both-edges;
-        }
 
-        @media (min-width:769px) {
-            .container {
-                padding: 0 var(--padding-desktop)
+        /* ============================= */
+        /*   VERSION GRAND ÉCRAN (≥769px) */
+        /* ============================= */
+        @media (min-width: 769px) {
+
+            /* --- Mise en page principale --- */
+            .admin-page {
+                max-width: 1000px;
+                /* largeur de la zone de travail centrée */
+                margin: 20px auto;
+                padding: 20px;
             }
 
-            .header-content {
-                padding: 0 var(--padding-desktop)
+            .tab-section {
+                max-width: 100%;
+                padding: 20px;
             }
 
-            .nav-desktop {
-                display: flex
+            /* --- Grille du formulaire --- */
+            .admin-form .row {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 16px;
             }
 
-            .login-desktop {
-                display: inline-flex
+            /* Groupes d’inputs bien espacés */
+            .group {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
             }
 
-            .mobile-menu-btn {
-                display: none
+            label {
+                font-weight: 600;
+            }
+
+            .group input,
+            .group select,
+            .group textarea {
+                padding: 6px 8px;
+                font-size: 15px;
+            }
+
+            /* --- Cartes et tableaux --- */
+            .card {
+                width: 100%;
+                max-width: 100%;
+                margin-top: 20px;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+                background: #fff;
+            }
+
+            /* Tableau bien lisible sur PC */
+            .table-wrap {
+                width: 100%;
+                max-width: 100%;
+                overflow-x: auto;
             }
 
             table {
+                width: 100%;
                 min-width: 820px;
+                /* largeur confortable sur écran large */
+                border-collapse: collapse;
+                font-size: 15px;
+            }
+
+            th,
+            td {
+                padding: 10px 14px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+                white-space: nowrap;
+            }
+
+            th {
+                background: #f3f3f3;
+                font-weight: 600;
+            }
+
+            /* --- Boutons --- */
+            .btn {
+                font-size: 15px;
+                padding: 8px 16px;
+                border-radius: 6px;
+                cursor: pointer;
+            }
+
+            .btn-primary {
+                background-color: #0078d7;
+                color: #fff;
+                border: none;
+            }
+
+            .btn-primary:hover {
+                background-color: #005fa3;
+            }
+
+            .btn-secondary {
+                background-color: #f1f1f1;
+                color: #222;
+                border: 1px solid #ccc;
+            }
+
+            .btn-secondary:hover {
+                background-color: #e0e0e0;
+            }
+
+            /* --- Alignement du header d’admin --- */
+            .admin-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                margin-bottom: 16px;
+            }
+
+            .admin-header h1 {
+                font-size: 22px;
+            }
+
+            /* --- Barre des onglets --- */
+            .admin-tabs {
+                display: flex;
+                justify-content: center;
+                gap: 8px;
+                margin-bottom: 20px;
+            }
+
+            .tab-btn {
+                padding: 10px 18px;
+                border: none;
+                background: #f2f2f2;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+
+            .tab-btn.active {
+                background: #0078d7;
+                color: #fff;
+            }
+
+            .tab-btn:hover {
+                background: #e1e1e1;
+            }
+
+            /* --- Message info --- */
+            #msg,
+            #progMsg,
+            #playerMsg {
+                margin-top: 8px;
+                font-size: 14px;
+                color: #0078d7;
             }
         }
+
 
         /* =========================
        ADMIN — styles scopés
        ========================= */
         .admin-page {
-            max-width: min(900px, 100%);
+            max-width: 900px;
             margin: 20px auto
         }
 
@@ -533,7 +702,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 0
+            min-width: 820px
         }
 
         th,
