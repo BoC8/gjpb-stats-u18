@@ -557,9 +557,25 @@
 
         /* Dézoom visuel du contenu admin sur mobile (sans toucher au header) */
         @media (max-width: 768px) {
+<<<<<<< HEAD
             /* Méthode principale (Chrome/Edge/Android) */
             .admin-page { zoom: 0.4; }
+=======
+
+            /* Méthode principale (Chrome/Edge/Android) 
+            .admin-page {
+                zoom: 0.4;
+            }*/
+            .tab-section {
+                max-width: 700px;
+                /* choisis ta valeur: 1000, 1100, 1200… */
+                margin: 0 auto;
+                padding: 16px;
+            }
+
+>>>>>>> 103329b (admin.html base form)
         }
+
         /* Fallback si 'zoom' n'est pas supporté (Safari/iOS) */
         @supports not (zoom: 0.4) {
             @media (max-width: 768px) {
@@ -595,8 +611,18 @@
             border-color: var(--color-sky-blue);
         }
 
+<<<<<<< HEAD
         .tab-section { display: none; }
         .tab-section.active { display: block; }
+=======
+        .tab-section {
+            display: none;
+        }
+
+        .tab-section.active {
+            display: block;
+        }
+>>>>>>> 103329b (admin.html base form)
     </style>
 </head>
 
@@ -646,6 +672,7 @@
 
             <!-- Tabs: sections admin -->
             <div class="admin-tabs" role="tablist" aria-label="Sections admin">
+<<<<<<< HEAD
                 <button class="tab-btn active" data-tab="matchs" role="tab" aria-selected="true">Matchs</button>
                 <button class="tab-btn" data-tab="programmations" role="tab" aria-selected="false">Programmation</button>
                 <button class="tab-btn" data-tab="joueurs" role="tab" aria-selected="false">Joueurs</button>
@@ -658,107 +685,228 @@
                         <label for="date">Date</label>
                         <input type="date" id="date" />
                     </div>
+=======
+                <button type="button" class="tab-btn active" data-tab="matchs" role="tab"
+                    aria-selected="true">Matchs</button>
+                <button type="button" class="tab-btn" data-tab="programmations" role="tab"
+                    aria-selected="false">Programmation</button>
+                <button type="button" class="tab-btn" data-tab="joueurs" role="tab"
+                    aria-selected="false">Joueurs</button>
+            </div>
+>>>>>>> 103329b (admin.html base form)
 
-                    <div class="group">
-                        <label for="equipe">Équipe</label>
-                        <select id="equipe">
-                            <option value="18A">18A</option>
-                            <option value="17">17</option>
-                            <option value="18B">18B</option>
-                        </select>
-                    </div>
+            <section id="tab-matchs" class="tab-section active">
+                <form id="form" class="admin-form" data-match-id="">
+                    <div class="row">
+                        <div class="group">
+                            <label for="date">Date</label>
+                            <input type="date" id="date" />
+                        </div>
 
-                    <div class="group">
-                        <label for="adversaire">Adversaire</label>
-                        <!-- APRÈS -->
-                        <select id="adversaire" required>
-                            <option value="" disabled selected>Choisir l’adversaire…</option>
-                        </select>
+                        <div class="group">
+                            <label for="equipe">Équipe</label>
+                            <select id="equipe">
+                                <option value="18A">18A</option>
+                                <option value="17">17</option>
+                                <option value="18B">18B</option>
+                            </select>
+                        </div>
 
-                    </div>
+                        <div class="group">
+                            <label for="adversaire">Adversaire</label>
+                            <!-- APRÈS -->
+                            <select id="adversaire" required>
+                                <option value="" disabled selected>Choisir l’adversaire…</option>
+                            </select>
 
-                    <div class="group">
-                        <label for="lieu">Lieu</label>
-                        <select id="lieu">
-                            <option value="DOM">DOM</option>
-                            <option value="EXT">EXT</option>
-                        </select>
-                    </div>
+                        </div>
 
-                    <div class="group">
-                        <label for="competition">Compétition</label>
-                        <select id="competition">
-                            <option value="Phase 1">Phase 1</option>
-                            <option value="Phase 2">Phase 2</option>
-                            <option value="Phase 3">Phase 3</option>
-                            <option value="Amical">Amical</option>
-                            <option value="Coupe">Coupe</option>
-                        </select>
-                    </div>
+                        <div class="group">
+                            <label for="lieu">Lieu</label>
+                            <select id="lieu">
+                                <option value="DOM">DOM</option>
+                                <option value="EXT">EXT</option>
+                            </select>
+                        </div>
 
-                    <div class="group">
-                        <label for="resultat">Résultat</label>
-                        <select id="resultat">
-                            <option value="V">Victoire</option>
-                            <option value="N">Nul</option>
-                            <option value="D">Défaite</option>
-                        </select>
-                    </div>
+                        <div class="group">
+                            <label for="competition">Compétition</label>
+                            <select id="competition">
+                                <option value="Phase 1">Phase 1</option>
+                                <option value="Phase 2">Phase 2</option>
+                                <option value="Phase 3">Phase 3</option>
+                                <option value="Amical">Amical</option>
+                                <option value="Coupe">Coupe</option>
+                            </select>
+                        </div>
 
-                    <div class="group">
-                        <label>Score (GJPB - ADV)</label>
-                        <div style="display:flex;gap:.5rem;align-items:center">
-                            <input type="number" id="buts_gjpb" placeholder="GJPB" min="0" style="width:110px" />
-                            <span>—</span>
-                            <input type="number" id="buts_adv" placeholder="Adversaire" min="0" style="width:110px" />
+                        <div class="group">
+                            <label for="resultat">Résultat</label>
+                            <select id="resultat">
+                                <option value="V">Victoire</option>
+                                <option value="N">Nul</option>
+                                <option value="D">Défaite</option>
+                            </select>
+                        </div>
+
+                        <div class="group">
+                            <label>Score (GJPB - ADV)</label>
+                            <div style="display:flex;gap:.5rem;align-items:center">
+                                <input type="number" id="buts_gjpb" placeholder="GJPB" min="0" style="width:110px" />
+                                <span>—</span>
+                                <input type="number" id="buts_adv" placeholder="Adversaire" min="0"
+                                    style="width:110px" />
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                    <div class="card">
+                        <div class="group">
+                            <label for="nbButeurs"><b>Nombre de buteurs</b></label>
+                            <input type="number" id="nbButeurs" min="0" max="14" value="0" />
+                            <div id="buteurs-container"></div>
+                        </div>
+
+                        <div class="group" style="margin-top:12px">
+                            <label for="nbPasseurs"><b>Nombre de passeurs</b></label>
+                            <input type="number" id="nbPasseurs" min="0" max="14" value="0" />
+                            <div id="passeurs-container"></div>
+                        </div>
+
+                        <div class="actions-bar">
+                            <button id="saveBtn" class="btn btn-primary" type="button">Enregistrer</button>
+                            <button id="resetBtn" class="btn btn-secondary" type="button"
+                                style="margin-left:8px">Réinitialiser</button>
+                            <div id="msg"></div>
+                        </div>
+                    </div>
+                </form>
 
                 <div class="card">
-                    <div class="group">
-                        <label for="nbButeurs"><b>Nombre de buteurs</b></label>
-                        <input type="number" id="nbButeurs" min="0" max="14" value="0" />
-                        <div id="buteurs-container"></div>
+                    <h2 style="margin-bottom:.5rem">⚽ Matchs enregistrés</h2>
+                    <div class="table-wrap">
+                        <table id="matchsTable">
+                            <thead>
+                                <tr>
+                                    <th>Actions</th>
+                                    <th>Date</th>
+                                    <th>Équipe</th>
+                                    <th>Adversaire</th>
+                                    <th>Lieu</th>
+                                    <th>Compétition</th>
+                                    <th>Score</th>
+                                    <th>Résultat</th>
+                                    <th>Buteurs</th>
+                                    <th>Passeurs</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
+                </div>
+            </section>
 
-                    <div class="group" style="margin-top:12px">
-                        <label for="nbPasseurs"><b>Nombre de passeurs</b></label>
-                        <input type="number" id="nbPasseurs" min="0" max="14" value="0" />
-                        <div id="passeurs-container"></div>
+            <!-- Programmations tab -->
+            <section id="tab-programmations" class="tab-section">
+                <form id="progForm" class="admin-form" data-prog-id="">
+                    <div class="row">
+                        <div class="group">
+                            <label for="prog_date">Date</label>
+                            <input type="date" id="prog_date" />
+                        </div>
+                        <div class="group">
+                            <label for="prog_equipe">Equipe</label>
+                            <select id="prog_equipe">
+                                <option value="18A">18A</option>
+                                <option value="17">17</option>
+                                <option value="18B">18B</option>
+                            </select>
+                        </div>
+                        <div class="group">
+                            <label for="prog_adversaire">Adversaire</label>
+                            <input type="text" id="prog_adversaire" placeholder="Nom de l'adversaire" />
+                        </div>
+                        <div class="group">
+                            <label for="prog_lieu">Lieu</label>
+                            <select id="prog_lieu">
+                                <option value="DOM">DOM</option>
+                                <option value="EXT">EXT</option>
+                            </select>
+                        </div>
+                        <div class="group">
+                            <label for="prog_competition">Competition</label>
+                            <select id="prog_competition">
+                                <option value="Phase 1">Phase 1</option>
+                                <option value="Phase 2">Phase 2</option>
+                                <option value="Phase 3">Phase 3</option>
+                                <option value="Amical">Amical</option>
+                                <option value="Coupe">Coupe</option>
+                            </select>
+                        </div>
+                        <div class="group">
+                            <label for="prog_heure">Heure</label>
+                            <input type="time" id="prog_heure" />
+                        </div>
                     </div>
-
                     <div class="actions-bar">
-                        <button id="saveBtn" class="btn btn-primary" type="button">Enregistrer</button>
-                        <button id="resetBtn" class="btn btn-secondary" type="button"
-                            style="margin-left:8px">Réinitialiser</button>
-                        <div id="msg"></div>
+                        <button id="progSaveBtn" type="button" class="btn btn-primary">Enregistrer</button>
+                        <button id="progResetBtn" type="button" class="btn btn-secondary"
+                            style="margin-left:8px">Reinitialiser</button>
+                        <div id="progMsg"></div>
+                    </div>
+                </form>
+
+                <div class="card">
+                    <h2 style="margin-bottom:.5rem">Programmations</h2>
+                    <div class="table-wrap">
+                        <table id="progsTable">
+                            <thead>
+                                <tr>
+                                    <th>Actions</th>
+                                    <th>Date</th>
+                                    <th>Equipe</th>
+                                    <th>Adversaire</th>
+                                    <th>Lieu</th>
+                                    <th>Competition</th>
+                                    <th>Heure</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                 </div>
-            </form>
+            </section>
 
-            <div class="card">
-                <h2 style="margin-bottom:.5rem">⚽ Matchs enregistrés</h2>
-                <div class="table-wrap">
-                    <table id="matchsTable">
-                        <thead>
-                            <tr>
-                                <th>Actions</th>
-                                <th>Date</th>
-                                <th>Équipe</th>
-                                <th>Adversaire</th>
-                                <th>Lieu</th>
-                                <th>Compétition</th>
-                                <th>Score</th>
-                                <th>Résultat</th>
-                                <th>Buteurs</th>
-                                <th>Passeurs</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+            <!-- Joueurs tab -->
+            <section id="tab-joueurs" class="tab-section">
+                <form id="playerForm" class="admin-form">
+                    <div class="row">
+                        <div class="group" style="grid-column: 1 / -1;">
+                            <label for="playerName">Nom du joueur</label>
+                            <input type="text" id="playerName" placeholder="Ex: Jean Dupont" />
+                        </div>
+                    </div>
+                    <div class="actions-bar">
+                        <button id="playerAddBtn" type="button" class="btn btn-primary">Ajouter</button>
+                        <div id="playerMsg"></div>
+                    </div>
+                </form>
+
+                <div class="card">
+                    <h2 style="margin-bottom:.5rem">Joueurs</h2>
+                    <div class="table-wrap">
+                        <table id="playersTable">
+                            <thead>
+                                <tr>
+                                    <th>Actions</th>
+                                    <th>Nom</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
+            </section>
 
             <!-- Programmations tab -->
             <section id="tab-programmations" class="tab-section">
@@ -1009,7 +1157,11 @@
                 $('#buteurs-container').innerHTML = '';
                 $('#passeurs-container').innerHTML = '';
                 await chargerMatchs();
+<<<<<<< HEAD
                 try { await chargerProgrammations(); } catch (e) {}
+=======
+                try { await chargerProgrammations(); } catch (e) { }
+>>>>>>> 103329b (admin.html base form)
             } catch (e) {
                 console.error(e);
                 msg('Erreur enregistrement : ' + (e.message || e), true);
@@ -1061,7 +1213,11 @@
         async function chargerProgrammations() {
             const tbody = document.querySelector('#progsTable tbody');
             if (!tbody) return;
+<<<<<<< HEAD
             const { data, error } = await supabase.from('programmations').select('*').order('date', { ascending: false });
+=======
+            const { data, error } = await supabase.from('programmations').select('*').order('date', { ascending: true });
+>>>>>>> 103329b (admin.html base form)
             tbody.innerHTML = '';
             if (error) { console.error(error); return; }
             (data || []).forEach(p => {
@@ -1160,7 +1316,11 @@
                 if (msgEl) msgEl.textContent = 'Joueur ajoute';
                 document.getElementById('playerName').value = '';
                 await chargerJoueursListe();
+<<<<<<< HEAD
                 try { await chargerJoueurs(); } catch (e) {}
+=======
+                try { await chargerJoueurs(); } catch (e) { }
+>>>>>>> 103329b (admin.html base form)
             } catch (e) {
                 console.error(e);
                 if (msgEl) msgEl.textContent = 'Erreur ajout joueur';
@@ -1172,7 +1332,11 @@
             const { error } = await supabase.from('joueurs').delete().eq('id', id);
             if (error) { console.error(error); return; }
             await chargerJoueursListe();
+<<<<<<< HEAD
             try { await chargerJoueurs(); } catch (e) {}
+=======
+            try { await chargerJoueurs(); } catch (e) { }
+>>>>>>> 103329b (admin.html base form)
         }
 
         async function chargerMatchDansForm(id) {
@@ -1290,7 +1454,11 @@
 
             // Programmations events
             const progSave = document.getElementById('progSaveBtn'); if (progSave) progSave.addEventListener('click', enregistrerProgrammation);
+<<<<<<< HEAD
             const progReset = document.getElementById('progResetBtn'); if (progReset) progReset.addEventListener('click', () => { const f = document.getElementById('progForm'); f.reset(); f.dataset.progId=''; const el=document.getElementById('progMsg'); if(el) el.textContent=''; });
+=======
+            const progReset = document.getElementById('progResetBtn'); if (progReset) progReset.addEventListener('click', () => { const f = document.getElementById('progForm'); f.reset(); f.dataset.progId = ''; const el = document.getElementById('progMsg'); if (el) el.textContent = ''; });
+>>>>>>> 103329b (admin.html base form)
             const progsTable = document.getElementById('progsTable'); if (progsTable) progsTable.addEventListener('click', ev => { const b = ev.target.closest('button'); if (!b) return; const id = b.dataset.id; if (b.classList.contains('edit-prog')) chargerProgrammationDansForm(id); if (b.classList.contains('del-prog')) supprimerProgrammation(id); });
 
             // Joueurs events
