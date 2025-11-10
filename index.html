@@ -245,6 +245,21 @@
             bottom: 0;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white" opacity="0.1"/><circle cx="80" cy="40" r="1" fill="white" opacity="0.15"/><circle cx="40" cy="80" r="1.5" fill="white" opacity="0.1"/><circle cx="60" cy="60" r="1" fill="white" opacity="0.2"/><circle cx="30" cy="70" r="1.2" fill="white" opacity="0.12"/></svg>');
             animation: float 20s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Calques diaporama d'arrière-plan pour la hero */
+        .hero-bg, .hero-bg-next {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+            z-index: 0;
+            filter: brightness(0.55);
+            pointer-events: none;
         }
 
         @keyframes float {
@@ -1055,6 +1070,8 @@
 
     <!-- Hero Section -->
     <section class="hero">
+        <div class="hero-bg" aria-hidden="true"></div>
+        <div class="hero-bg-next" aria-hidden="true"></div>
         <div class="container">
             <div class="hero-content">
                 <h1>
@@ -1070,10 +1087,11 @@
                 <div class="season-info">
                     <div class="season-title">📅 Saison 2025-2026 📅</div>
                     <div class="divisions">
-                        <a href="18A.html" style="text-decoration: none; color: #1e3a5f; font-weight: bold;">U18-D1</a>
+                        <a href="18A.html" style="text-decoration: none; color: #1e3a5f; font-weight: bold;">U18A</a>
                         •
-                        <a href="17.html" style="text-decoration: none; color: #1e3a5f; font-weight: bold;">U17-D2</a> •
-                        <a href="18B.html" style="text-decoration: none; color: #1e3a5f; font-weight: bold;">U18-D4</a>
+                        <a href="17.html" style="text-decoration: none; color: #1e3a5f; font-weight: bold;">U17</a>
+                        •
+                        <a href="18B.html" style="text-decoration: none; color: #1e3a5f; font-weight: bold;">U18B</a>
                     </div>
                 </div>
             </div>
@@ -1283,6 +1301,9 @@
                     loadRecordStats();
                 });
             });
+
+            // Diaporama d'arrière-plan de la hero
+            startHeroSlideshow();
 
             // Charger les données
             loadAllData();
@@ -1554,6 +1575,51 @@
         window.addEventListener('offline', () => {
             console.log('Connexion perdue');
         });
+
+        // === DIAPORAMA HERO ===
+        const HERO_SLIDES = [
+            'PHOTO-2025-10-29-18-03-13.jpg',
+            'PHOTO-2025-10-29-18-03-14_1.jpg',
+            'PHOTO-2025-10-29-18-03-14.jpg',
+            'PHOTO-2025-10-29-18-03-15_1.jpg',
+            'PHOTO-2025-10-29-18-03-15.jpg',
+            'PHOTO-2025-10-29-18-10-52.jpg'
+        ];
+
+        // Préchargement des images pour éviter les flashs
+        HERO_SLIDES.forEach(src => { const img = new Image(); img.src = src; });
+
+        function startHeroSlideshow() {
+            const el1 = document.querySelector('.hero-bg');
+            const el2 = document.querySelector('.hero-bg-next');
+            if (!el1 || !el2 || HERO_SLIDES.length === 0) return;
+
+            let index = 0;
+            let showFirst = true;
+
+            const setBg = (el, src) => { el.style.backgroundImage = `url('${src}')`; };
+
+            // Image initiale
+            setBg(el1, HERO_SLIDES[0]);
+            el1.style.opacity = '1';
+
+            const swap = () => {
+                const next = (index + 1) % HERO_SLIDES.length;
+                const showEl = showFirst ? el2 : el1;
+                const hideEl = showFirst ? el1 : el2;
+
+                setBg(showEl, HERO_SLIDES[next]);
+                showEl.style.opacity = '1';
+                hideEl.style.opacity = '0';
+
+                showFirst = !showFirst;
+                index = next;
+            };
+
+            // Première transition après 1s, puis toutes les 6s
+            setTimeout(swap, 1000);
+            setInterval(swap, 6000);
+        }
     </script>
 </body>
 
